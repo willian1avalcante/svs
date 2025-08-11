@@ -2,16 +2,16 @@
    VARIÁVEIS CSS PERSONALIZADAS PARA NAVBAR
    ===================================================== */
 :root {
-  /* Cores principais da navbar */
-  --navbar-bg-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --navbar-bg-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  /* Cores da navbar baseadas na paleta da empresa */
+  --navbar-bg-primary: linear-gradient(135deg, var(--base-primary) 0%, var(--svs-primaria-escura) 100%);
+  --navbar-bg-secondary: linear-gradient(135deg, var(--base-secondary) 0%, var(--gray-800) 100%);
   --navbar-glass: rgba(255, 255, 255, 0.15);
   --navbar-glass-hover: rgba(255, 255, 255, 0.25);
   --navbar-glass-active: rgba(255, 255, 255, 0.35);
   
   /* Sombras e efeitos */
-  --navbar-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
-  --navbar-shadow-intense: 0 16px 40px rgba(31, 38, 135, 0.5);
+  --navbar-shadow: 0 8px 32px rgba(186, 19, 25, 0.37);
+  --navbar-shadow-intense: 0 16px 40px rgba(186, 19, 25, 0.5);
   --navbar-border: 1px solid rgba(255, 255, 255, 0.18);
   --navbar-blur: blur(20px);
   
@@ -26,7 +26,7 @@
 }
 
 /* =====================================================
-   NAVBAR PRINCIPAL - GLASSMORPHISM DESIGN
+   NAVBAR PRINCIPAL - USANDO CORES DA EMPRESA
    ===================================================== */
 .navbar-svs {
   position: fixed;
@@ -35,7 +35,7 @@
   right: 0;
   height: var(--svs-altura-navbar);
   
-  /* Glassmorphism background */
+  /* Background usando cores da empresa */
   background: var(--navbar-bg-primary);
   backdrop-filter: var(--navbar-blur);
   -webkit-backdrop-filter: var(--navbar-blur);
@@ -413,7 +413,7 @@
 }
 
 /* =====================================================
-   DROPDOWN DE RESULTADOS - DESIGN PREMIUM
+   DROPDOWN DE RESULTADOS - USANDO CORES DA EMPRESA
    ===================================================== */
 .dropdown-resultados {
   position: absolute;
@@ -470,11 +470,9 @@
   filter: drop-shadow(0 -2px 4px rgba(0, 0, 0, 0.1));
 }
 
-/* Cabeçalho dos resultados */
+/* Cabeçalho dos resultados - USANDO CORES DA EMPRESA */
 .cabecalho-resultados {
-  background: linear-gradient(135deg, 
-    var(--svs-primaria) 0%, 
-    var(--svs-primaria-escura) 100%);
+  background: var(--svs-gradiente-principal);
   color: white;
   padding: var(--svs-espaco-medio) var(--svs-espaco-grande);
   text-align: center;
@@ -539,7 +537,7 @@
   border-bottom: none;
 }
 
-/* Efeito hover avançado */
+/* Efeito hover avançado - USANDO CORES DA EMPRESA */
 .item-resultado::before {
   content: '';
   position: absolute;
@@ -572,7 +570,7 @@
   transform: translateX(4px) scale(0.98);
 }
 
-/* Ícone do resultado */
+/* Ícone do resultado - USANDO CORES DA EMPRESA */
 .icone-resultado {
   width: 32px;
   height: 32px;
@@ -711,7 +709,7 @@
   font-weight: 600;
 }
 
-/* Scrollbar personalizada */
+/* Scrollbar personalizada - USANDO CORES DA EMPRESA */
 .lista-resultados::-webkit-scrollbar {
   width: 8px;
   background: rgba(0, 0, 0, 0.05);
@@ -723,9 +721,7 @@
 }
 
 .lista-resultados::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, 
-    var(--svs-primaria) 0%, 
-    var(--svs-primaria-escura) 100%);
+  background: var(--svs-gradiente-principal);
   border-radius: 4px;
   min-height: 30px;
 }
@@ -840,7 +836,7 @@
 }
 
 /* =====================================================
-   DROPDOWN DAS CATEGORIAS - DESIGN LUXUOSO
+   DROPDOWN DAS CATEGORIAS - USANDO CORES DA EMPRESA
    ===================================================== */
 .dropdown-categoria {
   position: absolute;
@@ -895,11 +891,9 @@
   filter: drop-shadow(0 -2px 4px rgba(0, 0, 0, 0.1));
 }
 
-/* Cabeçalho da categoria */
+/* Cabeçalho da categoria - USANDO CORES DA EMPRESA */
 .cabecalho-categoria {
-  background: linear-gradient(135deg, 
-    var(--svs-primaria) 0%, 
-    var(--svs-primaria-escura) 100%);
+  background: var(--svs-gradiente-principal);
   color: white;
   padding: var(--svs-espaco-medio) var(--svs-espaco-grande);
   font-size: 1rem;
@@ -965,7 +959,7 @@
   overflow: hidden;
 }
 
-/* Efeito hover nos itens */
+/* Efeito hover nos itens - USANDO CORES DA EMPRESA */
 .botao-item-categoria::before {
   content: '';
   position: absolute;
@@ -994,9 +988,7 @@
 }
 
 .botao-item-categoria.ativo {
-  background: linear-gradient(135deg, 
-    var(--svs-primaria) 0%, 
-    var(--svs-primaria-escura) 100%);
+  background: var(--svs-gradiente-principal);
   color: white;
   font-weight: 800;
   box-shadow: 
@@ -1451,26 +1443,6 @@
     right: -10px;
     min-width: 180px;
   }
-}
-
-/* =====================================================
-   TEMAS ALTERNATIVOS (OPCIONAL)
-   ===================================================== */
-
-/* Tema escuro da navbar */
-.navbar-svs.tema-escuro {
-  --navbar-bg-primary: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
-  --navbar-glass: rgba(255, 255, 255, 0.08);
-  --navbar-glass-hover: rgba(255, 255, 255, 0.15);
-  --navbar-text: rgba(255, 255, 255, 0.9);
-  --navbar-text-secondary: rgba(255, 255, 255, 0.6);
-}
-
-/* Tema colorido da navbar */
-.navbar-svs.tema-colorido {
-  --navbar-bg-primary: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 50%, #45b7d1 100%);
-  --navbar-glass: rgba(255, 255, 255, 0.2);
-  --navbar-glass-hover: rgba(255, 255, 255, 0.3);
 }
 
 /* =====================================================
