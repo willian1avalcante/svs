@@ -7,15 +7,15 @@
   --navbar-glass: rgba(255, 255, 255, 0.12);
   --navbar-glass-hover: rgba(255, 255, 255, 0.18);
   --navbar-glass-active: rgba(255, 255, 255, 0.25);
-  
+
   /* Sombras simples */
   --navbar-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   --navbar-border: 1px solid rgba(255, 255, 255, 0.15);
-  
+
   /* Animações suaves */
   --navbar-transition: all 0.25s ease;
   --navbar-transition-fast: all 0.15s ease;
-  
+
   /* Cores de texto */
   --navbar-text: rgba(255, 255, 255, 0.95);
   --navbar-text-secondary: rgba(255, 255, 255, 0.75);
@@ -31,14 +31,14 @@
   left: 0;
   right: 0;
   height: var(--svs-altura-navbar);
-  
+
   /* Background simples */
   background: var(--navbar-bg-primary);
-  
+
   /* Sombra sutil */
   box-shadow: var(--navbar-shadow);
   border-bottom: var(--navbar-border);
-  
+
   /* Layout */
   z-index: var(--svs-z-navbar);
   display: flex;
@@ -46,6 +46,21 @@
   justify-content: space-between;
   padding: 0 var(--svs-espaco-grande);
   color: var(--navbar-text);
+}
+
+.busca-global,
+.container-busca,
+.botao-expandir-busca,
+.busca-expandida {
+  align-items: center;
+  /* Todos alinhados verticalmente */
+}
+
+/* Garantir que o dropdown não interfira no layout */
+.dropdown-resultados {
+  position: absolute;
+  z-index: 9999;
+  /* Z-index alto para ficar acima de tudo */
 }
 
 /* =====================================================
@@ -96,20 +111,54 @@
    ===================================================== */
 .busca-global {
   display: flex;
-  flex-direction: column;
   align-items: center;
+  /* Mudança: flex-direction removida */
   gap: 6px;
   flex-shrink: 0;
   margin: 0 var(--svs-espaco-grande);
   position: relative;
   z-index: 10;
+  height: 44px;
+  /* Altura fixa para manter alinhamento */
 }
 
 .container-busca {
   position: relative;
   display: flex;
   align-items: center;
+  height: 44px;
+  /* Altura fixa */
   transition: var(--navbar-transition);
+}
+
+/* =====================================================
+   ESTADOS DA BUSCA (CORRIGIDOS)
+   ===================================================== */
+.container-busca:not(.expandido) .botao-expandir-busca {
+  display: flex;
+  opacity: 1;
+  visibility: visible;
+}
+
+.container-busca:not(.expandido) .busca-expandida {
+  display: flex;
+  /* Sempre visível mas com width 0 */
+  opacity: 0;
+  visibility: hidden;
+  width: 44px;
+}
+
+.container-busca.expandido .botao-expandir-busca {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  /* Não interferir com cliques */
+}
+
+.container-busca.expandido .busca-expandida {
+  display: flex;
+  opacity: 1;
+  visibility: visible;
 }
 
 /* =====================================================
@@ -119,22 +168,26 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   /* Estilo limpo */
   background: var(--navbar-glass);
   border: var(--navbar-border);
-  
+
   /* Formato circular */
   border-radius: 50%;
   width: 44px;
   height: 44px;
-  
+
   /* Cores e texto */
   color: var(--navbar-text);
   cursor: pointer;
-  
+
   /* Transições */
   transition: var(--navbar-transition);
+
+  /* Posicionamento */
+  position: relative;
+  z-index: 2;
 }
 
 .botao-expandir-busca:hover {
@@ -158,38 +211,49 @@
 .busca-expandida {
   display: flex;
   align-items: center;
-  
+
   /* Estilo limpo */
   background: var(--navbar-glass);
   border: var(--navbar-border);
-  
+
   /* Formato */
   border-radius: 22px;
   padding: 8px 16px;
-  min-width: 400px;
   height: 44px;
-  
-  /* Posicionamento */
+  /* Altura fixa igual ao botão */
+
+  /* Posicionamento CORRIGIDO - fica na mesma linha */
   position: absolute;
   top: 0;
+  /* Alinhado com o botão */
   left: 0;
-  z-index: 5;
-  
+  right: auto;
+  /* Permitir expansão para direita */
+  z-index: 1;
+
+  /* Largura inicial igual ao botão */
+  width: 44px;
+  min-width: 44px;
+
   /* Estados inicial */
   opacity: 0;
   visibility: hidden;
-  transform: scale(0.95) translateX(-10px);
-  
+  overflow: hidden;
+
   /* Transições */
   transition: var(--navbar-transition);
 }
 
+/* Estado ativo - expansão horizontal */
 .busca-expandida.ativa {
   opacity: 1;
   visibility: visible;
-  transform: scale(1) translateX(0);
+  width: 400px;
+  /* Largura expandida */
+  min-width: 400px;
 }
 
+/* Estado de foco */
 .busca-expandida:focus-within {
   background: var(--navbar-glass-active);
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25);
@@ -202,6 +266,18 @@
   font-size: 1rem;
   flex-shrink: 0;
   transition: var(--navbar-transition-fast);
+
+  /* Inicialmente oculto */
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+/* Mostrar ícone quando expandido */
+.busca-expandida.ativa .icone-busca {
+  opacity: 1;
+  transform: scale(1);
+  transition-delay: 0.1s;
+  /* Delay para aparecer depois da expansão */
 }
 
 .busca-expandida:focus-within .icone-busca {
@@ -219,6 +295,19 @@
   font-weight: 500;
   padding: 6px 0;
   min-width: 0;
+
+  /* Inicialmente oculto */
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: var(--navbar-transition-fast);
+}
+
+/* Mostrar input quando expandido */
+.busca-expandida.ativa .input-busca-global {
+  opacity: 1;
+  transform: translateX(0);
+  transition-delay: 0.15s;
+  /* Delay maior para aparecer por último */
 }
 
 .input-busca-global::placeholder {
@@ -248,12 +337,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
+
+  /* Inicialmente ocultos */
+  opacity: 0;
+  transform: scale(0.8);
 }
 
-.botao-limpar-busca {
-  opacity: 0;
-  visibility: hidden;
-  transform: scale(0.8);
+/* Mostrar botões quando expandido */
+.busca-expandida.ativa .botao-limpar-busca,
+.busca-expandida.ativa .botao-recolher-busca {
+  opacity: 1;
+  transform: scale(1);
+  transition-delay: 0.2s;
+  /* Delay para aparecer depois de tudo */
 }
 
 .botao-limpar-busca.visivel {
@@ -262,27 +358,17 @@
   transform: scale(1);
 }
 
+/* Quando busca não está ativa, esconder botão limpar */
+.busca-expandida:not(.ativa) .botao-limpar-busca {
+  opacity: 0 !important;
+  visibility: hidden;
+  transform: scale(0.8);
+}
+
 .botao-limpar-busca:hover,
 .botao-recolher-busca:hover {
   color: var(--navbar-text);
   background: var(--navbar-glass);
-}
-
-/* Estados da busca */
-.container-busca:not(.expandido) .botao-expandir-busca {
-  display: flex;
-}
-
-.container-busca:not(.expandido) .busca-expandida {
-  display: none;
-}
-
-.container-busca.expandido .botao-expandir-busca {
-  display: none;
-}
-
-.container-busca.expandido .busca-expandida {
-  display: flex;
 }
 
 /* =====================================================
@@ -293,27 +379,29 @@
   top: calc(100% + 8px);
   left: 0;
   right: 0;
-  
+
   /* Estilo limpo */
   background: white;
-  
+
   /* Formato */
   border-radius: 12px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  
+
   /* Sombra simples */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  
-  /* Tamanho */
+
+  /* Tamanho - ajustado para seguir a largura da busca */
   max-height: 480px;
   min-width: 400px;
-  
+  width: 400px;
+  /* Largura fixa igual à busca expandida */
+
   /* Estados */
   opacity: 0;
   visibility: hidden;
   transform: translateY(-10px);
-  
+
   /* Transições */
   transition: var(--navbar-transition);
   z-index: calc(var(--svs-z-dropdown) + 5);
@@ -528,16 +616,16 @@
   display: flex;
   align-items: center;
   gap: var(--svs-espaco-pequeno);
-  
+
   /* Estilo limpo */
   background: var(--navbar-glass);
   border: var(--navbar-border);
-  
+
   /* Formato */
   border-radius: 12px;
   padding: 10px 16px;
   min-height: 40px;
-  
+
   /* Texto */
   color: var(--navbar-text);
   text-decoration: none;
@@ -545,7 +633,7 @@
   font-size: 0.9rem;
   font-weight: 600;
   white-space: nowrap;
-  
+
   /* Transições */
   transition: var(--navbar-transition);
 }
@@ -580,26 +668,26 @@
   top: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%);
-  
+
   /* Estilo limpo */
   background: white;
   border: 1px solid rgba(0, 0, 0, 0.1);
-  
+
   /* Formato */
   border-radius: 12px;
   min-width: 280px;
   max-width: 320px;
   overflow: hidden;
-  
+
   /* Estados */
   opacity: 0;
   visibility: hidden;
   transform: translateX(-50%) translateY(-10px);
-  
+
   /* Transições */
   transition: var(--navbar-transition);
   z-index: var(--svs-z-dropdown);
-  
+
   /* Sombra simples */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
@@ -704,23 +792,23 @@
   display: flex;
   align-items: center;
   gap: var(--svs-espaco-pequeno);
-  
+
   /* Estilo limpo */
   background: var(--navbar-glass);
   border: var(--navbar-border);
-  
+
   /* Formato */
   border-radius: 12px;
   padding: 10px 16px;
   min-height: 40px;
-  
+
   /* Texto */
   color: var(--navbar-text);
   text-decoration: none;
   cursor: pointer;
   font-size: 0.9rem;
   font-weight: 600;
-  
+
   /* Transições */
   transition: var(--navbar-transition);
 }
@@ -781,28 +869,28 @@
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
-  
+
   /* Estilo limpo */
   background: white;
   border: 1px solid rgba(0, 0, 0, 0.1);
-  
+
   /* Formato */
   border-radius: 12px;
   min-width: 200px;
   overflow: hidden;
-  
+
   /* Estados */
   opacity: 0;
   visibility: hidden;
   transform: translateY(-10px);
-  
+
   /* Transições */
   transition: var(--navbar-transition);
   z-index: var(--svs-z-dropdown);
-  
+
   /* Sombra simples */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  
+
   display: none;
 }
 
@@ -883,17 +971,32 @@
   animation: fadeInUp 0.2s ease forwards;
 }
 
-.item-resultado:nth-child(1) { animation-delay: 0ms; }
-.item-resultado:nth-child(2) { animation-delay: 30ms; }
-.item-resultado:nth-child(3) { animation-delay: 60ms; }
-.item-resultado:nth-child(4) { animation-delay: 90ms; }
-.item-resultado:nth-child(5) { animation-delay: 120ms; }
+.item-resultado:nth-child(1) {
+  animation-delay: 0ms;
+}
+
+.item-resultado:nth-child(2) {
+  animation-delay: 30ms;
+}
+
+.item-resultado:nth-child(3) {
+  animation-delay: 60ms;
+}
+
+.item-resultado:nth-child(4) {
+  animation-delay: 90ms;
+}
+
+.item-resultado:nth-child(5) {
+  animation-delay: 120ms;
+}
 
 @keyframes fadeInUp {
   from {
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -904,14 +1007,20 @@
    RESPONSIVIDADE
    ===================================================== */
 @media (max-width: 1200px) {
+  .busca-expandida.ativa {
+    width: 350px;
+    min-width: 350px;
+  }
+
+  .dropdown-resultados {
+    min-width: 350px;
+    width: 350px;
+  }
+
   .busca-expandida {
     min-width: 350px;
   }
-  
-  .dropdown-resultados {
-    min-width: 350px;
-  }
-  
+
   .botao-categoria {
     padding: 8px 12px;
     font-size: 0.85rem;
@@ -922,23 +1031,30 @@
   .navbar-svs {
     padding: 0 var(--svs-espaco-medio);
   }
-  
-  .busca-expandida {
+
+  .busca-expandida.ativa {
+    width: 300px;
     min-width: 300px;
   }
-  
+
+  .dropdown-resultados {
+    min-width: 300px;
+    width: 300px;
+  }
+
   .botao-expandir-busca {
     width: 40px;
     height: 40px;
   }
-  
-  .menu-principal {
-    gap: 4px;
+
+  .busca-expandida {
+    height: 40px;
+    width: 40px;
+    min-width: 40px;
   }
-  
-  .botao-categoria {
-    padding: 6px 10px;
-    font-size: 0.8rem;
+
+  .container-busca:not(.expandido) .busca-expandida {
+    width: 40px;
   }
 }
 
@@ -949,39 +1065,37 @@
     min-height: var(--svs-altura-navbar);
     padding: var(--svs-espaco-pequeno) var(--svs-espaco-medio);
   }
-  
+
   .busca-global {
     order: 3;
     width: 100%;
     margin: var(--svs-espaco-pequeno) 0 0 0;
+    height: auto;
+    /* Altura automática no mobile */
   }
-  
+
   .container-busca {
     width: 100%;
+    height: 40px;
+    /* Altura reduzida no mobile */
   }
-  
+
   .busca-expandida {
-    min-width: auto;
+    height: 40px;
+    width: 40px;
+    min-width: 40px;
+  }
+
+  .busca-expandida.ativa {
     width: 100%;
+    /* Largura total no mobile */
+    min-width: auto;
     position: relative;
+    /* Posição relativa no mobile */
     left: 0;
     transform: none;
   }
-  
-  .busca-expandida.ativa {
-    transform: none;
-  }
-  
-  .menu-principal {
-    order: 4;
-    width: 100%;
-    margin: var(--svs-espaco-pequeno) 0 0 0;
-    justify-content: flex-start;
-    overflow-x: auto;
-    padding-bottom: var(--svs-espaco-pequeno);
-  }
-  
-  .dropdown-categoria,
+
   .dropdown-resultados {
     position: fixed;
     top: auto;
@@ -991,52 +1105,74 @@
     transform: none;
     max-width: none;
     min-width: auto;
+    width: auto;
   }
-  
-  .botao-usuario {
-    min-width: 140px;
+
+  .botao-expandir-busca {
+    width: 40px;
+    height: 40px;
+  }
+
+  .container-busca:not(.expandido) .busca-expandida {
+    width: 40px;
   }
 }
 
 @media (max-width: 480px) {
-  .texto-marca {
-    display: none;
+  .busca-expandida {
+    height: 36px;
+    width: 36px;
+    min-width: 36px;
+    padding: 6px 12px;
   }
-  
-  .icone-marca {
-    width: 32px;
-    height: 32px;
+
+  .busca-expandida.ativa {
+    height: 36px;
   }
-  
+
   .botao-expandir-busca {
     width: 36px;
     height: 36px;
   }
-  
-  .busca-expandida {
-    padding: 6px 12px;
+
+  .container-busca {
     height: 36px;
   }
-  
-  .nome-usuario {
-    display: none;
+
+  .container-busca:not(.expandido) .busca-expandida {
+    width: 36px;
   }
-  
-  .botao-usuario {
-    min-width: 40px;
-    padding: 8px;
+}
+
+/* =====================================================
+   ANIMAÇÃO DE EXPANSÃO SUAVE
+   ===================================================== */
+@keyframes expandirBuscaHorizontal {
+  0% {
+    width: 44px;
+    opacity: 0;
   }
-  
-  .menu-usuario {
-    right: -10px;
-    min-width: 160px;
+
+  50% {
+    opacity: 0.7;
   }
+
+  100% {
+    width: 400px;
+    opacity: 1;
+  }
+}
+
+/* Aplicar animação apenas quando necessário */
+.busca-expandida.animando {
+  animation: expandirBuscaHorizontal 0.4s cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
 
 /* =====================================================
    IMPRESSÃO
    ===================================================== */
 @media print {
+
   .navbar-svs,
   .overlay-categorias,
   .dropdown-resultados,

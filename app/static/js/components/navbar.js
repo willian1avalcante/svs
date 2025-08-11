@@ -182,14 +182,14 @@ class SVSNavbar {
 
     // Marcar como expandida
     this.containerBusca.classList.add('expandido');
-    this.buscaExpandida.classList.add('ativa', 'animando');
+    this.buscaExpandida.classList.add('ativa');
     this.buscaExpandidaAtiva = true;
 
-    // Focar no input após animação
+    // Focar no input após a animação de expansão
     setTimeout(() => {
       this.inputBuscaGlobal.focus();
       this.buscaExpandida.classList.remove('animando');
-    }, 200);
+    }, 250); // Tempo ajustado para a nova animação
 
     // Adicionar efeito de destaque (opcional)
     this.adicionarDestaqueLupa();
@@ -209,7 +209,7 @@ class SVSNavbar {
     setTimeout(() => {
       this.containerBusca.classList.remove('expandido');
       this.buscaExpandidaAtiva = false;
-    }, 300);
+    }, 250); // Tempo ajustado
 
     // Remover destaque
     this.removerDestaqueLupa();
