@@ -1,0 +1,549 @@
+/* =====================================================
+   CSS de Responsividade para Dispositivos Mobile
+   SVS - Sistema de Vendas Skymsen
+   ===================================================== */
+
+/* Breakpoints padrão */
+
+:root {
+  --mobile-breakpoint: 768px;
+  --tablet-breakpoint: 992px;
+  --desktop-breakpoint: 1200px;
+  /* Variáveis para mobile */
+  --mobile-sidebar-height: auto;
+  --mobile-content-margin: 0;
+  --mobile-menu-padding: 12px;
+  --mobile-button-height: 44px;
+  /* Tamanho mínimo recomendado para touch */
+  --mobile-font-size: 14px;
+  --mobile-header-height: 60px;
+  /* Altura fixa do header em mobile */
+}
+
+/* =====================================================
+   TABLET (768px - 991px)
+   ===================================================== */
+
+@media (max-width: 991px) and (min-width: 769px) {
+  .sidebar {
+    width: 180px;
+  }
+  .content-area {
+    margin-left: 180px;
+  }
+  .footer {
+    left: 180px;
+  }
+  .menu-button-inline {
+    width: 180px;
+    font-size: 9px;
+  }
+  .user-info {
+    padding: 6px;
+  }
+  .verdana10 {
+    font-size: 9px;
+  }
+}
+
+/* =====================================================
+   MOBILE (max-width: 768px)
+   ===================================================== */
+
+@media (max-width: 768px) {
+  /* Reset do overflow para mobile */
+  body {
+    overflow: visible;
+    font-size: var(--mobile-font-size);
+  }
+  /* Container principal - layout mobile otimizado */
+  .container {
+    flex-direction: column;
+    height: 100vh;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+  /* Sidebar - header compacto em mobile */
+  .sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
+    min-height: var(--mobile-header-height);
+    max-height: none;
+    /* Remove limitação de altura */
+    border-right: none;
+    border-bottom: 2px solid #cccccc;
+    overflow: visible;
+    z-index: 999;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+  /* Header do usuário - sempre visível e compacto */
+  .user-info {
+    height: var(--mobile-header-height);
+    padding: var(--mobile-menu-padding);
+    flex-wrap: nowrap;
+    gap: 8px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .user-details {
+    flex: 1;
+    min-width: 150px;
+  }
+  .user-actions {
+    flex-shrink: 0;
+  }
+  .user-actions img {
+    width: 24px;
+    height: 24px;
+  }
+  /* Menu navigation - colapsável */
+  .menu-navigation {
+    display: none;
+    /* Oculto por padrão */
+    flex-direction: column;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+    max-height: 60vh;
+    /* Máximo 60% da tela quando expandido */
+    overflow-y: auto;
+  }
+  /* Classe para mostrar o menu quando expandido */
+  .menu-navigation.show {
+    display: flex;
+  }
+  /* Botão para toggle do menu mobile */
+  .mobile-menu-toggle {
+    display: block;
+    background: none;
+    border: none;
+    font-size: 18px;
+    padding: 8px;
+    cursor: pointer;
+    color: #000;
+    margin-left: 8px;
+  }
+  .mobile-menu-toggle::before {
+    content: "☰";
+    /* Ícone hamburger */
+  }
+  .mobile-menu-toggle.active::before {
+    content: "✕";
+    /* Ícone X quando aberto */
+  }
+  /* Seções do menu - comportamento simplificado em mobile */
+  .menu-section {
+    flex-shrink: 0;
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+  }
+  .menu-section-header {
+    height: auto;
+    padding: var(--mobile-menu-padding);
+    font-size: 16px;
+    min-height: var(--mobile-button-height);
+    width: 100%;
+    margin: 0;
+    flex-shrink: 0;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .menu-section-header::after {
+    content: "+";
+    position: absolute;
+    right: 15px;
+    font-size: 18px;
+    transition: transform 0.3s ease;
+  }
+  .menu-section.expanded .menu-section-header::after {
+    content: "-";
+    transform: rotate(180deg);
+  }
+  .menu-section-header:hover {
+    background-color: #333;
+  }
+  .menu-section-header:active {
+    background-color: #555;
+  }
+  /* Conteúdo do menu - MANTÉM comportamento accordion em mobile */
+  .menu-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    flex-shrink: 0;
+  }
+  .menu-section.expanded .menu-content {
+    max-height: 300px;
+    /* Altura fixa para mobile */
+    overflow-y: auto;
+  }
+  .menu-item {
+    height: auto;
+    min-height: var(--mobile-button-height);
+    border-bottom: 1px solid #ddd;
+    margin: 0;
+    padding: 0;
+    flex-shrink: 0;
+  }
+  .menu-item:last-child {
+    border-bottom: none;
+  }
+  .menu-item:active {
+    background-color: #e0e0e0;
+  }
+  /* Botões do menu - otimizado para touch */
+  .menu-button-inline {
+    width: 100%;
+    height: auto;
+    min-height: var(--mobile-button-height);
+    padding: var(--mobile-menu-padding);
+    font-size: var(--mobile-font-size);
+    text-align: left;
+    border-radius: 0;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    color: #000000;
+    background-color: #f0f0f0;
+    border: none;
+    cursor: pointer;
+    display: block;
+    box-sizing: border-box;
+    font-family: verdana;
+  }
+  .menu-button-inline:hover {
+    background-color: #e0e0e0;
+  }
+  .menu-button-inline:active {
+    background-color: #d0d0d0;
+    transform: scale(0.98);
+  }
+  .menu-button-inline:focus {
+    outline: 2px solid #0099cc;
+    outline-offset: 2px;
+  }
+  /* Área de status - apenas inline em mobile */
+  .selection-status.mobile-status {
+    border-top: none;
+    border-left: 2px solid #000;
+    margin-top: 0;
+    margin-left: auto;
+    flex-shrink: 0;
+    min-height: auto;
+    height: var(--mobile-header-height);
+    display: flex;
+    align-items: center;
+  }
+  .selection-status.mobile-status .selection-info {
+    width: auto;
+    height: auto;
+    min-height: auto;
+    padding: 8px 12px;
+    font-size: 12px;
+    text-align: center;
+    background-color: yellow;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+  }
+  /* Esconder a seção de status desktop em mobile */
+  .selection-status.desktop-status {
+    display: none !important;
+  }
+  /* Área de conteúdo - ocupa o restante da tela */
+  .content-area {
+    margin-left: 0;
+    flex: 1;
+    overflow: auto;
+    padding: var(--mobile-menu-padding);
+    min-height: 0;
+    /* Permite que o flex funcione */
+    background-color: #f9f9f9;
+  }
+  /* Footer - mobile */
+  .footer {
+    margin-left: 0;
+    position: static;
+    left: auto;
+    right: auto;
+    padding: var(--mobile-menu-padding);
+    text-align: center;
+    flex-shrink: 0;
+  }
+  /* Tipografia mobile */
+  .verdana10 {
+    font-size: var(--mobile-font-size);
+    line-height: 1.4;
+  }
+  .verdana10w {
+    font-size: var(--mobile-font-size);
+  }
+  .verdana12 {
+    font-size: 16px;
+  }
+  /* Estados de foco e hover para touch devices */
+  .link:hover {
+    background-color: #f0f0f0;
+  }
+  .link:active {
+    background-color: #e0e0e0;
+  }
+  /* Scroll suave para navegação */
+  .menu-navigation {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+  /* Otimizações para performance mobile */
+  .menu-section {
+    will-change: auto;
+  }
+  .menu-content {
+    will-change: auto;
+  }
+  /* Esconder elementos desnecessários em mobile */
+  .desktop-only {
+    display: none !important;
+  }
+}
+
+/* =====================================================
+   MOBILE SMALL (max-width: 480px)
+   ===================================================== */
+
+@media (max-width: 480px) {
+  :root {
+    --mobile-menu-padding: 10px;
+    --mobile-font-size: 13px;
+    --mobile-header-height: 55px;
+  }
+  .user-info {
+    flex-direction: row;
+    /* Mantém horizontal mesmo em telas pequenas */
+    align-items: center;
+    gap: 8px;
+    height: var(--mobile-header-height);
+  }
+  .user-details {
+    flex: 1;
+    min-width: 120px;
+  }
+  .selection-status.mobile-status .selection-info {
+    font-size: 11px;
+    padding: 6px 8px;
+  }
+  .menu-section-header {
+    font-size: 15px;
+    padding: 10px;
+  }
+  .menu-button-inline {
+    font-size: 13px;
+    padding: 10px;
+  }
+  .verdana10 {
+    font-size: 13px;
+  }
+}
+
+/* =====================================================
+   LANDSCAPE MOBILE (orientação paisagem)
+   ===================================================== */
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .menu-navigation {
+    max-height: 50vh;
+  }
+  .content-area {
+    min-height: 40vh;
+  }
+}
+
+/* =====================================================
+   DESKTOP - Esconder status mobile
+   ===================================================== */
+
+@media (min-width: 769px) {
+  .selection-status.mobile-status {
+    display: none !important;
+  }
+  .mobile-menu-toggle {
+    display: none !important;
+  }
+}
+
+/* =====================================================
+   PREFERÊNCIAS DE MOVIMENTO REDUZIDO
+   ===================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-button-inline {
+    transition: none;
+  }
+  .menu-navigation {
+    scroll-behavior: auto;
+  }
+  .menu-section-header::after {
+    transition: none;
+  }
+  .menu-content {
+    transition: none;
+  }
+}
+
+/* =====================================================
+   UTILITÁRIOS MOBILE
+   ===================================================== */
+
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-only {
+    display: block;
+  }
+  .desktop-only {
+    display: none !important;
+  }
+  /* Botão toggle do menu - apenas mobile */
+  .mobile-menu-toggle {
+    display: block;
+  }
+}
+
+.desktop-only {
+  display: block;
+}
+
+/* =====================================================
+   OTIMIZAÇÕES PARA TOUCH
+   ===================================================== */
+
+@media (max-width: 768px) {
+  /* Aumenta área de toque */
+  .menu-button-inline {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+  }
+  .menu-section-header {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+  }
+  .mobile-menu-toggle {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+  }
+  /* Scroll mais suave em iOS */
+  .menu-navigation {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* =====================================================
+   ACESSIBILIDADE MOBILE
+   ===================================================== */
+
+@media (max-width: 768px) {
+  /* Foco visível melhorado */
+  .menu-button-inline:focus {
+    outline: 3px solid #0099cc;
+    outline-offset: 2px;
+    z-index: 1;
+    position: relative;
+  }
+  .menu-section-header:focus {
+    outline: 3px solid #0099cc;
+    outline-offset: 2px;
+    z-index: 1;
+    position: relative;
+  }
+  .mobile-menu-toggle:focus {
+    outline: 3px solid #0099cc;
+    outline-offset: 2px;
+  }
+  /* Contraste melhorado para textos pequenos */
+  .verdana10 {
+    font-weight: 500;
+  }
+  /* Espaçamento adequado para leitores de tela */
+  .menu-section-header[aria-expanded="true"]::after {
+    content: "−";
+  }
+  .menu-section-header[aria-expanded="false"]::after {
+    content: "+";
+  }
+}
+
+/* =====================================================
+   CORREÇÕES ESPECÍFICAS PARA WEBKIT (Android Chrome)
+   ===================================================== */
+
+@media (max-width: 768px) {
+  /* Corrige problemas de rendering no Android */
+  .sidebar {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+  .menu-section {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+  /* Evita zoom automático em inputs no iOS */
+  .menu-button-inline {
+    font-size: max(16px, var(--mobile-font-size));
+  }
+}
+
+/* =====================================================
+   MODO ESCURO (se o sistema suportar)
+   ===================================================== */
+
+@media (prefers-color-scheme: dark) {
+  @media (max-width: 768px) {
+    .sidebar {
+      background-color: #1a1a1a;
+      border-bottom-color: #444;
+    }
+    .user-info {
+      background-color: #333;
+      color: #fff;
+    }
+    .menu-section-header {
+      background-color: #222;
+      color: #fff;
+    }
+    .menu-button-inline {
+      background-color: #2a2a2a;
+      color: #fff;
+      border-bottom: 1px solid #444;
+    }
+    .menu-button-inline:hover {
+      background-color: #3a3a3a;
+    }
+    .menu-button-inline:active {
+      background-color: #4a4a4a;
+    }
+    .content-area {
+      background-color: #1a1a1a;
+      color: #fff;
+    }
+    .footer {
+      background-color: #333;
+      color: #fff;
+      border-top-color: #444;
+    }
+    .mobile-menu-toggle {
+      color: #fff;
+    }
+  }
+}

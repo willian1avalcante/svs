@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="SVS - Sistema de Vendas Skymsen" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SVS - Sistema de Vendas Skymsen</title>
+  
+  <!-- CSS do Sistema -->
+  <link rel="stylesheet" href="/static/css/base.css" />
+  <link rel="stylesheet" href="/static/css/navbar.css" />
+  <link rel="stylesheet" href="/static/css/modules.css" />
+  
+  <!-- Bibliotecas Locais -->
+  <link rel="stylesheet" href="/static/vendor/bootstrap/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="/static/vendor/fontawesome_700/css/all.min.css" />
+  
+  <!-- Fontes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- DEBUG CSS - TEMPORÁRIO -->
+  <!-- <style>
+    .dropdown-menu.mostrar {
+      background: red !important;
+      min-height: 300px !important;
+      display: block !important;
+      opacity: 1 !important;
+      max-height: 500px !important;
+      transform: translateY(0) !important;
+    }
+  </style> -->
+</head>
+
+<body class="svs-app">
+  
+  <!-- CONTAINER DA NAVBAR -->
+  <div id="navbar-container" role="navigation" aria-label="Navegação principal"></div>
+  
+  <!-- CONTAINER PRINCIPAL -->
+  <div class="app-container">
+    
+    <!-- ÁREA DE CONTEÚDO -->
+    <main class="main-content" id="main-content" role="main">
+      
+      <!-- ESTADO DE CARREGAMENTO -->
+      <div class="estado-carregamento oculto" id="loading-state">
+        <div class="spinner-carregamento"></div>
+        <p>Carregando...</p>
+      </div>
+      
+      <!-- CONTAINER DE MÓDULOS -->
+      <div class="module-container" id="module-container">
+        
+        <!-- TELA DE BOAS-VINDAS SIMPLES -->
+        <div class="tela-boas-vindas">
+          <div class="conteudo-boas-vindas aparecer">
+            
+            <div class="logo-sistema">
+              <i class="fas fa-building"></i>
+            </div>
+            
+            <h1 class="titulo-sistema">
+              Sistema de Vendas <span class="destaque">Skymsen</span>
+            </h1>
+            
+            <p class="descricao-sistema">
+              Bem-vindo ao SVS. Utilize o menu superior para acessar as funcionalidades do sistema.
+            </p>
+            
+            <div class="instrucao-uso">
+              <i class="fas fa-info-circle"></i>
+              Para começar, clique no menu no topo da página
+            </div>
+            
+          </div>
+        </div>
+        
+      </div>
+      
+    </main>
+    
+    <!-- RODAPÉ -->
+    <footer class="rodape-app" id="app-footer">
+      <div class="conteudo-rodape">
+        <span class="texto-rodape">
+          SVS - Sistema de Vendas Skymsen &copy; 2024
+        </span>
+        <span class="status-sistema">
+          Sistema Ativo
+        </span>
+      </div>
+    </footer>
+    
+  </div>
+
+  <!-- Scripts JavaScript -->
+  <script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/static/js/core/app.js"></script>
+  <script src="/static/js/core/module-loader.js"></script>
+  <script src="/static/js/core/spa-router.js"></script>
+  <script src="/static/js/components/navbar.js"></script>
+  
+  <!-- Inicialização -->
+  <script>
+    // Configuração global
+    window.SVS_CONFIG = {
+      apiBase: '/api',
+      staticBase: '/static',
+      version: '2.0.0',
+      debug: true,
+      usuario: {
+        nome: 'willian.cavalcante',
+        permissoes: ['leitura', 'escrita', 'admin']
+      }
+    };
+
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('🎯 Iniciando SVS...');
+      window.SVSApp.init();
+    });
+  </script>
+</body>
+
+</html>

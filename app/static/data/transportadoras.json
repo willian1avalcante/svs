@@ -1,0 +1,219 @@
+{
+  "transportadoras": [
+    {
+      "codigo": "100113",
+      "nome": "L.H.C UTILIDADES LT-(SP)"
+    },
+    {
+      "codigo": "99875",
+      "nome": "VALDIR VANATH-(SC)"
+    },
+    {
+      "codigo": "5240",
+      "nome": "-(RS)"
+    },
+    {
+      "codigo": "6696",
+      "nome": "-(SC)"
+    },
+    {
+      "codigo": "40239",
+      "nome": "-(ES)"
+    },
+    {
+      "codigo": "41629",
+      "nome": "-()"
+    },
+    {
+      "codigo": "43108",
+      "nome": "-()"
+    },
+    {
+      "codigo": "8761",
+      "nome": "-(SP)"
+    },
+    {
+      "codigo": "98136",
+      "nome": "-(SP)"
+    },
+    {
+      "codigo": "98266",
+      "nome": "-(SP)"
+    },
+    {
+      "codigo": "99354",
+      "nome": "-(EX)"
+    },
+    {
+      "codigo": "99607",
+      "nome": "-(SP)"
+    },
+    {
+      "codigo": "99833",
+      "nome": "-(MS)"
+    },
+    {
+      "codigo": "99892",
+      "nome": "-(PR)"
+    },
+    {
+      "codigo": "97888",
+      "nome": "AGGYO ADMINISTRACAO-(SP)"
+    },
+    {
+      "codigo": "100078",
+      "nome": "MICAELI OLIVEIRA DE-(SC)"
+    },
+    {
+      "codigo": "7097",
+      "nome": "RIO CLARO INDUSTRIA-(SP)"
+    },
+    {
+      "codigo": "97770",
+      "nome": "SOM CARDEAL DE VALM-(SC)"
+    },
+    {
+      "codigo": "98222",
+      "nome": "TW - SAPUCAIA-RS-(RS)"
+    },
+    {
+      "codigo": "99891",
+      "nome": "1 ALIANÇA CARGAS E L-(SP)"
+    },
+    {
+      "codigo": "99900",
+      "nome": "10.696.503 ANDRE ELI-(SP)"
+    },
+    {
+      "codigo": "9028",
+      "nome": "100 METAIS-(SC)"
+    },
+    {
+      "codigo": "95751",
+      "nome": "1200 AQUECIMENTO-(PR)"
+    },
+    {
+      "codigo": "98804",
+      "nome": "12258960 JORGE LUIZ -(RS)"
+    },
+    {
+      "codigo": "99944",
+      "nome": "19.966.366 FLAVIO QU-(SP)"
+    },
+    {
+      "codigo": "98896",
+      "nome": "21.798.911 FRANCISNE-(BA)"
+    },
+    {
+      "codigo": "100025",
+      "nome": "23.774.379 RENATO FR-(BA)"
+    },
+    {
+      "codigo": "98545",
+      "nome": "28.580.670 DOUGLAS G-(SC)"
+    },
+    {
+      "codigo": "10223",
+      "nome": "2AE AEREO SP-(SP)"
+    },
+    {
+      "codigo": "99529",
+      "nome": "2C COMERCIO E SERVIC-(RS)"
+    },
+    {
+      "codigo": "9293",
+      "nome": "2FT FRETES *-(PR)"
+    },
+    {
+      "codigo": "99763",
+      "nome": "2H BEBIDAS EIRELI-(SC)"
+    },
+    {
+      "codigo": "97200",
+      "nome": "2JC LOGISTICA E TRAN-(PR)"
+    },
+    {
+      "codigo": "39426",
+      "nome": "3 RHO-()"
+    },
+    {
+      "codigo": "98535",
+      "nome": "304 INOX-(SC)"
+    },
+    {
+      "codigo": "98655",
+      "nome": "32995819 DALILA BENE-(MT)"
+    },
+    {
+      "codigo": "98594",
+      "nome": "34.479.224 JESSICA C-(ES)"
+    },
+    {
+      "codigo": "98391",
+      "nome": "3A TRANSPORTE LOGIST-(RN)"
+    },
+    {
+      "codigo": "97877",
+      "nome": "3D FILA-(MG)"
+    },
+    {
+      "codigo": "99898",
+      "nome": "46.023.207 ANDERSON -(PR)"
+    },
+    {
+      "codigo": "98806",
+      "nome": "46490352 JOSE VIANA -(SP)"
+    },
+    {
+      "codigo": "98662",
+      "nome": "47.114.532 LUCIANO O-(SC)"
+    },
+    {
+      "codigo": "98596",
+      "nome": "47393783 SUSANA GOUL-(RJ)"
+    },
+    {
+      "codigo": "100024",
+      "nome": "49.339.020 MARTHA AL-(SP)"
+    },
+    {
+      "codigo": "98749",
+      "nome": "49.462.173 ALEXNDRE -(PA)"
+    },
+    {
+      "codigo": "98060",
+      "nome": "50.085.753 MAKICIELA-(MG)"
+    },
+    {
+      "codigo": "99820",
+      "nome": "50.220.561 LUCAS AND-(RS)"
+    },
+    {
+      "codigo": "100057",
+      "nome": "51.028.621 SILVIO DA-(BA)"
+    },
+    {
+      "codigo": "98572",
+      "nome": "51.867.757 BRUNA DIA-(SC)"
+    },
+    {
+      "codigo": "98287",
+      "nome": "51515710 ELIZEU AURO-(RO)"
+    }
+  ],
+  "metadata": {
+    "total_registros": 50,
+    "ultima_atualizacao": "2025-08-10",
+    "descricao": "Lista de Transportadoras - Primeiros 50 registros extraídos do HTML real",
+    "estrutura": {
+      "codigo": "Código único da transportadora",
+      "nome": "Nome da transportadora com estado entre parênteses"
+    },
+    "observacoes": [
+      "Alguns registros têm apenas o estado sem nome da empresa",
+      "Códigos variam de 4 a 6 dígitos",
+      "Estados aparecem entre parênteses no final",
+      "Alguns registros contêm CPF/CNPJ no nome"
+    ]
+  }
+}

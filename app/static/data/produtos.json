@@ -1,0 +1,231 @@
+{
+  "produtos": [
+    {
+      "codigo": "030023",
+      "descricao": "CORT.F.AUT.CFAS 0,25-60"
+    },
+    {
+      "codigo": "030040",
+      "descricao": "DES.BATATAS DB-10 0,33-60"
+    },
+    {
+      "codigo": "030066",
+      "descricao": "TRIT.INDL.TSP-02 0,33-60"
+    },
+    {
+      "codigo": "030090",
+      "descricao": "LIQUID.IND.LSB-15 1,5-60"
+    },
+    {
+      "codigo": "030112",
+      "descricao": "LIQUID.IND.LSB-25 1,5-60"
+    },
+    {
+      "codigo": "030139",
+      "descricao": "EXTRATOR SUCO ESB 0,25-60"
+    },
+    {
+      "codigo": "030210",
+      "descricao": "ENSACAD.LING.MANUAL ES-08"
+    },
+    {
+      "codigo": "030228",
+      "descricao": "AMAC.BIFE AB 0,33-60"
+    },
+    {
+      "codigo": "030295",
+      "descricao": "BAT.MAS.SOR.BS-16 0,33-60"
+    },
+    {
+      "codigo": "030333",
+      "descricao": "BAT.MAS.SOR.BA-30 0,75-60"
+    },
+    {
+      "codigo": "030368",
+      "descricao": "CIL.P/MASSAS CMS-300 1-60"
+    },
+    {
+      "codigo": "030481",
+      "descricao": "PREP.ALIM.PA-7C 0,5-60"
+    },
+    {
+      "codigo": "030490",
+      "descricao": "PREP.ALIM.PA-14 1-60"
+    },
+    {
+      "codigo": "030538",
+      "descricao": "FRITAD.SKYMSEM FSC-5000W"
+    },
+    {
+      "codigo": "030562",
+      "descricao": "MINI-SER.FITA MSN 0,33-60Hz"
+    },
+    {
+      "codigo": "040614",
+      "descricao": "DES.BATATAS DB-06 0,25-60"
+    },
+    {
+      "codigo": "040649",
+      "descricao": "CORT.F.AUT.CFAS 0,25-50"
+    },
+    {
+      "codigo": "040738",
+      "descricao": "EXTRATOR SUCO ESB 0,25-50"
+    },
+    {
+      "codigo": "040800",
+      "descricao": "AMAC.BIFE AB 0,5-50"
+    },
+    {
+      "codigo": "040886",
+      "descricao": "BAT.MAS.SOR.BA-16 0,33-50"
+    },
+    {
+      "codigo": "040908",
+      "descricao": "BAT.MAS.SOR.BA-30 0,75-50"
+    },
+    {
+      "codigo": "040924",
+      "descricao": "CIL.P/MASSAS CMS-300 1-50"
+    },
+    {
+      "codigo": "040932",
+      "descricao": "PREP.ALIM.PA-14 1-50"
+    },
+    {
+      "codigo": "041009",
+      "descricao": "PREP.ALIM.PA-7C 0,5-50"
+    },
+    {
+      "codigo": "041050",
+      "descricao": "PIC.CAR.PSN-10 1,5-60"
+    },
+    {
+      "codigo": "041092",
+      "descricao": "PIC.CAR.PSN-22 1,5-60"
+    },
+    {
+      "codigo": "041149",
+      "descricao": "DES.BATATAS DB-06 0,5-50"
+    },
+    {
+      "codigo": "041157",
+      "descricao": "PIC.CAR.PSN-10 1,25-50"
+    },
+    {
+      "codigo": "041165",
+      "descricao": "DES.BATATAS DB-10 0,5-60"
+    },
+    {
+      "codigo": "041173",
+      "descricao": "DES.BATATAS DB-10 0,5-50"
+    },
+    {
+      "codigo": "041181",
+      "descricao": "S.FIT.P/OSSOS SS 1-60"
+    },
+    {
+      "codigo": "041190",
+      "descricao": "S.FIT.P/OSSOS SS 1-50"
+    },
+    {
+      "codigo": "041203",
+      "descricao": "S.FIT.P/OSSOS SS 1,5-60"
+    },
+    {
+      "codigo": "041211",
+      "descricao": "S.FIT.P/OSSOS SS 1,5-50"
+    },
+    {
+      "codigo": "041220",
+      "descricao": "S.FIT.P/OSSOS SI 1-60"
+    },
+    {
+      "codigo": "041262",
+      "descricao": "S.FIT.P/OSSOS SL 1-60"
+    },
+    {
+      "codigo": "041270",
+      "descricao": "S.FIT.P/OSSOS SL 1-50"
+    },
+    {
+      "codigo": "041289",
+      "descricao": "S.FIT.P/OSSOS SL 1,5-60"
+    },
+    {
+      "codigo": "041483",
+      "descricao": "LIQUID.IND.TA-02 127V"
+    },
+    {
+      "codigo": "041491",
+      "descricao": "LIQUID.IND.LSV-06 0,5-60"
+    },
+    {
+      "codigo": "041637",
+      "descricao": "S.FIT.P/OSSOS SS 2-50"
+    },
+    {
+      "codigo": "041769",
+      "descricao": "LIQUID.IND.LSV-04 0,5-60"
+    },
+    {
+      "codigo": "041785",
+      "descricao": "CIL.P/MAS.CMSE-300 0,5-60"
+    },
+    {
+      "codigo": "041807",
+      "descricao": "LIQUID.IND.LSV-10 0,5-60"
+    },
+    {
+      "codigo": "041998",
+      "descricao": "FRITAD.SKYMSEN FSE-5000W"
+    },
+    {
+      "codigo": "052027",
+      "descricao": "PIC.CAR.PSA-22 1-60"
+    },
+    {
+      "codigo": "052035",
+      "descricao": "PIC.CAR.PSEE-98M 2-60"
+    },
+    {
+      "codigo": "052051",
+      "descricao": "PIC.CAR.PSEE-98M 2-50"
+    },
+    {
+      "codigo": "052060",
+      "descricao": "PIC.CAR.PSEE-98T 2-60"
+    }
+  ],
+  "metadata": {
+    "total_registros": 50,
+    "ultima_atualizacao": "2025-08-10",
+    "descricao": "Lista de Produtos - 50 registros extraídos dos dados reais",
+    "estrutura": {
+      "codigo": "Código único do produto (6 dígitos)",
+      "descricao": "Descrição completa do produto com especificações"
+    },
+    "categorias_identificadas": [
+      "CORTADORES",
+      "DESCASCADORES",
+      "TRITURADORES", 
+      "LIQUIDIFICADORES",
+      "EXTRATORES",
+      "ENSACADORAS",
+      "AMACIADORES",
+      "BATEDEIRAS",
+      "CILINDROS",
+      "PREPARADORES",
+      "FRITADEIRAS",
+      "MINI-SERRAS",
+      "PICADORES",
+      "SERRAS FITA"
+    ],
+    "observacoes": [
+      "Produtos da linha Skymsen para uso industrial",
+      "Códigos seguem padrão de 6 dígitos",
+      "Descrições incluem especificações técnicas (voltagem, capacidade)",
+      "Variações de 50Hz e 60Hz para diferentes mercados"
+    ]
+  }
+}

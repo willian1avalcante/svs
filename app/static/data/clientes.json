@@ -1,0 +1,364 @@
+{
+  "clientes": [
+    {
+      "codigo": "20177",
+      "razao_social": "CORCRIL COMERCIO DE REFRIGERACAO CRICIUM",
+      "municipio": "CRICIUMA",
+      "uf": "SC",
+      "telefone": "(48) 3437-5011"
+    },
+    {
+      "codigo": "20341",
+      "razao_social": "IND. E COMERCIO DE MOVEIS HIRATA LTDA",
+      "municipio": "MARILIA",
+      "uf": "SP",
+      "telefone": "(14) 3433-1777"
+    },
+    {
+      "codigo": "20433",
+      "razao_social": "MARCIAL MAQUINAS LTDA - ME.",
+      "municipio": "BLUMENAU",
+      "uf": "SC",
+      "telefone": "(47) 3323-5388"
+    },
+    {
+      "codigo": "20453",
+      "razao_social": "MERCADO DAS BALANCAS LTDA",
+      "municipio": "SAO PAULO",
+      "uf": "SP",
+      "telefone": "(11) 3311-0861"
+    },
+    {
+      "codigo": "20498",
+      "razao_social": "MAQUINBAL COM.DE BALANCAS LTDA.",
+      "municipio": "SAO PAULO",
+      "uf": "SP",
+      "telefone": "(11) 2914-1228"
+    },
+    {
+      "codigo": "20532",
+      "razao_social": "REBAL COMERCIAL LIMITADA",
+      "municipio": "SAO CAETANO DO SUL",
+      "uf": "SP",
+      "telefone": "(11) 4227-7300"
+    },
+    {
+      "codigo": "20607",
+      "razao_social": "REFRIGERACAO TIEPPO LTDA EPP",
+      "municipio": "JOACABA",
+      "uf": "SC",
+      "telefone": "(49) 3522-1207"
+    },
+    {
+      "codigo": "20685",
+      "razao_social": "TOPEMA IND.E COM.LTDA.",
+      "municipio": "DIADEMA",
+      "uf": "SP",
+      "telefone": "(11) 2134-7400"
+    },
+    {
+      "codigo": "21182",
+      "razao_social": "REFRIGERACAO RELETRON LTDA.",
+      "municipio": "RONDONOPOLIS",
+      "uf": "MT",
+      "telefone": "(66) 3426-6227"
+    },
+    {
+      "codigo": "21238",
+      "razao_social": "COMERCIAL DE REFRIGERACAO PANAN OESTE LTDA",
+      "municipio": "CAMPO GRANDE",
+      "uf": "MS",
+      "telefone": "(67) 3322-5555"
+    },
+    {
+      "codigo": "23695",
+      "razao_social": "ORGOMAQ ORGANIZACAO GOIANA DE MAQUINAS LTDA",
+      "municipio": "BRASILIA",
+      "uf": "DF",
+      "telefone": "(61) 3354-3534"
+    },
+    {
+      "codigo": "23717",
+      "razao_social": "ATLANTICA COMERCIO DE BALANCAS DE PESAGE",
+      "municipio": "CURITIBA",
+      "uf": "PR",
+      "telefone": "(41) 3345-9228"
+    },
+    {
+      "codigo": "23765",
+      "razao_social": "MONTE ALEGRE - INDUSTRIA E COMERCIO DE R",
+      "municipio": "RIBEIRAO PRETO",
+      "uf": "SP",
+      "telefone": "(16) 3797-1777"
+    },
+    {
+      "codigo": "23766",
+      "razao_social": "ACIMAQ EQUIPAMENTOS INDLS.COMLS.LTDA.",
+      "municipio": "CARIACICA",
+      "uf": "ES",
+      "telefone": "(27) 3346-5111"
+    },
+    {
+      "codigo": "23850",
+      "razao_social": "BALCENTER MAQUINAS E EQUIPAMENTOS LTDA",
+      "municipio": "SAO PAULO",
+      "uf": "SP",
+      "telefone": "(11) 3865-2236"
+    },
+    {
+      "codigo": "24320",
+      "razao_social": "LIDER MAQUINAS REGISTRADORAS E REFRIGERA",
+      "municipio": "BRASILIA",
+      "uf": "DF",
+      "telefone": "(61) 3242-3935"
+    },
+    {
+      "codigo": "24346",
+      "razao_social": "FRAMA FRANCA MAQUINAS LTDA.",
+      "municipio": "NITEROI",
+      "uf": "RJ",
+      "telefone": "(21) 2621-5502"
+    },
+    {
+      "codigo": "24394",
+      "razao_social": "CONESUL COM.DE EQUIP.DE REFRIG.LTDA.",
+      "municipio": "FOZ DO IGUACU",
+      "uf": "PR",
+      "telefone": "(45) 3028-3737"
+    },
+    {
+      "codigo": "24558",
+      "razao_social": "LONDRIPESO COM.DE BALANCAS LTDA. - M E",
+      "municipio": "LONDRINA",
+      "uf": "PR",
+      "telefone": "(43) 3329-3994"
+    },
+    {
+      "codigo": "24753",
+      "razao_social": "COMERCIO DE BALANCAS SAO ROQUE LTDA.",
+      "municipio": "SAO ROQUE",
+      "uf": "SP",
+      "telefone": "(11) 4712-5575"
+    },
+    {
+      "codigo": "24823",
+      "razao_social": "COLD FRIO REFRIGERACAO LTDA. - ME",
+      "municipio": "JOINVILLE",
+      "uf": "SC",
+      "telefone": "(47) 3439-0070"
+    },
+    {
+      "codigo": "25206",
+      "razao_social": "MAQ GEL COMERCIO DE REFRIGERACAO LTDA.",
+      "municipio": "ITU",
+      "uf": "SP",
+      "telefone": "(11) 4022-4608"
+    },
+    {
+      "codigo": "25486",
+      "razao_social": "BCE FOODSERVICE EQUIPMENT",
+      "municipio": "JOHANNESBURG",
+      "uf": "EX",
+      "telefone": "(27) 1 0001-0300"
+    },
+    {
+      "codigo": "25698",
+      "razao_social": "SAQUAREMA BALANCAS ELETRONICAS LTDA - ME",
+      "municipio": "SAQUAREMA",
+      "uf": "RJ",
+      "telefone": "(22) 2653-3291"
+    },
+    {
+      "codigo": "25909",
+      "razao_social": "IRMAOS GONCALVES COMERCIO E INDUSTRIA LT",
+      "municipio": "JARU",
+      "uf": "RO",
+      "telefone": "(69) 3521-8000"
+    },
+    {
+      "codigo": "25957",
+      "razao_social": "TRIPACON COMERCIAL LTDA",
+      "municipio": "CURITIBA",
+      "uf": "PR",
+      "telefone": "(41) 3366-6065"
+    },
+    {
+      "codigo": "25986",
+      "razao_social": "PIMENTA COMERCIO DE MAQUINAS LTDA - ME",
+      "municipio": "JOINVILLE",
+      "uf": "SC",
+      "telefone": "(47) 3432-0977"
+    },
+    {
+      "codigo": "26048",
+      "razao_social": "RELETRON MAQUINAS E EQUIPS DE REFR LTDA.",
+      "municipio": "VARZEA GRANDE",
+      "uf": "MT",
+      "telefone": "(65) 3682-1011"
+    },
+    {
+      "codigo": "26897",
+      "razao_social": "MARI ELISA BISCARO COSER",
+      "municipio": "FLORIANOPOLIS",
+      "uf": "SC",
+      "telefone": "(48) 3248-8686"
+    },
+    {
+      "codigo": "26948",
+      "razao_social": "WALLITEC COMERCIO DE MAQUINAS LTDA",
+      "municipio": "RIO DE JANEIRO",
+      "uf": "RJ",
+      "telefone": "(21) 2270-3094"
+    },
+    {
+      "codigo": "26999",
+      "razao_social": "SORVEPAN COM. E REPRES. LTDA.",
+      "municipio": "ARACAJU",
+      "uf": "SE",
+      "telefone": "(79) 3253-7500"
+    },
+    {
+      "codigo": "27018",
+      "razao_social": "INDUSTRIA E COM. DE REFRIG. MARLUCI LTDA",
+      "municipio": "FRANCISCO BELTRAO",
+      "uf": "PR",
+      "telefone": "(46) 3524-4178"
+    },
+    {
+      "codigo": "27030",
+      "razao_social": "COLD CENTER BALCOES BALANCAS E MIUDEZAS",
+      "municipio": "SAO PAULO",
+      "uf": "SP",
+      "telefone": "(11) 9 4887-9000"
+    },
+    {
+      "codigo": "27033",
+      "razao_social": "COMERCIAL DIAS EQUIPAMENTOS LTDA - EPP",
+      "municipio": "POCOS DE CALDAS",
+      "uf": "MG",
+      "telefone": "(35) 3722-3176"
+    },
+    {
+      "codigo": "27096",
+      "razao_social": "STAR COMERCIO E SERVICOS COM BALANCAS EI",
+      "municipio": "SALVADOR",
+      "uf": "BA",
+      "telefone": "(71) 3334-2099"
+    },
+    {
+      "codigo": "28919",
+      "razao_social": "MG MANUTENCAO PARA COZINHA INDUSTRIAL LTDA",
+      "municipio": "CAMPINAS",
+      "uf": "SP",
+      "telefone": "(19) 3233-9460"
+    },
+    {
+      "codigo": "29990",
+      "razao_social": "ISABEL CRISTINA CABRAL BALS.E EQ.REF.LT.",
+      "municipio": "CURITIBA",
+      "uf": "PR",
+      "telefone": "(41) 3348-1731"
+    },
+    {
+      "codigo": "30016",
+      "razao_social": "J L FREESE ME",
+      "municipio": "SANTA CRUZ DO SUL",
+      "uf": "RS",
+      "telefone": "(51) 3711-8176"
+    },
+    {
+      "codigo": "30176",
+      "razao_social": "PAULO ROBERTO OLBERMANN - ME",
+      "municipio": "SANTA CRUZ DO SUL",
+      "uf": "RS",
+      "telefone": "(51) 3715-2389"
+    },
+    {
+      "codigo": "30414",
+      "razao_social": "PAULOMAQ COM. DE BALANCAS E MAQS. LTDA",
+      "municipio": "PETROPOLIS",
+      "uf": "RJ",
+      "telefone": "(24) 3243-3773"
+    },
+    {
+      "codigo": "30574",
+      "razao_social": "J.B. DE OLIVEIRA EQUIPAMENTOS EPP",
+      "municipio": "CAMPOS DO JORDAO",
+      "uf": "SP",
+      "telefone": "(12) 3664-3331"
+    },
+    {
+      "codigo": "30824",
+      "razao_social": "FRAZILLI REFRIGERACOES LTDA.-ME",
+      "municipio": "ITAPEVA",
+      "uf": "SP",
+      "telefone": "(15) 3522-1750"
+    },
+    {
+      "codigo": "30841",
+      "razao_social": "PLASTILAR UTENSILIOS E EQUIPAMENTOS LTDA",
+      "municipio": "UBERLANDIA",
+      "uf": "MG",
+      "telefone": "(34) 3236-4620"
+    },
+    {
+      "codigo": "31079",
+      "razao_social": "R. J. A. COMERCIO E ASSISTENCIA TECNICA DE BALANCAS ELETRONICAS LTDA.",
+      "municipio": "LONDRINA",
+      "uf": "PR",
+      "telefone": "(43) 3329-3373"
+    },
+    {
+      "codigo": "31087",
+      "razao_social": "RECANTO DAS MAQUINAS SERVICOS LTDA - ME",
+      "municipio": "RECANTO DAS EMAS",
+      "uf": "DF",
+      "telefone": "(61) 3331-3044"
+    },
+    {
+      "codigo": "31234",
+      "razao_social": "CASA GRANDE EQUIPAMENTOS LTDA",
+      "municipio": "SAO PAULO",
+      "uf": "SP",
+      "telefone": "(11) 3228-7388"
+    },
+    {
+      "codigo": "31330",
+      "razao_social": "VALFORT ELETRO MECANICA LTDA-ME",
+      "municipio": "NOVA FRIBURGO",
+      "uf": "RJ",
+      "telefone": "(22) 2523-1434"
+    },
+    {
+      "codigo": "31488",
+      "razao_social": "CONTAMAQ EQUIPAMENTOS LTDA",
+      "municipio": "SAO BERNARDO DO CAMPO",
+      "uf": "SP",
+      "telefone": "(11) 4109-9324"
+    },
+    {
+      "codigo": "31645",
+      "razao_social": "FUNDICAO TECNOLUMY LTDA.",
+      "municipio": "GASPAR",
+      "uf": "SC",
+      "telefone": "(47) 3332-8236"
+    }
+  ],
+  "metadata": {
+    "total_registros": 50,
+    "ultima_atualizacao": "2025-08-10",
+    "descricao": "Lista de Clientes - 50 registros extraídos dos dados reais",
+    "estrutura": {
+      "codigo": "Código único do cliente (4-5 dígitos)",
+      "razao_social": "Nome completo da empresa",
+      "municipio": "Cidade da empresa",
+      "uf": "Estado (sigla de 2 letras)",
+      "telefone": "Número de telefone formatado"
+    },
+    "estatisticas": {
+      "estados_representados": ["SC", "SP", "MT", "MS", "DF", "PR", "ES", "RJ", "RO", "SE", "MG", "BA", "RS", "EX"],
+      "total_estados": 14,
+      "cliente_internacional": 1
+    }
+  }
+}

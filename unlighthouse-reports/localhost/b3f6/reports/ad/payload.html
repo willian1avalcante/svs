@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description"
+    content="SVS - Sistema de Vendas Skymsen. Plataforma completa para gestão de vendas, cotações, pedidos, consultas e relatórios comerciais." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SVS - Sistema de Vendas Skymsen</title>
+  <link rel="stylesheet" href="/static/css/menu.css" type="text/css" />
+  <link rel="stylesheet" href="/static/css/responsive.css" type="text/css" />
+  <link rel="stylesheet" href="/static/css/w3.css" />
+  <link rel="stylesheet" href="/static/vendor/fontawesome_700/css/all.min.css" />
+
+  <script type="text/javascript" src="/static/js/spa.js"></script>
+
+  <!-- CSS específicos de módulos -->
+  
+  <link rel="stylesheet" href="/static/css/ad.css" type="text/css" />
+  
+
+  <!-- Preload de CSS para SPA -->
+  <link rel="preload" href="/static/css/ad.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet" href="/static/css/ad.css">
+  </noscript>
+</head>
+
+<body>
+  <form name="Menu" method="POST" action="/menu" id="main-form">
+    <input type="hidden" name="sistema" value="VEN" />
+
+    <main class="container">
+      <aside class="sidebar naoimprime">
+        <header class="user-info">
+          <div class="user-details">
+            <span class="verdana10">Usuário: <strong>willian.cavalcante</strong></span>
+          </div>
+          <div class="user-actions">
+            <span class="verdana10">
+              <a href="http://www.skymsen.com.br/Intranet/cal_calendario.php"
+                class="w3-button w3-padding-small calendar-link" target="_blank" rel="noopener"
+                aria-label="Abrir calendário">
+                <i class="fas fa-calendar-days" aria-hidden="true"></i>
+              </a>
+              <input type="submit" name="cmd_atualiza" hidden class="cmd-atualiza-inline" value />
+            </span>
+          </div>
+
+          <!-- Status inline - apenas mobile -->
+          <div class="selection-status mobile-status mobile-only">
+            <div class="selection-info">
+              <span class="verdana10">TODOS REP.<br />TODOS CLI.</span>
+            </div>
+          </div>
+
+          <!-- Botão toggle do menu mobile -->
+          <button type="button" class="mobile-menu-toggle mobile-only" aria-label="Abrir/fechar menu principal"
+            aria-expanded="false" aria-controls="main-navigation"></button>
+        </header>
+
+        <nav class="menu-navigation" id="main-navigation" role="navigation" aria-label="Menu principal do sistema">
+          <div class="menu-section">
+            <button type="button" class="menu-section-header fundo_tit_menu" aria-expanded="false"
+              aria-controls="cadastro-menu" aria-label="Expandir seção Cadastro">
+              Cadastro
+            </button>
+            <div class="menu-content" id="cadastro-menu" role="group" aria-labelledby="cadastro-header">
+              <div class="menu-item">
+                <button type="button" class="menu-button-inline active"
+                  data-module="ad" aria-label="Navegar para AD">
+                  AD
+                </button>
+              </div>
+              <div class="menu-item">
+                <button type="button" class="menu-button-inline" data-module="bloqueio"
+                  aria-label="Navegar para Bloqueio de Produtos">
+                  Bloqueio de Produtos
+                </button>
+              </div>
+              <div class="menu-item">
+                <button type="button" class="menu-button-inline" data-module="cotacoes"
+                  aria-label="Navegar para Cadastro de Cotações">
+                  Cad.Cotações
+                </button>
+              </div>
+              <div class="menu-item">
+                <button type="button" class="menu-button-inline" data-module="pedidos"
+                  aria-label="Navegar para Cadastro de Pedidos">
+                  Cad.Pedidos
+                </button>
+              </div>
+              <div class="menu-item">
+                <button type="button" class="menu-button-inline" data-module="transportadoras"
+                  aria-label="Navegar para Transportadoras para SVS">
+                  Transportadoras p/SVS
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-section">
+            <button type="button" class="menu-section-header fundo_tit_menu" aria-expanded="false"
+              aria-controls="consultas-menu" aria-label="Expandir seção Consultas">
+              Consultas
+            </button>
+            <div class="menu-content" id="consultas-menu" role="group" aria-labelledby="consultas-header">
+              <div class="menu-item">
+                <input type="submit" name="Escolha" class="menu-button-inline" value="Cargas Pendentes"
+                  aria-label="Navegar para Cargas Pendentes" />
+              </div>
+              <div class="menu-item">
+                <input type="submit" name="Escolha" class="menu-button-inline" value="Classes/Clientes"
+                  aria-label="Navegar para Classes e Clientes" />
+              </div>
+              <div class="menu-item">
+                <input type="submit" name="Escolha" class="menu-button-inline" value="Comissões"
+                  aria-label="Navegar para Comissões" />
+              </div>
+              <div class="menu-item">
+                <input type="submit" name="Escolha" class="menu-button-inline" value="Cotações"
+                  aria-label="Navegar para Cotações" />
+              </div>
+              <div class="menu-item">
+                <input type="submit" name="Escolha" class="menu-button-inline" value="Espelho de Nota"
+                  aria-label="Navegar para Espelho de Nota" />
+              </div>
+              <div class="menu-item">
+                <input type="submit" name="Escolha" class="menu-button-inline" value="Estoques de Produtos"
+                  aria-label="Navegar para Estoques de Produtos" />
+              </div>
+              <div class="menu-item">
+                <input type="submit" name="Escolha" class="menu-button-inline" value="Fat.p/Produto"
+                  aria-label="Navegar para Faturamento por Produto" />
+              </div>
+              <div class="menu-item">
+                <input type="submit" name="Escolha" class="menu-button-inline" value="Faturas 2022"
+                  aria-label="Navegar para Faturas 2022" />
+              </div>
+              <div class="menu-item">
+                <input type="submit" name="Escolha" class="menu-button-inline" value="Faturas até 2021"
+                  aria-label="Navegar para Faturas até 2021" />
+              </div>
+              <div class="menu-item">
+                <input type="submit" name="Escolha" class="menu-button-inline" value="Pedidos"
+                  aria-label="Navegar para Pedidos" />
+              </div>
+              <div class="menu-item">
+                <input type="submit" name="Escolha" class="menu-button-inline" value="Pedidos Enviados"
+                  aria-label="Navegar para Pedidos Enviados" />
+              </div>
+              <div class="menu-item">
+                <input type="submit" name="Escolha" class="menu-button-inline" value="Pedidos Pendentes"
+                  aria-label="Navegar para Pedidos Pendentes" />
+              </div>
+              <div class="menu-item">
+                <input type="submit" name="Escolha" class="menu-button-inline" value="Pedidos-Entrega"
+                  aria-label="Navegar para Pedidos Entrega" />
+              </div>
+              <div class="menu-item">
+                <input type="submit" name="Escolha" class="menu-button-inline" value="Pedidos-Resumos"
+                  aria-label="Navegar para Pedidos Resumos" />
+              </div>
+              <div class="menu-item">
+                <input type="submit" name="Escolha" class="menu-button-inline" value="Prazo de Entrega por Dia"
+                  aria-label="Navegar para Prazo de Entrega por Dia" />
+              </div>
+              <div class="menu-item">
+                <input type="submit" name="Escolha" class="menu-button-inline" value="Previsão Data de Entrega"
+                  aria-label="Navegar para Previsão Data de Entrega" />
+              </div>
+              <div class="menu-item">
+                <input type="submit" name="Escolha" class="menu-button-inline" value="Reservas"
+                  aria-label="Navegar para Reservas" />
+              </div>
+              <div class="menu-item">
+                <input type="submit" name="Escolha" class="menu-button-inline" value="Resumo Faturamento"
+                  aria-label="Navegar para Resumo de Faturamento" />
+              </div>
+              <div class="menu-item">
+                <input type="submit" name="Escolha" class="menu-button-inline" value="Resumo Mensal"
+                  aria-label="Navegar para Resumo Mensal" />
+              </div>
+              <div class="menu-item">
+                <input type="submit" name="Escolha" class="menu-button-inline" value="Títulos Baixados"
+                  aria-label="Navegar para Títulos Baixados" />
+              </div>
+              <div class="menu-item">
+                <input type="submit" name="Escolha" class="menu-button-inline" value="Títulos Pendentes"
+                  aria-label="Navegar para Títulos Pendentes" />
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-section">
+            <button type="button" class="menu-section-header fundo_tit_menu" aria-expanded="false"
+              aria-controls="precos-menu" aria-label="Expandir seção Listas de Preços">
+              Listas de Preços
+            </button>
+            <div class="menu-content" id="precos-menu" role="group" aria-labelledby="precos-header">
+              <div class="menu-item">
+                <input type="submit" name="Escolha" class="menu-button-inline" value="Consulta CR na LP"
+                  aria-label="Navegar para Consulta CR na Lista de Preços" />
+              </div>
+              <div class="menu-item">
+                <input type="submit" name="Escolha" class="menu-button-inline" value="LP Componentes"
+                  aria-label="Navegar para Lista de Preços de Componentes" />
+              </div>
+              <div class="menu-item">
+                <input type="submit" name="Escolha" class="menu-button-inline" value="LP Produtos"
+                  aria-label="Navegar para Lista de Preços de Produtos" />
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-section">
+            <button type="button" class="menu-section-header fundo_tit_menu" aria-expanded="false"
+              aria-controls="selecoes-menu" aria-label="Expandir seção Seleções">
+              Seleções
+            </button>
+            <div class="menu-content" id="selecoes-menu" role="group" aria-labelledby="selecoes-header">
+              <div class="menu-item">
+                <input type="submit" name="Escolha" class="menu-button-inline" value="Seleciona Cliente"
+                  aria-label="Navegar para Selecionar Cliente" />
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-section">
+            <button type="button" class="menu-section-header fundo_tit_menu" aria-expanded="false"
+              aria-controls="usuario-menu" aria-label="Expandir seção Usuário">
+              Usuário
+            </button>
+            <div class="menu-content" id="usuario-menu" role="group" aria-labelledby="usuario-header">
+              <div class="menu-item">
+                <input type="submit" name="cmd_muda_senha" class="menu-button-inline" value="Alterar Senha"
+                  aria-label="Navegar para Alterar Senha" />
+              </div>
+              <div class="menu-item">
+                <input type="submit" name="cmd_sair_sistema" class="menu-button-inline" value="Sair do Sistema"
+                  aria-label="Sair do Sistema" />
+              </div>
+            </div>
+          </div>
+        </nav>
+
+        <!-- Área de status desktop - apenas desktop -->
+        <div class="selection-status desktop-status desktop-only">
+          <div class="selection-info">
+            <span class="verdana10">TODOS REPRESENTANTES.<br />TODOS CLIENTES</span>
+          </div>
+        </div>
+      </aside>
+
+      <section class="content-area" id="content-area">
+        
+        <main class="ad-module" role="main" aria-label="Módulo de Autorização de Devolução">
+   <form name="frm_AD" method="POST" action="/ad" class="ad-form" novalidate>
+
+      <!-- Cabeçalho: Seleção de AD -->
+      <section class="ad-header" aria-labelledby="ad-selection-title">
+         <div class="form-group">
+            <label for="ad-select" class="form-label" id="ad-selection-title">
+               Autorização de Devolução (AD):
+            </label>
+            <select id="ad-select" name="AD" class="form-select" onchange="atualiza()" aria-describedby="ad-help">
+               <option value="0" selected>Nova Autorização de Devolução</option>
+            </select>
+            <small id="ad-help" class="form-help">
+               Selecione uma AD existente ou crie uma nova
+            </small>
+         </div>
+      </section>
+
+      <!-- Dados do Cliente -->
+      <section class="client-section" aria-labelledby="client-title">
+         <h2 id="client-title" class="section-title">Dados do Cliente</h2>
+
+         <div class="client-selection">
+            <div class="form-group inline">
+               <label for="client-code" class="form-label">Cliente:</label>
+               <input type="text" id="client-code" name="Cliente_CD" class="form-input form-input-small" maxlength="6"
+                  placeholder="Código" onchange="atualiza()" aria-describedby="client-code-help" />
+               <small id="client-code-help" class="form-help">
+                  Digite o código do cliente
+               </small>
+            </div>
+
+            <div class="form-group">
+               <label for="client-select" class="sr-only">Nome do
+                  Cliente</label>
+               <select id="client-select" name="Cliente" class="form-select" onchange="atualiza()"
+                  aria-describedby="client-select-help">
+                  <option value>Selecione um cliente...</option>
+               </select>
+               <small id="client-select-help" class="form-help">
+                  Cliente selecionado aparecerá aqui
+               </small>
+            </div>
+         </div>
+
+         <!-- Endereço do Cliente (readonly) -->
+         <div class="client-address" aria-labelledby="address-title">
+            <h3 id="address-title" class="subsection-title sr-only">
+               Endereço do Cliente
+            </h3>
+            <div class="address-grid">
+               <div class="address-item">
+                  <span class="address-label">Endereço:</span>
+                  <span class="address-value" id="client-address">RUA 5</span>
+               </div>
+               <div class="address-item">
+                  <span class="address-label">Cidade:</span>
+                  <span class="address-value" id="client-city">JATAÍ-GO</span>
+               </div>
+               <div class="address-item">
+                  <span class="address-label">Fone:</span>
+                  <span class="address-value" id="client-phone">(64)
+                     8439-5287</span>
+               </div>
+               <div class="address-item">
+                  <span class="address-label">Fax:</span>
+                  <span class="address-value" id="client-fax">-</span>
+               </div>
+            </div>
+         </div>
+      </section>
+
+      <!-- Dados das Notas Fiscais -->
+      <section class="invoices-section" aria-labelledby="invoices-title">
+         <h2 id="invoices-title" class="section-title">Notas Fiscais</h2>
+
+         <div class="form-group">
+            <label for="nf-cliente" class="form-label">
+               Nota Fiscal do Cliente (NF de Entrada):
+            </label>
+            <input type="text" id="nf-cliente" name="nr_nf_cliente" class="form-input" maxlength="50"
+               placeholder="Número da nota fiscal do cliente" aria-describedby="nf-cliente-help" />
+            <small id="nf-cliente-help" class="form-help">
+               Informe o número da nota fiscal de entrada
+            </small>
+         </div>
+
+         <div class="form-group">
+            <label for="nf-siemsen" class="form-label">
+               Nota Fiscal da Siemsen (NF de Saída):
+            </label>
+            <div class="input-group">
+               <input type="text" id="nf-siemsen" name="nr_nf_siemsen" class="form-input" maxlength="50"
+                  placeholder="Número da nota fiscal de saída" aria-describedby="nf-siemsen-help" />
+               <button type="submit" name="cmd_importar" class="btn btn-secondary"
+                  aria-label="Importar itens da nota fiscal">
+                  Importar Itens da Nota
+               </button>
+            </div>
+            <small id="nf-siemsen-help" class="form-help">
+               Nota fiscal de saída da Siemsen para importar itens
+               automaticamente
+            </small>
+         </div>
+      </section>
+
+      <!-- Dados do Transporte -->
+      <section class="transport-section" aria-labelledby="transport-title">
+         <h2 id="transport-title" class="section-title">Transporte</h2>
+
+         <div class="form-group">
+            <label for="tipo-frete" class="form-label">Tipo de Frete:</label>
+            <select id="tipo-frete" name="tp_frete" class="form-select" aria-describedby="frete-help">
+               <option value="C" selected>Pago pelo Cliente</option>
+               <option value="S">Pago pela Siemsen</option>
+               <option value="T">Pago pela Transportadora</option>
+            </select>
+            <small id="frete-help" class="form-help">
+               Selecione quem será responsável pelo pagamento do frete
+            </small>
+         </div>
+
+         <div class="transport-selection">
+            <div class="form-group inline">
+               <label for="transp-code" class="form-label">Transportadora:</label>
+               <input type="text" id="transp-code" name="cd_transp" class="form-input form-input-small" maxlength="6"
+                  placeholder="Código" onchange="atualiza()" aria-describedby="transp-code-help" />
+               <small id="transp-code-help" class="form-help">
+                  Código da transportadora
+               </small>
+            </div>
+
+            <div class="form-group">
+               <label for="transp-select" class="sr-only">Nome da
+                  Transportadora</label>
+               <select id="transp-select" name="Transp" class="form-select" aria-describedby="transp-select-help">
+                  <option value>Selecione uma transportadora...</option>
+               </select>
+               <small id="transp-select-help" class="form-help">
+                  Transportadora selecionada
+               </small>
+            </div>
+         </div>
+      </section>
+
+      <!-- Motivos da Devolução -->
+      <section class="reasons-section" aria-labelledby="reasons-title">
+         <h2 id="reasons-title" class="section-title">Motivos da Devolução</h2>
+
+         <fieldset class="reasons-grid">
+            <legend class="sr-only">Selecione os motivos da devolução</legend>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot01" name="mot01" value="OK01" class="form-checkbox" />
+               <label for="mot01" class="checkbox-label">
+                  Preço ou prazo não confere com o pedido (1)
+               </label>
+            </div>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot02" name="mot02" value="OK02" class="form-checkbox" />
+               <label for="mot02" class="checkbox-label">
+                  Mercadoria não confere com o pedido (2)
+               </label>
+            </div>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot03" name="mot03" value="OK03" class="form-checkbox" />
+               <label for="mot03" class="checkbox-label">
+                  Cliente alega não ter feito o pedido (3)
+               </label>
+            </div>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot04" name="mot04" value="OK04" class="form-checkbox" />
+               <label for="mot04" class="checkbox-label">
+                  Produto com defeito (4)
+               </label>
+            </div>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot05" name="mot05" value="OK05" class="form-checkbox" />
+               <label for="mot05" class="checkbox-label">
+                  Conserto na garantia (5)
+               </label>
+            </div>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot06" name="mot06" value="OK06" class="form-checkbox" />
+               <label for="mot06" class="checkbox-label">
+                  Mercadoria para troca por outro produto (6)
+               </label>
+            </div>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot07" name="mot07" value="OK07" class="form-checkbox" />
+               <label for="mot07" class="checkbox-label">
+                  Retorno de demonstração ou teste (7)
+               </label>
+            </div>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot08" name="mot08" value="OK08" class="form-checkbox" />
+               <label for="mot08" class="checkbox-label">
+                  Transportadora não entregou no prazo solicitado (8)
+               </label>
+            </div>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot09" name="mot09" value="OK09" class="form-checkbox" />
+               <label for="mot09" class="checkbox-label">
+                  Acerto de contas (9)
+               </label>
+            </div>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot10" name="mot10" value="OK10" class="form-checkbox" />
+               <label for="mot10" class="checkbox-label">
+                  Cliente comprou o item/produto errado (10)
+               </label>
+            </div>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot11" name="mot11" value="OK11" class="form-checkbox" />
+               <label for="mot11" class="checkbox-label">
+                  Conserto fora da garantia (11)
+               </label>
+            </div>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot12" name="mot12" value="OK12" class="form-checkbox" />
+               <label for="mot12" class="checkbox-label">
+                  Retorno de substituição (12)
+               </label>
+            </div>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot13" name="mot13" value="OK13" class="form-checkbox" />
+               <label for="mot13" class="checkbox-label">
+                  Mercadoria devolvida (13)
+               </label>
+            </div>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot14" name="mot14" value="OK14" class="form-checkbox" />
+               <label for="mot14" class="checkbox-label">
+                  Avaria de Transporte (14)
+               </label>
+            </div>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot15" name="mot15" value="OK15" class="form-checkbox" />
+               <label for="mot15" class="checkbox-label">
+                  Recusa da Nota Fiscal (15)
+               </label>
+            </div>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot16" name="mot16" value="OK16" class="form-checkbox" />
+               <label for="mot16" class="checkbox-label">
+                  Componente avariado - ATA (16)
+               </label>
+            </div>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot17" name="mot17" value="OK17" class="form-checkbox" />
+               <label for="mot17" class="checkbox-label">
+                  Pedido duplicado (17)
+               </label>
+            </div>
+         </fieldset>
+      </section>
+
+      <!-- Observações -->
+      <section class="observations-section" aria-labelledby="observations-title">
+         <h2 id="observations-title" class="section-title">
+            Observações e Anotações
+         </h2>
+
+         <div class="form-group">
+            <label for="observacoes" class="form-label">
+               <strong>Observações:</strong>
+            </label>
+            <textarea id="observacoes" name="dn_observ" class="form-textarea" rows="6"
+               placeholder="Digite as observações sobre a devolução..." aria-describedby="obs-help"></textarea>
+            <small id="obs-help" class="form-help">
+               Observações que serão impressas na AD
+            </small>
+         </div>
+
+         <div class="form-group">
+            <label for="anotacoes-internas" class="form-label">
+               <strong>Anotações Internas (não serão impressas na AD):</strong>
+            </label>
+            <textarea id="anotacoes-internas" name="dn_observ_internas" class="form-textarea" rows="6"
+               placeholder="Anotações internas para controle..." aria-describedby="internal-help"></textarea>
+            <small id="internal-help" class="form-help">
+               Anotações apenas para uso interno, não aparecem na AD impressa
+            </small>
+         </div>
+
+         <div class="form-group">
+            <label for="responsavel" class="form-label">Responsável:</label>
+            <select id="responsavel" name="dn_responsavel" class="form-select" aria-describedby="resp-help">
+               <option value="CLIENTE" selected>Cliente</option>
+               <option value="ATA">Assistente Técnico</option>
+               <option value="REPRESENTANTE">Representante</option>
+               <option value="SIEMSEN">Siemsen</option>
+            </select>
+            <small id="resp-help" class="form-help">
+               Quem é o responsável pela devolução
+            </small>
+         </div>
+      </section>
+
+      <!-- Itens da Devolução -->
+      <section class="items-section" aria-labelledby="items-title">
+         <h2 id="items-title" class="section-title">Itens da Devolução</h2>
+
+         <div class="items-table" role="table" aria-label="Tabela de itens para devolução">
+            <div class="items-header" role="row">
+               <div class="item-col-code" role="columnheader">Código</div>
+               <div class="item-col-qty" role="columnheader">Quantidade</div>
+               <div class="item-col-unit" role="columnheader">Unidade</div>
+               <div class="item-col-desc" role="columnheader">Descrição</div>
+               <div class="item-col-serial" role="columnheader">Série</div>
+               <div class="item-col-op" role="columnheader">Operação</div>
+            </div>
+
+            <div class="items-row" role="row">
+               <div class="item-col-code" role="cell">
+                  <input type="text" id="cd-item" name="cd_item" class="form-input form-input-small" maxlength="6"
+                     placeholder="Código" onchange="codigo_item()" aria-label="Código do item" />
+               </div>
+               <div class="item-col-qty" role="cell">
+                  <input type="number" id="qt-item" name="qt_item" class="form-input form-input-small" min="0" step="1"
+                     placeholder="Qtd" aria-label="Quantidade do item" />
+               </div>
+               <div class="item-col-unit" role="cell">
+                  <span class="placeholder-text">-</span>
+               </div>
+               <div class="item-col-desc" role="cell">
+                  <span class="placeholder-text">-</span>
+               </div>
+               <div class="item-col-serial" role="cell">
+                  <span class="placeholder-text">-</span>
+               </div>
+               <div class="item-col-op" role="cell">
+                  <span class="placeholder-text">-</span>
+               </div>
+            </div>
+         </div>
+      </section>
+
+      <!-- Ações do Formulário -->
+      <section class="actions-section" aria-labelledby="actions-title">
+         <h2 id="actions-title" class="sr-only">Ações do Formulário</h2>
+
+         <div class="form-actions">
+            <button type="submit" name="cmd_Grava" class="btn btn-secondary" aria-label="Atualizar dados da AD">
+               Atualizar Dados da AD
+            </button>
+
+            <button type="submit" name="cmd_confirma" class="btn btn-primary" aria-label="Gravar AD definitivamente">
+               Gravar AD
+            </button>
+         </div>
+      </section>
+
+      <!-- Campo hidden para controle de execução -->
+      <input type="hidden" name="Execucao" value />
+   </form>
+</main>
+        
+      </section>
+    </main>
+
+    <footer class="footer">
+      <input type="hidden" name="Execucao" value />
+    </footer>
+  </form>
+
+  <script type="text/javascript" src="/static/js/menu.js"></script>
+  <script type="text/javascript" src="/static/js/ad.js"></script>
+</body>
+
+</html>

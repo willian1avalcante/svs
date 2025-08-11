@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="description"
+      content="SVS - Sistema de Vendas Skymsen. Plataforma completa para gestão de vendas, cotações, pedidos, consultas e relatórios comerciais."
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SVS - Sistema de Vendas Skymsen</title>
+    <link rel="stylesheet" href="/static/css/menu.css" type="text/css" />
+    <link rel="stylesheet" href="/static/css/responsive.css" type="text/css" />
+    <link rel="stylesheet" href="/static/css/w3.css" />
+    <link
+      rel="stylesheet"
+      href="/static/vendor/fontawesome_700/css/all.min.css"
+    />
+    <script type="text/javascript" src="/static/js/menu.js"></script>
+  </head>
+
+  <body>
+    <form
+      name="Menu"
+      method="POST"
+      action="https://www.skymsen.com.br/svs/menu.php"
+    >
+      <input type="hidden" name="sistema" value="VEN" />
+
+      <main class="container">
+        <aside class="sidebar naoimprime">
+          <header class="user-info">
+            <div class="user-details">
+              <span class="verdana10"
+                >Usuário: <strong>willian.cavalcante</strong></span
+              >
+            </div>
+            <div class="user-actions">
+              <span class="verdana10">
+                <a
+                  href="http://www.skymsen.com.br/Intranet/cal_calendario.php"
+                  class="w3-button w3-padding-small calendar-link"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="Abrir calendário"
+                >
+                  <i class="fas fa-calendar-days" aria-hidden="true"></i>
+                </a>
+                <input
+                  type="submit"
+                  name="cmd_atualiza"
+                  hidden
+                  class="cmd-atualiza-inline"
+                  value
+                />
+              </span>
+            </div>
+
+            <!-- Status inline - apenas mobile -->
+            <div class="selection-status mobile-status mobile-only">
+              <div class="selection-info">
+                <span class="verdana10">TODOS REP.<br />TODOS CLI.</span>
+              </div>
+            </div>
+
+            <!-- Botão toggle do menu mobile -->
+            <button
+              type="button"
+              class="mobile-menu-toggle mobile-only"
+              aria-label="Abrir/fechar menu principal"
+              aria-expanded="false"
+              aria-controls="main-navigation"
+            ></button>
+          </header>
+
+          <nav
+            class="menu-navigation"
+            id="main-navigation"
+            role="navigation"
+            aria-label="Menu principal do sistema"
+          >
+            <div class="menu-section">
+              <button
+                type="button"
+                class="menu-section-header fundo_tit_menu"
+                aria-expanded="false"
+                aria-controls="cadastro-menu"
+                aria-label="Expandir seção Cadastro"
+              >
+                Cadastro
+              </button>
+              <div
+                class="menu-content"
+                id="cadastro-menu"
+                role="group"
+                aria-labelledby="cadastro-header"
+              >
+                <div class="menu-item">
+                  <input
+                    type="submit"
+                    name="Escolha"
+                    class="menu-button-inline"
+                    value="AD"
+                    aria-label="Navegar para AD"
+                  />
+                </div>
+                <div class="menu-item">
+                  <input
+                    type="submit"
+                    name="Escolha"
+                    class="menu-button-inline"
+                    value="Bloqueio de Produtos"
+                    aria-label="Navegar para Bloqueio de Produtos"
+                  />
+                </div>
+                <div class="menu-item">
+                  <input
+                    type="submit"
+                    name="Escolha"
+                    class="menu-button-inline"
+                    value="Cad.Cotações"
+                    aria-label="Navegar para Cadastro de Cotações"
+                  />
+                </div>
+                <div class="menu-item">
+                  <input
+                    type="submit"
+                    name="Escolha"
+                    class="menu-button-inline"
+                    value="Cad.Pedidos"
+                    aria-label="Navegar para Cadastro de Pedidos"
+                  />
+                </div>
+                <div class="menu-item">
+                  <input
+                    type="submit"
+                    name="Escolha"
+                    class="menu-button-inline"
+                    value="Transportadoras p/SVS"
+                    aria-label="Navegar para Transportadoras para SVS"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="menu-section">
+              <button
+                type="button"
+                class="menu-section-header fundo_tit_menu"
+                aria-expanded="false"
+                aria-controls="consultas-menu"
+                aria-label="Expandir seção Consultas"
+              >
+                Consultas
+              </button>
+              <div
+                class="menu-content"
+                id="consultas-menu"
+                role="group"
+                aria-labelledby="consultas-header"
+              >
+                <div class="menu-item">
+                  <input
+                    type="submit"
+                    name="Escolha"
+                    class="menu-button-inline"
+                    value="Cargas Pendentes"
+                    aria-label="Navegar para Cargas Pendentes"
+                  />
+                </div>
+                <div class="menu-item">
+                  <input
+                    type="submit"
+                    name="Escolha"
+                    class="menu-button-inline"
+                    value="Classes/Clientes"
+                    aria-label="Navegar para Classes e Clientes"
+                  />
+                </div>
+                <div class="menu-item">
+                  <input
+                    type="submit"
+                    name="Escolha"
+                    class="menu-button-inline"
+                    value="Comissões"
+                    aria-label="Navegar para Comissões"
+                  />
+                </div>
+                <div class="menu-item">
+                  <input
+                    type="submit"
+                    name="Escolha"
+                    class="menu-button-inline"
+                    value="Cotações"
+                    aria-label="Navegar para Cotações"
+                  />
+                </div>
+                <div class="menu-item">
+                  <input
+                    type="submit"
+                    name="Escolha"
+                    class="menu-button-inline"
+                    value="Espelho de Nota"
+                    aria-label="Navegar para Espelho de Nota"
+                  />
+                </div>
+                <div class="menu-item">
+                  <input
+                    type="submit"
+                    name="Escolha"
+                    class="menu-button-inline"
+                    value="Estoques de Produtos"
+                    aria-label="Navegar para Estoques de Produtos"
+                  />
+                </div>
+                <div class="menu-item">
+                  <input
+                    type="submit"
+                    name="Escolha"
+                    class="menu-button-inline"
+                    value="Fat.p/Produto"
+                    aria-label="Navegar para Faturamento por Produto"
+                  />
+                </div>
+                <div class="menu-item">
+                  <input
+                    type="submit"
+                    name="Escolha"
+                    class="menu-button-inline"
+                    value="Faturas 2022"
+                    aria-label="Navegar para Faturas 2022"
+                  />
+                </div>
+                <div class="menu-item">
+                  <input
+                    type="submit"
+                    name="Escolha"
+                    class="menu-button-inline"
+                    value="Faturas até 2021"
+                    aria-label="Navegar para Faturas até 2021"
+                  />
+                </div>
+                <div class="menu-item">
+                  <input
+                    type="submit"
+                    name="Escolha"
+                    class="menu-button-inline"
+                    value="Pedidos"
+                    aria-label="Navegar para Pedidos"
+                  />
+                </div>
+                <div class="menu-item">
+                  <input
+                    type="submit"
+                    name="Escolha"
+                    class="menu-button-inline"
+                    value="Pedidos Enviados"
+                    aria-label="Navegar para Pedidos Enviados"
+                  />
+                </div>
+                <div class="menu-item">
+                  <input
+                    type="submit"
+                    name="Escolha"
+                    class="menu-button-inline"
+                    value="Pedidos Pendentes"
+                    aria-label="Navegar para Pedidos Pendentes"
+                  />
+                </div>
+                <div class="menu-item">
+                  <input
+                    type="submit"
+                    name="Escolha"
+                    class="menu-button-inline"
+                    value="Pedidos-Entrega"
+                    aria-label="Navegar para Pedidos Entrega"
+                  />
+                </div>
+                <div class="menu-item">
+                  <input
+                    type="submit"
+                    name="Escolha"
+                    class="menu-button-inline"
+                    value="Pedidos-Resumos"
+                    aria-label="Navegar para Pedidos Resumos"
+                  />
+                </div>
+                <div class="menu-item">
+                  <input
+                    type="submit"
+                    name="Escolha"
+                    class="menu-button-inline"
+                    value="Prazo de Entrega por Dia"
+                    aria-label="Navegar para Prazo de Entrega por Dia"
+                  />
+                </div>
+                <div class="menu-item">
+                  <input
+                    type="submit"
+                    name="Escolha"
+                    class="menu-button-inline"
+                    value="Previsão Data de Entrega"
+                    aria-label="Navegar para Previsão Data de Entrega"
+                  />
+                </div>
+                <div class="menu-item">
+                  <input
+                    type="submit"
+                    name="Escolha"
+                    class="menu-button-inline"
+                    value="Reservas"
+                    aria-label="Navegar para Reservas"
+                  />
+                </div>
+                <div class="menu-item">
+                  <input
+                    type="submit"
+                    name="Escolha"
+                    class="menu-button-inline"
+                    value="Resumo Faturamento"
+                    aria-label="Navegar para Resumo de Faturamento"
+                  />
+                </div>
+                <div class="menu-item">
+                  <input
+                    type="submit"
+                    name="Escolha"
+                    class="menu-button-inline"
+                    value="Resumo Mensal"
+                    aria-label="Navegar para Resumo Mensal"
+                  />
+                </div>
+                <div class="menu-item">
+                  <input
+                    type="submit"
+                    name="Escolha"
+                    class="menu-button-inline"
+                    value="Títulos Baixados"
+                    aria-label="Navegar para Títulos Baixados"
+                  />
+                </div>
+                <div class="menu-item">
+                  <input
+                    type="submit"
+                    name="Escolha"
+                    class="menu-button-inline"
+                    value="Títulos Pendentes"
+                    aria-label="Navegar para Títulos Pendentes"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="menu-section">
+              <button
+                type="button"
+                class="menu-section-header fundo_tit_menu"
+                aria-expanded="false"
+                aria-controls="precos-menu"
+                aria-label="Expandir seção Listas de Preços"
+              >
+                Listas de Preços
+              </button>
+              <div
+                class="menu-content"
+                id="precos-menu"
+                role="group"
+                aria-labelledby="precos-header"
+              >
+                <div class="menu-item">
+                  <input
+                    type="submit"
+                    name="Escolha"
+                    class="menu-button-inline"
+                    value="Consulta CR na LP"
+                    aria-label="Navegar para Consulta CR na Lista de Preços"
+                  />
+                </div>
+                <div class="menu-item">
+                  <input
+                    type="submit"
+                    name="Escolha"
+                    class="menu-button-inline"
+                    value="LP Componentes"
+                    aria-label="Navegar para Lista de Preços de Componentes"
+                  />
+                </div>
+                <div class="menu-item">
+                  <input
+                    type="submit"
+                    name="Escolha"
+                    class="menu-button-inline"
+                    value="LP Produtos"
+                    aria-label="Navegar para Lista de Preços de Produtos"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="menu-section">
+              <button
+                type="button"
+                class="menu-section-header fundo_tit_menu"
+                aria-expanded="false"
+                aria-controls="selecoes-menu"
+                aria-label="Expandir seção Seleções"
+              >
+                Seleções
+              </button>
+              <div
+                class="menu-content"
+                id="selecoes-menu"
+                role="group"
+                aria-labelledby="selecoes-header"
+              >
+                <div class="menu-item">
+                  <input
+                    type="submit"
+                    name="Escolha"
+                    class="menu-button-inline"
+                    value="Seleciona Cliente"
+                    aria-label="Navegar para Selecionar Cliente"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="menu-section">
+              <button
+                type="button"
+                class="menu-section-header fundo_tit_menu"
+                aria-expanded="false"
+                aria-controls="usuario-menu"
+                aria-label="Expandir seção Usuário"
+              >
+                Usuário
+              </button>
+              <div
+                class="menu-content"
+                id="usuario-menu"
+                role="group"
+                aria-labelledby="usuario-header"
+              >
+                <div class="menu-item">
+                  <input
+                    type="submit"
+                    name="cmd_muda_senha"
+                    class="menu-button-inline"
+                    value="Alterar Senha"
+                    aria-label="Navegar para Alterar Senha"
+                  />
+                </div>
+                <div class="menu-item">
+                  <input
+                    type="submit"
+                    name="cmd_sair_sistema"
+                    class="menu-button-inline"
+                    value="Sair do Sistema"
+                    aria-label="Sair do Sistema"
+                  />
+                </div>
+              </div>
+            </div>
+          </nav>
+
+          <!-- Área de status desktop - apenas desktop -->
+          <div class="selection-status desktop-status desktop-only">
+            <div class="selection-info">
+              <span class="verdana10"
+                >TODOS REPRESENTANTES.<br />TODOS CLIENTES</span
+              >
+            </div>
+          </div>
+        </aside>
+
+        <section class="content-area">
+          <!-- Área de conteúdo - agora ocupa a maior parte da tela em mobile -->
+        </section>
+      </main>
+
+      <footer class="footer">
+        <input type="hidden" name="Execucao" value />
+      </footer>
+    </form>
+  </body>
+</html>

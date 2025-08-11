@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /api/
+Allow: /
+
+# Este é um sistema interno de intranet
+# Não deve ser indexado por mecanismos de busca externos

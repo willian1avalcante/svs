@@ -1,0 +1,343 @@
+<!-- NAVBAR COMPONENT -->
+<nav class="navbar-svs" role="navigation" aria-label="Navegação principal">
+
+  <!-- Logo/Brand -->
+  <div class="marca-navbar">
+    <div class="icone-marca"></div>
+    <span class="texto-marca">SVS</span>
+  </div>
+
+  <!-- Área central -->
+  <div class="centro-navbar">
+    <div class="status-selecao">
+      <span class="texto-status">TODOS REPRESENTANTES<br>TODOS CLIENTES</span>
+    </div>
+  </div>
+
+  <!-- Ações do usuário -->
+  <div class="acoes-navbar">
+
+    <!-- Link do calendário -->
+    <a href="http://www.skymsen.com.br/Intranet/cal_calendario.php" class="botao-acao-navbar botao-calendario"
+      target="_blank" rel="noopener" title="Abrir calendário" aria-label="Abrir calendário">
+      <i class="fas fa-calendar-days" aria-hidden="true"></i>
+    </a>
+
+    <!-- Dropdown do usuário -->
+    <div class="dropdown-usuario">
+      <button type="button" class="botao-acao-navbar botao-usuario" aria-label="Menu do usuário" aria-expanded="false">
+        <i class="fas fa-user-circle" aria-hidden="true"></i>
+        <span class="nome-usuario">willian.cavalcante</span>
+        <i class="fas fa-chevron-down seta-usuario" aria-hidden="true"></i>
+      </button>
+
+      <div class="menu-usuario">
+        <div class="item-menu-usuario">
+          <button type="button" class="botao-menu-usuario" data-action="change-password"
+            aria-label="Alterar senha do usuário">
+            <i class="fas fa-key"></i>
+            <span>Alterar Senha</span>
+          </button>
+        </div>
+        <div class="item-menu-usuario">
+          <button type="button" class="botao-menu-usuario botao-sair" data-action="logout" aria-label="Sair do sistema">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Sair do Sistema</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botão do menu principal -->
+    <button type="button" class="botao-acao-navbar botao-menu" aria-label="Abrir/fechar menu principal"
+      aria-expanded="false">
+      <div class="icone-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <span class="texto-menu">Menu</span>
+    </button>
+
+  </div>
+</nav>
+
+<!-- OVERLAY PARA FECHAR MENU -->
+<div class="overlay-menu"></div>
+
+<!-- MENU DROPDOWN RETRÁTIL -->
+<div class="dropdown-menu">
+
+  <!-- BUSCA RÁPIDA - NOVA FEATURE -->
+  <div class="busca-rapida-container">
+    <div class="busca-rapida">
+      <i class="fas fa-search icone-busca-rapida" aria-hidden="true"></i>
+      <input type="text" class="input-busca-rapida" id="busca-rapida-input"
+        placeholder="Digite 2+ letras para buscar módulos..." autocomplete="off" aria-label="Busca rápida de módulos">
+      <button type="button" class="limpar-busca" id="limpar-busca" aria-label="Limpar busca" title="Limpar busca">
+        <i class="fas fa-times"></i>
+      </button>
+      <span class="contador-resultados" id="contador-resultados">
+        21 itens
+      </span>
+    </div>
+  </div>
+
+  <div class="container-menu">
+
+    <!-- Seção Cadastro -->
+    <div class="secao-menu" data-section="cadastro">
+      <button type="button" class="cabecalho-secao-menu" aria-expanded="false" aria-controls="cadastro-menu">
+        <span>Cadastro</span>
+      </button>
+      <div class="conteudo-menu" id="cadastro-menu">
+        <div class="item-menu" data-busca="ad anúncio anuncio">
+          <button type="button" class="botao-item-menu" data-module="ad" aria-label="Navegar para AD">
+            <i class="fas fa-file-alt"></i>
+            <span>AD</span>
+          </button>
+        </div>
+        <div class="item-menu" data-busca="bloqueio produtos bloquear">
+          <button type="button" class="botao-item-menu" data-module="bloqueio"
+            aria-label="Navegar para Bloqueio de Produtos">
+            <i class="fas fa-ban"></i>
+            <span>Bloqueio de Produtos</span>
+          </button>
+        </div>
+        <div class="item-menu" data-busca="cotações cotacao cad cadastro">
+          <button type="button" class="botao-item-menu" data-module="cotacoes"
+            aria-label="Navegar para Cadastro de Cotações">
+            <i class="fas fa-calculator"></i>
+            <span>Cad.Cotações</span>
+          </button>
+        </div>
+        <div class="item-menu" data-busca="pedidos cad cadastro">
+          <button type="button" class="botao-item-menu" data-module="pedidos"
+            aria-label="Navegar para Cadastro de Pedidos">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Cad.Pedidos</span>
+          </button>
+        </div>
+        <div class="item-menu" data-busca="transportadoras transporte svs">
+          <button type="button" class="botao-item-menu" data-module="transportadoras"
+            aria-label="Navegar para Transportadoras para SVS">
+            <i class="fas fa-truck"></i>
+            <span>Transportadoras p/SVS</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção Consultas -->
+    <div class="secao-menu" data-section="consultas">
+      <button type="button" class="cabecalho-secao-menu" aria-expanded="false" aria-controls="consultas-menu">
+        <span>Consultas</span>
+      </button>
+      <div class="conteudo-menu" id="consultas-menu">
+        <div class="item-menu" data-busca="cargas pendentes">
+          <button type="button" class="botao-item-menu" data-action="navigate" data-target="Cargas Pendentes"
+            aria-label="Navegar para Cargas Pendentes">
+            <i class="fas fa-truck-loading"></i>
+            <span>Cargas Pendentes</span>
+          </button>
+        </div>
+        <div class="item-menu" data-busca="classes clientes">
+          <button type="button" class="botao-item-menu" data-action="navigate" data-target="Classes/Clientes"
+            aria-label="Navegar para Classes e Clientes">
+            <i class="fas fa-users"></i>
+            <span>Classes/Clientes</span>
+          </button>
+        </div>
+        <div class="item-menu" data-busca="comissões comissoes">
+          <button type="button" class="botao-item-menu" data-action="navigate" data-target="Comissões"
+            aria-label="Navegar para Comissões">
+            <i class="fas fa-percentage"></i>
+            <span>Comissões</span>
+          </button>
+        </div>
+        <div class="item-menu" data-busca="cotações cotacao">
+          <button type="button" class="botao-item-menu" data-action="navigate" data-target="Cotações"
+            aria-label="Navegar para Cotações">
+            <i class="fas fa-calculator"></i>
+            <span>Cotações</span>
+          </button>
+        </div>
+        <div class="item-menu" data-busca="espelho nota">
+          <button type="button" class="botao-item-menu" data-action="navigate" data-target="Espelho de Nota"
+            aria-label="Navegar para Espelho de Nota">
+            <i class="fas fa-file-invoice"></i>
+            <span>Espelho de Nota</span>
+          </button>
+        </div>
+        <div class="item-menu" data-busca="estoques produtos">
+          <button type="button" class="botao-item-menu" data-action="navigate" data-target="Estoques de Produtos"
+            aria-label="Navegar para Estoques de Produtos">
+            <i class="fas fa-boxes"></i>
+            <span>Estoques de Produtos</span>
+          </button>
+        </div>
+        <div class="item-menu" data-busca="faturamento produto fat">
+          <button type="button" class="botao-item-menu" data-action="navigate" data-target="Fat.p/Produto"
+            aria-label="Navegar para Faturamento por Produto">
+            <i class="fas fa-chart-bar"></i>
+            <span>Fat.p/Produto</span>
+          </button>
+        </div>
+        <div class="item-menu" data-busca="faturas 2022">
+          <button type="button" class="botao-item-menu" data-action="navigate" data-target="Faturas 2022"
+            aria-label="Navegar para Faturas 2022">
+            <i class="fas fa-file-invoice-dollar"></i>
+            <span>Faturas 2022</span>
+          </button>
+        </div>
+        <div class="item-menu" data-busca="faturas 2021">
+          <button type="button" class="botao-item-menu" data-action="navigate" data-target="Faturas até 2021"
+            aria-label="Navegar para Faturas até 2021">
+            <i class="fas fa-archive"></i>
+            <span>Faturas até 2021</span>
+          </button>
+        </div>
+        <div class="item-menu" data-busca="pedidos">
+          <button type="button" class="botao-item-menu" data-action="navigate" data-target="Pedidos"
+            aria-label="Navegar para Pedidos">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Pedidos</span>
+          </button>
+        </div>
+        <div class="item-menu" data-busca="pedidos enviados">
+          <button type="button" class="botao-item-menu" data-action="navigate" data-target="Pedidos Enviados"
+            aria-label="Navegar para Pedidos Enviados">
+            <i class="fas fa-paper-plane"></i>
+            <span>Pedidos Enviados</span>
+          </button>
+        </div>
+        <div class="item-menu" data-busca="pedidos pendentes">
+          <button type="button" class="botao-item-menu" data-action="navigate" data-target="Pedidos Pendentes"
+            aria-label="Navegar para Pedidos Pendentes">
+            <i class="fas fa-clock"></i>
+            <span>Pedidos Pendentes</span>
+          </button>
+        </div>
+        <div class="item-menu" data-busca="pedidos entrega">
+          <button type="button" class="botao-item-menu" data-action="navigate" data-target="Pedidos-Entrega"
+            aria-label="Navegar para Pedidos Entrega">
+            <i class="fas fa-shipping-fast"></i>
+            <span>Pedidos-Entrega</span>
+          </button>
+        </div>
+        <div class="item-menu" data-busca="pedidos resumos">
+          <button type="button" class="botao-item-menu" data-action="navigate" data-target="Pedidos-Resumos"
+            aria-label="Navegar para Pedidos Resumos">
+            <i class="fas fa-list-alt"></i>
+            <span>Pedidos-Resumos</span>
+          </button>
+        </div>
+        <div class="item-menu" data-busca="prazo entrega dia">
+          <button type="button" class="botao-item-menu" data-action="navigate" data-target="Prazo de Entrega por Dia"
+            aria-label="Navegar para Prazo de Entrega por Dia">
+            <i class="fas fa-calendar-check"></i>
+            <span>Prazo de Entrega por Dia</span>
+          </button>
+        </div>
+        <div class="item-menu" data-busca="previsão data entrega">
+          <button type="button" class="botao-item-menu" data-action="navigate" data-target="Previsão Data de Entrega"
+            aria-label="Navegar para Previsão Data de Entrega">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Previsão Data de Entrega</span>
+          </button>
+        </div>
+        <div class="item-menu" data-busca="reservas">
+          <button type="button" class="botao-item-menu" data-action="navigate" data-target="Reservas"
+            aria-label="Navegar para Reservas">
+            <i class="fas fa-bookmark"></i>
+            <span>Reservas</span>
+          </button>
+        </div>
+        <div class="item-menu" data-busca="resumo faturamento">
+          <button type="button" class="botao-item-menu" data-action="navigate" data-target="Resumo Faturamento"
+            aria-label="Navegar para Resumo de Faturamento">
+            <i class="fas fa-chart-pie"></i>
+            <span>Resumo Faturamento</span>
+          </button>
+        </div>
+        <div class="item-menu" data-busca="resumo mensal">
+          <button type="button" class="botao-item-menu" data-action="navigate" data-target="Resumo Mensal"
+            aria-label="Navegar para Resumo Mensal">
+            <i class="fas fa-calendar-week"></i>
+            <span>Resumo Mensal</span>
+          </button>
+        </div>
+        <div class="item-menu" data-busca="títulos baixados titulos">
+          <button type="button" class="botao-item-menu" data-action="navigate" data-target="Títulos Baixados"
+            aria-label="Navegar para Títulos Baixados">
+            <i class="fas fa-check-circle"></i>
+            <span>Títulos Baixados</span>
+          </button>
+        </div>
+        <div class="item-menu" data-busca="títulos pendentes titulos">
+          <button type="button" class="botao-item-menu" data-action="navigate" data-target="Títulos Pendentes"
+            aria-label="Navegar para Títulos Pendentes">
+            <i class="fas fa-exclamation-circle"></i>
+            <span>Títulos Pendentes</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção Listas de Preços -->
+    <div class="secao-menu" data-section="precos">
+      <button type="button" class="cabecalho-secao-menu" aria-expanded="false" aria-controls="precos-menu">
+        <span>Listas de Preços</span>
+      </button>
+      <div class="conteudo-menu" id="precos-menu">
+        <div class="item-menu" data-busca="consulta cr lista preços precos">
+          <button type="button" class="botao-item-menu" data-action="navigate" data-target="Consulta CR na LP"
+            aria-label="Navegar para Consulta CR na Lista de Preços">
+            <i class="fas fa-search"></i>
+            <span>Consulta CR na LP</span>
+          </button>
+        </div>
+        <div class="item-menu" data-busca="lista preços componentes precos">
+          <button type="button" class="botao-item-menu" data-action="navigate" data-target="LP Componentes"
+            aria-label="Navegar para Lista de Preços de Componentes">
+            <i class="fas fa-cogs"></i>
+            <span>LP Componentes</span>
+          </button>
+        </div>
+        <div class="item-menu" data-busca="lista preços produtos precos">
+          <button type="button" class="botao-item-menu" data-action="navigate" data-target="LP Produtos"
+            aria-label="Navegar para Lista de Preços de Produtos">
+            <i class="fas fa-list-ul"></i>
+            <span>LP Produtos</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção Seleções -->
+    <div class="secao-menu" data-section="selecoes">
+      <button type="button" class="cabecalho-secao-menu" aria-expanded="false" aria-controls="selecoes-menu">
+        <span>Seleções</span>
+      </button>
+      <div class="conteudo-menu" id="selecoes-menu">
+        <div class="item-menu" data-busca="seleciona cliente">
+          <button type="button" class="botao-item-menu" data-action="navigate" data-target="Seleciona Cliente"
+            aria-label="Navegar para Selecionar Cliente">
+            <i class="fas fa-user-check"></i>
+            <span>Seleciona Cliente</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FORM LEGADO OCULTO PARA FUNCIONALIDADES ANTIGAS -->
+<form name="Menu" method="POST" action="/menu" id="legacy-form" style="display: none;">
+  <input type="hidden" name="sistema" value="VEN" />
+  <input type="hidden" name="Escolha" value="" id="legacy-escolha" />
+  <input type="hidden" name="cmd_muda_senha" value="" id="legacy-senha" />
+  <input type="hidden" name="cmd_sair_sistema" value="" id="legacy-sair" />
+  <input type="hidden" name="Execucao" value="" />
+</form>

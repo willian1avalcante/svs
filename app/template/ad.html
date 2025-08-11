@@ -1,0 +1,373 @@
+<main class="ad-module" role="main" aria-label="Módulo de Autorização de Devolução">
+   <form name="frm_AD" method="POST" action="/ad" class="ad-form" novalidate>
+
+      <!-- Cabeçalho: Seleção de AD -->
+      <section class="ad-header" aria-labelledby="ad-selection-title">
+         <div class="form-group">
+            <label for="ad-select" class="form-label" id="ad-selection-title">
+               Autorização de Devolução (AD):
+            </label>
+            <select id="ad-select" name="AD" class="form-select" onchange="atualiza()" aria-describedby="ad-help">
+               <option value="0" selected>Nova Autorização de Devolução</option>
+            </select>
+            <small id="ad-help" class="form-help">
+               Selecione uma AD existente ou crie uma nova
+            </small>
+         </div>
+      </section>
+
+      <!-- Dados do Cliente -->
+      <section class="client-section" aria-labelledby="client-title">
+         <h2 id="client-title" class="section-title">Dados do Cliente</h2>
+
+         <div class="client-selection">
+            <div class="form-group inline">
+               <label for="client-code" class="form-label">Cliente:</label>
+               <input type="text" id="client-code" name="Cliente_CD" class="form-input form-input-small" maxlength="6"
+                  placeholder="Código" onchange="atualiza()" aria-describedby="client-code-help" />
+               <small id="client-code-help" class="form-help">
+                  Digite o código do cliente
+               </small>
+            </div>
+
+            <div class="form-group">
+               <label for="client-select" class="sr-only">Nome do
+                  Cliente</label>
+               <select id="client-select" name="Cliente" class="form-select" onchange="atualiza()"
+                  aria-describedby="client-select-help">
+                  <option value>Selecione um cliente...</option>
+               </select>
+               <small id="client-select-help" class="form-help">
+                  Cliente selecionado aparecerá aqui
+               </small>
+            </div>
+         </div>
+
+         <!-- Endereço do Cliente (readonly) -->
+         <div class="client-address" aria-labelledby="address-title">
+            <h3 id="address-title" class="subsection-title sr-only">
+               Endereço do Cliente
+            </h3>
+            <div class="address-grid">
+               <div class="address-item">
+                  <span class="address-label">Endereço:</span>
+                  <span class="address-value" id="client-address">RUA 5</span>
+               </div>
+               <div class="address-item">
+                  <span class="address-label">Cidade:</span>
+                  <span class="address-value" id="client-city">JATAÍ-GO</span>
+               </div>
+               <div class="address-item">
+                  <span class="address-label">Fone:</span>
+                  <span class="address-value" id="client-phone">(64)
+                     8439-5287</span>
+               </div>
+               <div class="address-item">
+                  <span class="address-label">Fax:</span>
+                  <span class="address-value" id="client-fax">-</span>
+               </div>
+            </div>
+         </div>
+      </section>
+
+      <!-- Dados das Notas Fiscais -->
+      <section class="invoices-section" aria-labelledby="invoices-title">
+         <h2 id="invoices-title" class="section-title">Notas Fiscais</h2>
+
+         <div class="form-group">
+            <label for="nf-cliente" class="form-label">
+               Nota Fiscal do Cliente (NF de Entrada):
+            </label>
+            <input type="text" id="nf-cliente" name="nr_nf_cliente" class="form-input" maxlength="50"
+               placeholder="Número da nota fiscal do cliente" aria-describedby="nf-cliente-help" />
+            <small id="nf-cliente-help" class="form-help">
+               Informe o número da nota fiscal de entrada
+            </small>
+         </div>
+
+         <div class="form-group">
+            <label for="nf-siemsen" class="form-label">
+               Nota Fiscal da Siemsen (NF de Saída):
+            </label>
+            <div class="input-group">
+               <input type="text" id="nf-siemsen" name="nr_nf_siemsen" class="form-input" maxlength="50"
+                  placeholder="Número da nota fiscal de saída" aria-describedby="nf-siemsen-help" />
+               <button type="submit" name="cmd_importar" class="btn btn-secondary"
+                  aria-label="Importar itens da nota fiscal">
+                  Importar Itens da Nota
+               </button>
+            </div>
+            <small id="nf-siemsen-help" class="form-help">
+               Nota fiscal de saída da Siemsen para importar itens
+               automaticamente
+            </small>
+         </div>
+      </section>
+
+      <!-- Dados do Transporte -->
+      <section class="transport-section" aria-labelledby="transport-title">
+         <h2 id="transport-title" class="section-title">Transporte</h2>
+
+         <div class="form-group">
+            <label for="tipo-frete" class="form-label">Tipo de Frete:</label>
+            <select id="tipo-frete" name="tp_frete" class="form-select" aria-describedby="frete-help">
+               <option value="C" selected>Pago pelo Cliente</option>
+               <option value="S">Pago pela Siemsen</option>
+               <option value="T">Pago pela Transportadora</option>
+            </select>
+            <small id="frete-help" class="form-help">
+               Selecione quem será responsável pelo pagamento do frete
+            </small>
+         </div>
+
+         <div class="transport-selection">
+            <div class="form-group inline">
+               <label for="transp-code" class="form-label">Transportadora:</label>
+               <input type="text" id="transp-code" name="cd_transp" class="form-input form-input-small" maxlength="6"
+                  placeholder="Código" onchange="atualiza()" aria-describedby="transp-code-help" />
+               <small id="transp-code-help" class="form-help">
+                  Código da transportadora
+               </small>
+            </div>
+
+            <div class="form-group">
+               <label for="transp-select" class="sr-only">Nome da
+                  Transportadora</label>
+               <select id="transp-select" name="Transp" class="form-select" aria-describedby="transp-select-help">
+                  <option value>Selecione uma transportadora...</option>
+               </select>
+               <small id="transp-select-help" class="form-help">
+                  Transportadora selecionada
+               </small>
+            </div>
+         </div>
+      </section>
+
+      <!-- Motivos da Devolução -->
+      <section class="reasons-section" aria-labelledby="reasons-title">
+         <h2 id="reasons-title" class="section-title">Motivos da Devolução</h2>
+
+         <fieldset class="reasons-grid">
+            <legend class="sr-only">Selecione os motivos da devolução</legend>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot01" name="mot01" value="OK01" class="form-checkbox" />
+               <label for="mot01" class="checkbox-label">
+                  Preço ou prazo não confere com o pedido (1)
+               </label>
+            </div>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot02" name="mot02" value="OK02" class="form-checkbox" />
+               <label for="mot02" class="checkbox-label">
+                  Mercadoria não confere com o pedido (2)
+               </label>
+            </div>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot03" name="mot03" value="OK03" class="form-checkbox" />
+               <label for="mot03" class="checkbox-label">
+                  Cliente alega não ter feito o pedido (3)
+               </label>
+            </div>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot04" name="mot04" value="OK04" class="form-checkbox" />
+               <label for="mot04" class="checkbox-label">
+                  Produto com defeito (4)
+               </label>
+            </div>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot05" name="mot05" value="OK05" class="form-checkbox" />
+               <label for="mot05" class="checkbox-label">
+                  Conserto na garantia (5)
+               </label>
+            </div>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot06" name="mot06" value="OK06" class="form-checkbox" />
+               <label for="mot06" class="checkbox-label">
+                  Mercadoria para troca por outro produto (6)
+               </label>
+            </div>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot07" name="mot07" value="OK07" class="form-checkbox" />
+               <label for="mot07" class="checkbox-label">
+                  Retorno de demonstração ou teste (7)
+               </label>
+            </div>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot08" name="mot08" value="OK08" class="form-checkbox" />
+               <label for="mot08" class="checkbox-label">
+                  Transportadora não entregou no prazo solicitado (8)
+               </label>
+            </div>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot09" name="mot09" value="OK09" class="form-checkbox" />
+               <label for="mot09" class="checkbox-label">
+                  Acerto de contas (9)
+               </label>
+            </div>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot10" name="mot10" value="OK10" class="form-checkbox" />
+               <label for="mot10" class="checkbox-label">
+                  Cliente comprou o item/produto errado (10)
+               </label>
+            </div>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot11" name="mot11" value="OK11" class="form-checkbox" />
+               <label for="mot11" class="checkbox-label">
+                  Conserto fora da garantia (11)
+               </label>
+            </div>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot12" name="mot12" value="OK12" class="form-checkbox" />
+               <label for="mot12" class="checkbox-label">
+                  Retorno de substituição (12)
+               </label>
+            </div>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot13" name="mot13" value="OK13" class="form-checkbox" />
+               <label for="mot13" class="checkbox-label">
+                  Mercadoria devolvida (13)
+               </label>
+            </div>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot14" name="mot14" value="OK14" class="form-checkbox" />
+               <label for="mot14" class="checkbox-label">
+                  Avaria de Transporte (14)
+               </label>
+            </div>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot15" name="mot15" value="OK15" class="form-checkbox" />
+               <label for="mot15" class="checkbox-label">
+                  Recusa da Nota Fiscal (15)
+               </label>
+            </div>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot16" name="mot16" value="OK16" class="form-checkbox" />
+               <label for="mot16" class="checkbox-label">
+                  Componente avariado - ATA (16)
+               </label>
+            </div>
+
+            <div class="reason-item">
+               <input type="checkbox" id="mot17" name="mot17" value="OK17" class="form-checkbox" />
+               <label for="mot17" class="checkbox-label">
+                  Pedido duplicado (17)
+               </label>
+            </div>
+         </fieldset>
+      </section>
+
+      <!-- Observações -->
+      <section class="observations-section" aria-labelledby="observations-title">
+         <h2 id="observations-title" class="section-title">
+            Observações e Anotações
+         </h2>
+
+         <div class="form-group">
+            <label for="observacoes" class="form-label">
+               <strong>Observações:</strong>
+            </label>
+            <textarea id="observacoes" name="dn_observ" class="form-textarea" rows="6"
+               placeholder="Digite as observações sobre a devolução..." aria-describedby="obs-help"></textarea>
+            <small id="obs-help" class="form-help">
+               Observações que serão impressas na AD
+            </small>
+         </div>
+
+         <div class="form-group">
+            <label for="anotacoes-internas" class="form-label">
+               <strong>Anotações Internas (não serão impressas na AD):</strong>
+            </label>
+            <textarea id="anotacoes-internas" name="dn_observ_internas" class="form-textarea" rows="6"
+               placeholder="Anotações internas para controle..." aria-describedby="internal-help"></textarea>
+            <small id="internal-help" class="form-help">
+               Anotações apenas para uso interno, não aparecem na AD impressa
+            </small>
+         </div>
+
+         <div class="form-group">
+            <label for="responsavel" class="form-label">Responsável:</label>
+            <select id="responsavel" name="dn_responsavel" class="form-select" aria-describedby="resp-help">
+               <option value="CLIENTE" selected>Cliente</option>
+               <option value="ATA">Assistente Técnico</option>
+               <option value="REPRESENTANTE">Representante</option>
+               <option value="SIEMSEN">Siemsen</option>
+            </select>
+            <small id="resp-help" class="form-help">
+               Quem é o responsável pela devolução
+            </small>
+         </div>
+      </section>
+
+      <!-- Itens da Devolução -->
+      <section class="items-section" aria-labelledby="items-title">
+         <h2 id="items-title" class="section-title">Itens da Devolução</h2>
+
+         <div class="items-table" role="table" aria-label="Tabela de itens para devolução">
+            <div class="items-header" role="row">
+               <div class="item-col-code" role="columnheader">Código</div>
+               <div class="item-col-qty" role="columnheader">Quantidade</div>
+               <div class="item-col-unit" role="columnheader">Unidade</div>
+               <div class="item-col-desc" role="columnheader">Descrição</div>
+               <div class="item-col-serial" role="columnheader">Série</div>
+               <div class="item-col-op" role="columnheader">Operação</div>
+            </div>
+
+            <div class="items-row" role="row">
+               <div class="item-col-code" role="cell">
+                  <input type="text" id="cd-item" name="cd_item" class="form-input form-input-small" maxlength="6"
+                     placeholder="Código" onchange="codigo_item()" aria-label="Código do item" />
+               </div>
+               <div class="item-col-qty" role="cell">
+                  <input type="number" id="qt-item" name="qt_item" class="form-input form-input-small" min="0" step="1"
+                     placeholder="Qtd" aria-label="Quantidade do item" />
+               </div>
+               <div class="item-col-unit" role="cell">
+                  <span class="placeholder-text">-</span>
+               </div>
+               <div class="item-col-desc" role="cell">
+                  <span class="placeholder-text">-</span>
+               </div>
+               <div class="item-col-serial" role="cell">
+                  <span class="placeholder-text">-</span>
+               </div>
+               <div class="item-col-op" role="cell">
+                  <span class="placeholder-text">-</span>
+               </div>
+            </div>
+         </div>
+      </section>
+
+      <!-- Ações do Formulário -->
+      <section class="actions-section" aria-labelledby="actions-title">
+         <h2 id="actions-title" class="sr-only">Ações do Formulário</h2>
+
+         <div class="form-actions">
+            <button type="submit" name="cmd_Grava" class="btn btn-secondary" aria-label="Atualizar dados da AD">
+               Atualizar Dados da AD
+            </button>
+
+            <button type="submit" name="cmd_confirma" class="btn btn-primary" aria-label="Gravar AD definitivamente">
+               Gravar AD
+            </button>
+         </div>
+      </section>
+
+      <!-- Campo hidden para controle de execução -->
+      <input type="hidden" name="Execucao" value />
+   </form>
+</main>
