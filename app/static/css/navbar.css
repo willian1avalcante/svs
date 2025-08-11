@@ -751,3 +751,345 @@
     display: none !important;
   }
 }
+
+
+/* =====================================================
+   DROPDOWN DE RESULTADOS DA BUSCA GLOBAL
+   ===================================================== */
+.dropdown-resultados {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: var(--svs-fundo-principal);
+  border: 2px solid var(--svs-primaria);
+  border-radius: var(--svs-raio-grande);
+  box-shadow: var(--svs-sombra-grande), 0 0 20px rgba(30, 64, 175, 0.1);
+  max-height: 400px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  z-index: calc(var(--svs-z-dropdown) + 1);
+  overflow: hidden;
+  min-width: 400px;
+}
+
+.dropdown-resultados.visivel {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-resultados::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid var(--svs-primaria);
+}
+
+.dropdown-resultados::after {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid var(--svs-fundo-principal);
+}
+
+/* =====================================================
+   CABEÇALHO DOS RESULTADOS
+   ===================================================== */
+.cabecalho-resultados {
+  background: var(--svs-gradiente-principal);
+  color: white;
+  padding: var(--svs-espaco-pequeno) var(--svs-espaco-grande);
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: var(--svs-raio-grande) var(--svs-raio-grande) 0 0;
+}
+
+/* =====================================================
+   LISTA DE RESULTADOS
+   ===================================================== */
+.lista-resultados {
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--svs-fundo-principal);
+}
+
+.item-resultado {
+  display: flex;
+  align-items: center;
+  padding: var(--svs-espaco-pequeno) var(--svs-espaco-grande);
+  border-bottom: 1px solid var(--svs-borda-clara);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  role: option;
+  background: white;
+}
+
+.item-resultado:last-child {
+  border-bottom: none;
+}
+
+.item-resultado:hover,
+.item-resultado.destacado {
+  background: var(--svs-primaria-clara);
+  transform: translateX(4px);
+  border-left: 3px solid var(--svs-primaria);
+  padding-left: calc(var(--svs-espaco-grande) - 3px);
+}
+
+.item-resultado:active {
+  background: var(--svs-primaria);
+  color: white;
+}
+
+/* Ícone do resultado */
+.icone-resultado {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--svs-primaria-clara);
+  color: var(--svs-primaria);
+  border-radius: var(--svs-raio-pequeno);
+  font-size: 0.75rem;
+  margin-right: var(--svs-espaco-medio);
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.item-resultado:hover .icone-resultado,
+.item-resultado.destacado .icone-resultado {
+  background: var(--svs-primaria);
+  color: white;
+  transform: scale(1.1);
+}
+
+/* Conteúdo do resultado */
+.conteudo-resultado {
+  flex: 1;
+  min-width: 0;
+}
+
+.nome-resultado {
+  font-weight: 600;
+  color: var(--svs-texto-principal);
+  margin-bottom: 2px;
+  font-size: 0.875rem;
+  line-height: 1.2;
+}
+
+.categoria-resultado {
+  font-size: 0.75rem;
+  color: var(--svs-texto-suave);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.item-resultado:hover .nome-resultado,
+.item-resultado.destacado .nome-resultado {
+  color: var(--svs-primaria-escura);
+}
+
+.item-resultado:hover .categoria-resultado,
+.item-resultado.destacado .categoria-resultado {
+  color: var(--svs-primaria);
+}
+
+/* Destacar termo encontrado nos resultados */
+.resultado-termo-encontrado {
+  background: var(--svs-aviso);
+  color: #000;
+  padding: 0.1em 0.3em;
+  border-radius: 0.2em;
+  font-weight: 700;
+}
+
+/* =====================================================
+   RODAPÉ DOS RESULTADOS
+   ===================================================== */
+.rodape-resultados {
+  background: var(--svs-fundo-secundario);
+  padding: var(--svs-espaco-pequeno) var(--svs-espaco-grande);
+  border-top: 1px solid var(--svs-borda-clara);
+  text-align: center;
+  border-radius: 0 0 var(--svs-raio-grande) var(--svs-raio-grande);
+}
+
+.dica-navegacao {
+  color: var(--svs-texto-suave);
+  font-size: 0.7rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--svs-espaco-pequeno);
+}
+
+.dica-navegacao i {
+  color: var(--svs-primaria);
+}
+
+/* =====================================================
+   ESTADOS ESPECIAIS
+   ===================================================== */
+.lista-resultados.vazia {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--svs-espaco-extra);
+  color: var(--svs-texto-suave);
+  font-style: italic;
+}
+
+.lista-resultados.vazia::before {
+  content: '🔍';
+  font-size: 2rem;
+  margin-bottom: var(--svs-espaco-pequeno);
+  opacity: 0.5;
+}
+
+.lista-resultados.vazia::after {
+  content: 'Nenhum resultado encontrado';
+  font-size: 0.875rem;
+}
+
+/* =====================================================
+   SCROLLBAR DOS RESULTADOS
+   ===================================================== */
+.lista-resultados::-webkit-scrollbar {
+  width: 6px;
+  background: var(--svs-fundo-secundario);
+}
+
+.lista-resultados::-webkit-scrollbar-track {
+  background: var(--svs-fundo-terciario);
+  border-radius: 3px;
+}
+
+.lista-resultados::-webkit-scrollbar-thumb {
+  background: var(--svs-primaria);
+  border-radius: 3px;
+  min-height: 20px;
+}
+
+.lista-resultados::-webkit-scrollbar-thumb:hover {
+  background: var(--svs-primaria-hover);
+}
+
+/* =====================================================
+   ANIMAÇÕES
+   ===================================================== */
+@keyframes slideInResult {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.item-resultado {
+  animation: slideInResult 0.2s ease-out forwards;
+}
+
+.item-resultado:nth-child(1) { animation-delay: 0ms; }
+.item-resultado:nth-child(2) { animation-delay: 50ms; }
+.item-resultado:nth-child(3) { animation-delay: 100ms; }
+.item-resultado:nth-child(4) { animation-delay: 150ms; }
+.item-resultado:nth-child(5) { animation-delay: 200ms; }
+
+/* =====================================================
+   RESPONSIVIDADE
+   ===================================================== */
+@media (max-width: 992px) {
+  .dropdown-resultados {
+    min-width: 350px;
+    max-height: 350px;
+  }
+  
+  .lista-resultados {
+    max-height: 250px;
+  }
+}
+
+@media (max-width: 768px) {
+  .dropdown-resultados {
+    position: fixed;
+    top: 70px;
+    left: 10px;
+    right: 10px;
+    min-width: auto;
+    max-height: 60vh;
+  }
+  
+  .dropdown-resultados::before,
+  .dropdown-resultados::after {
+    display: none;
+  }
+  
+  .lista-resultados {
+    max-height: calc(60vh - 80px);
+  }
+}
+
+@media (max-width: 480px) {
+  .item-resultado {
+    padding: var(--svs-espaco-medio);
+  }
+  
+  .nome-resultado {
+    font-size: 0.8rem;
+  }
+  
+  .categoria-resultado {
+    font-size: 0.7rem;
+  }
+  
+  .icone-resultado {
+    width: 20px;
+    height: 20px;
+    font-size: 0.7rem;
+  }
+}
+
+/* =====================================================
+   ATUALIZAÇÃO DA BUSCA GLOBAL EXISTENTE
+   ===================================================== */
+.busca-global {
+  position: relative; /* Importante para posicionamento do dropdown */
+}
+
+.contador-resultados {
+  /* Remover estilos anteriores do contador */
+  display: inline;
+  font-weight: 600;
+  color: white;
+}
+
+/* Remover CSS antigo do contador se existir */
+.contador-resultados.com-resultados,
+.contador-resultados.sem-resultados {
+  opacity: 1;
+}

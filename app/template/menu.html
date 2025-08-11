@@ -7,7 +7,7 @@
     <span class="texto-marca">SVS</span>
   </div>
 
-  <!-- BUSCA GLOBAL -->
+  <!-- BUSCA GLOBAL COM DROPDOWN DE RESULTADOS -->
   <div class="busca-global">
     <div class="container-busca">
       <i class="fas fa-search icone-busca"></i>
@@ -15,7 +15,10 @@
              class="input-busca-global" 
              placeholder="Buscar módulos..."
              id="busca-global-input"
-             autocomplete="off">
+             autocomplete="off"
+             aria-expanded="false"
+             aria-haspopup="listbox"
+             role="combobox">
       <button type="button" 
               class="botao-limpar-busca" 
               id="limpar-busca-global"
@@ -23,12 +26,25 @@
         <i class="fas fa-times"></i>
       </button>
     </div>
-    <div class="contador-resultados" id="contador-resultados">
-      <span class="texto-contador"></span>
+    
+    <!-- DROPDOWN COM RESULTADOS DA BUSCA -->
+    <div class="dropdown-resultados" id="dropdown-resultados" role="listbox">
+      <div class="cabecalho-resultados">
+        <span class="contador-resultados" id="contador-resultados"></span>
+      </div>
+      <div class="lista-resultados" id="lista-resultados">
+        <!-- Resultados aparecerão aqui dinamicamente -->
+      </div>
+      <div class="rodape-resultados">
+        <small class="dica-navegacao">
+          <i class="fas fa-keyboard"></i>
+          Use ↑↓ para navegar, Enter para selecionar, Esc para fechar
+        </small>
+      </div>
     </div>
   </div>
 
-  <!-- Menu Principal Horizontal -->
+  <!-- Menu Principal Horizontal - SEM MODIFICAÇÕES -->
   <div class="menu-principal">
     
     <!-- Categoria: Cadastro -->
