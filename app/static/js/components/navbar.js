@@ -400,19 +400,20 @@ class SVSNavbar {
     item.className = 'item-resultado';
     item.setAttribute('role', 'option');
     item.setAttribute('data-index', index);
+    item.setAttribute('aria-label', `${resultado.nome} - ${resultado.categoria}`);
 
     // Destacar termo encontrado no nome
     const nomeDestacado = this.destacarTermoNoTexto(resultado.nome, this.termoBuscaAtual);
 
     item.innerHTML = `
-      <div class="icone-resultado">
-        <i class="${resultado.icone}"></i>
-      </div>
-      <div class="conteudo-resultado">
-        <div class="nome-resultado">${nomeDestacado}</div>
-        <div class="categoria-resultado">${resultado.categoria}</div>
-      </div>
-    `;
+    <div class="icone-resultado">
+      <i class="${resultado.icone}"></i>
+    </div>
+    <div class="conteudo-resultado">
+      <div class="nome-resultado">${nomeDestacado}</div>
+      <div class="categoria-resultado">${resultado.categoria}</div>
+    </div>
+  `;
 
     // Event listeners para o item
     item.addEventListener('click', () => {
@@ -422,6 +423,9 @@ class SVSNavbar {
     item.addEventListener('mouseenter', () => {
       this.selecionarResultado(index);
     });
+
+    // Adicionar delay para animação de entrada
+    item.style.animationDelay = `${Math.min(index * 50, 250)}ms`;
 
     return item;
   }
@@ -487,10 +491,14 @@ class SVSNavbar {
   }
 
   selecionarResultado(index) {
-    // Remover seleção anterior
+    // Remover seleção anterior com animação suave
     const itemAnterior = this.listaResultados.querySelector('.item-resultado.destacado');
     if (itemAnterior) {
       itemAnterior.classList.remove('destacado');
+      // Adicionar pequeno delay para transição suave
+      setTimeout(() => {
+        itemAnterior.style.transform = '';
+      }, 50);
     }
 
     this.resultadoSelecionado = index;
@@ -500,11 +508,32 @@ class SVSNavbar {
     if (novoItem) {
       novoItem.classList.add('destacado');
 
-      // Scroll para o item visível
+      // Adicionar classe temporária para animação especial
+      novoItem.classList.add('nova-selecao');
+      setTimeout(() => {
+        novoItem.classList.remove('nova-selecao');
+      }, 400);
+
+      // Scroll suave para o item visível
       novoItem.scrollIntoView({
         behavior: 'smooth',
-        block: 'nearest'
+        block: 'nearest',
+        inline: 'nearest'
       });
+
+      // Feedback sonoro sutil (opcional)
+      this.emitirFeedbackSelecao();
+    }
+  }
+
+  emitirFeedbackSelecao() {
+    // Feedback visual adicional via CSS custom property
+    const item = this.listaResultados.querySelector('.item-resultado.destacado');
+    if (item) {
+      item.style.setProperty('--pulse-color', 'var(--svs-primaria)');
+      setTimeout(() => {
+        item.style.removeProperty('--pulse-color');
+      }, 400);
     }
   }
 
