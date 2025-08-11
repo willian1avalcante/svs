@@ -7,6 +7,27 @@
     <span class="texto-marca">SVS</span>
   </div>
 
+  <!-- BUSCA GLOBAL -->
+  <div class="busca-global">
+    <div class="container-busca">
+      <i class="fas fa-search icone-busca"></i>
+      <input type="text" 
+             class="input-busca-global" 
+             placeholder="Buscar módulos..."
+             id="busca-global-input"
+             autocomplete="off">
+      <button type="button" 
+              class="botao-limpar-busca" 
+              id="limpar-busca-global"
+              title="Limpar busca">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="contador-resultados" id="contador-resultados">
+      <span class="texto-contador"></span>
+    </div>
+  </div>
+
   <!-- Menu Principal Horizontal -->
   <div class="menu-principal">
     
@@ -20,13 +41,6 @@
       <div class="dropdown-categoria">
         <div class="cabecalho-categoria">
           Cadastro
-        </div>
-        
-        <div class="busca-categoria">
-          <input type="text" 
-                 class="input-busca-categoria" 
-                 placeholder="Buscar..."
-                 data-categoria="cadastro">
         </div>
         
         <div class="conteudo-categoria">
@@ -74,13 +88,6 @@
       <div class="dropdown-categoria">
         <div class="cabecalho-categoria">
           Consultas
-        </div>
-        
-        <div class="busca-categoria">
-          <input type="text" 
-                 class="input-busca-categoria" 
-                 placeholder="Buscar..."
-                 data-categoria="consultas">
         </div>
         
         <div class="conteudo-categoria">
@@ -226,13 +233,6 @@
           Listas de Preços
         </div>
         
-        <div class="busca-categoria">
-          <input type="text" 
-                 class="input-busca-categoria" 
-                 placeholder="Buscar..."
-                 data-categoria="precos">
-        </div>
-        
         <div class="conteudo-categoria">
           <div class="item-categoria" data-busca="consulta cr lista preços precos">
             <button type="button" class="botao-item-categoria" data-action="navigate" data-target="Consulta CR na LP">
@@ -266,13 +266,6 @@
       <div class="dropdown-categoria">
         <div class="cabecalho-categoria">
           Seleções
-        </div>
-        
-        <div class="busca-categoria">
-          <input type="text" 
-                 class="input-busca-categoria" 
-                 placeholder="Buscar..."
-                 data-categoria="selecoes">
         </div>
         
         <div class="conteudo-categoria">
