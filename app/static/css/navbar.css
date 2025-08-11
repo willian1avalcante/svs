@@ -39,11 +39,12 @@
   box-shadow: var(--navbar-shadow);
   border-bottom: var(--navbar-border);
 
-  /* Layout */
+  /* Layout reorganizado */
   z-index: var(--svs-z-navbar);
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: var(--svs-espaco-grande);
+  /* Gap entre elementos principais */
   padding: 0 var(--svs-espaco-grande);
   color: var(--navbar-text);
 }
@@ -75,8 +76,11 @@
   color: var(--navbar-text);
   text-decoration: none;
   flex-shrink: 0;
+  /* Não encolher */
   transition: var(--navbar-transition);
   cursor: pointer;
+  order: 1;
+  /* Primeiro elemento */
 }
 
 .marca-navbar:hover {
@@ -112,14 +116,18 @@
 .busca-global {
   display: flex;
   align-items: center;
-  /* Mudança: flex-direction removida */
   gap: 6px;
   flex-shrink: 0;
-  margin: 0 var(--svs-espaco-grande);
+  /* Não encolher */
   position: relative;
   z-index: 10;
   height: 44px;
-  /* Altura fixa para manter alinhamento */
+  order: 3;
+  /* Terceiro elemento */
+  margin-left: auto;
+  /* Empurrar para direita, deixando espaço */
+  margin-right: var(--svs-espaco-grande);
+  /* Espaço antes das ações */
 }
 
 .container-busca {
@@ -599,12 +607,15 @@
    MENU PRINCIPAL - DESIGN CLEAN
    ===================================================== */
 .menu-principal {
-  flex: 1;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  /* Alinhar à esquerda */
   gap: var(--svs-espaco-pequeno);
-  margin: 0 var(--svs-espaco-medio);
+  flex-shrink: 0;
+  /* Não encolher */
+  order: 2;
+  /* Segundo elemento */
 }
 
 .categoria-menu {
@@ -786,6 +797,9 @@
   align-items: center;
   gap: var(--svs-espaco-medio);
   flex-shrink: 0;
+  /* Não encolher */
+  order: 4;
+  /* Último elemento */
 }
 
 .botao-acao-navbar {
@@ -1025,11 +1039,24 @@
     padding: 8px 12px;
     font-size: 0.85rem;
   }
+
+  .navbar-svs {
+    gap: var(--svs-espaco-medio);
+    /* Gap menor em telas menores */
+  }
+
+  .busca-global {
+    margin-right: var(--svs-espaco-medio);
+  }
 }
 
 @media (max-width: 992px) {
   .navbar-svs {
-    padding: 0 var(--svs-espaco-medio);
+    gap: var(--svs-espaco-pequeno);
+  }
+
+  .busca-global {
+    margin-right: var(--svs-espaco-pequeno);
   }
 
   .busca-expandida.ativa {
@@ -1064,14 +1091,37 @@
     height: auto;
     min-height: var(--svs-altura-navbar);
     padding: var(--svs-espaco-pequeno) var(--svs-espaco-medio);
+    gap: var(--svs-espaco-pequeno);
   }
 
-  .busca-global {
+  /* Logo fica na primeira linha */
+  .marca-navbar {
+    order: 1;
+    flex: 0 0 auto;
+  }
+
+  /* Ações ficam ao lado do logo na primeira linha */
+  .acoes-navbar {
+    order: 2;
+    margin-left: auto;
+  }
+
+  /* Menu fica na segunda linha */
+  .menu-principal {
     order: 3;
     width: 100%;
     margin: var(--svs-espaco-pequeno) 0 0 0;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: var(--svs-espaco-pequeno);
+  }
+
+  /* Busca fica na terceira linha */
+  .busca-global {
+    order: 4;
+    width: 100%;
+    margin: var(--svs-espaco-pequeno) 0 0 0;
     height: auto;
-    /* Altura automática no mobile */
   }
 
   .container-busca {
@@ -1142,6 +1192,16 @@
   .container-busca:not(.expandido) .busca-expandida {
     width: 36px;
   }
+
+  .marca-navbar {
+    flex: 1;
+    /* Ocupar espaço disponível */
+  }
+
+  .texto-marca {
+    display: none;
+    /* Esconder texto em telas muito pequenas */
+  }
 }
 
 /* =====================================================
@@ -1200,4 +1260,55 @@
     --navbar-border: 2px solid rgba(255, 255, 255, 0.4);
     --navbar-text: white;
   }
+}
+
+.busca-global .dropdown-resultados {
+  /* Posicionamento absoluto em relação à busca */
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  z-index: 9999;
+}
+
+/* Garantir espaçamento adequado entre elementos */
+.navbar-svs>* {
+  flex-shrink: 0;
+  /* Nenhum elemento deve encolher por padrão */
+}
+
+@media (max-width: 1024px) {
+
+  /* Em telas médias, reduzir texto dos botões */
+  .botao-categoria {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+
+  .botao-categoria span {
+    display: none;
+    /* Esconder texto, mostrar só ícones */
+  }
+
+  .botao-categoria::after {
+    content: attr(data-short);
+    /* Mostrar versão curta */
+  }
+}
+
+/* Adicionar versões curtas aos botões (se necessário) */
+.categoria-menu[data-categoria="cadastro"] .botao-categoria::after {
+  content: "Cad";
+}
+
+.categoria-menu[data-categoria="consultas"] .botao-categoria::after {
+  content: "Cons";
+}
+
+.categoria-menu[data-categoria="precos"] .botao-categoria::after {
+  content: "Preços";
+}
+
+.categoria-menu[data-categoria="selecoes"] .botao-categoria::after {
+  content: "Sel";
 }

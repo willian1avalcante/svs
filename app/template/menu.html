@@ -7,48 +7,7 @@
     <span class="texto-marca">SVS</span>
   </div>
 
-  <!-- BUSCA GLOBAL EXPANSÍVEL -->
-  <div class="busca-global">
-    <div class="container-busca" id="container-busca">
-      <!-- BOTÃO LUPA INICIAL -->
-      <button type="button" class="botao-expandir-busca" id="botao-expandir-busca" title="Buscar módulos"
-        aria-label="Expandir busca">
-        <i class="fas fa-search icone-busca-inicial"></i>
-      </button>
-
-      <!-- BUSCA EXPANDIDA (inicialmente oculta) -->
-      <div class="busca-expandida" id="busca-expandida">
-        <i class="fas fa-search icone-busca"></i>
-        <input type="text" class="input-busca-global" placeholder="Buscar módulos..." id="busca-global-input"
-          autocomplete="off" aria-expanded="false" aria-haspopup="listbox" role="combobox">
-        <button type="button" class="botao-limpar-busca" id="limpar-busca-global" title="Limpar busca">
-          <i class="fas fa-times"></i>
-        </button>
-        <button type="button" class="botao-recolher-busca" id="botao-recolher-busca" title="Fechar busca"
-          aria-label="Recolher busca">
-          <i class="fas fa-chevron-up"></i>
-        </button>
-      </div>
-    </div>
-
-    <!-- DROPDOWN COM RESULTADOS DA BUSCA -->
-    <div class="dropdown-resultados" id="dropdown-resultados" role="listbox">
-      <div class="cabecalho-resultados">
-        <span class="contador-resultados" id="contador-resultados"></span>
-      </div>
-      <div class="lista-resultados" id="lista-resultados">
-        <!-- Resultados aparecerão aqui dinamicamente -->
-      </div>
-      <div class="rodape-resultados">
-        <small class="dica-navegacao">
-          <i class="fas fa-keyboard"></i>
-          Use ↑↓ para navegar, Enter para selecionar, Esc para fechar
-        </small>
-      </div>
-    </div>
-  </div>
-
-  <!-- Menu Principal Horizontal - SEM MODIFICAÇÕES -->
+  <!-- Menu Principal Horizontal - MOVIDO PARA DEPOIS DO LOGO -->
   <div class="menu-principal">
 
     <!-- Categoria: Cadastro -->
@@ -302,6 +261,47 @@
       </div>
     </div>
 
+  </div>
+
+  <!-- BUSCA GLOBAL EXPANSÍVEL - MOVIDA PARA DEPOIS DOS MENUS -->
+  <div class="busca-global">
+    <div class="container-busca" id="container-busca">
+      <!-- BOTÃO LUPA INICIAL -->
+      <button type="button" class="botao-expandir-busca" id="botao-expandir-busca" title="Buscar módulos"
+        aria-label="Expandir busca">
+        <i class="fas fa-search icone-busca-inicial"></i>
+      </button>
+
+      <!-- BUSCA EXPANDIDA (inicialmente oculta) -->
+      <div class="busca-expandida" id="busca-expandida">
+        <i class="fas fa-search icone-busca"></i>
+        <input type="text" class="input-busca-global" placeholder="Buscar módulos..." id="busca-global-input"
+          autocomplete="off" aria-expanded="false" aria-haspopup="listbox" role="combobox">
+        <button type="button" class="botao-limpar-busca" id="limpar-busca-global" title="Limpar busca">
+          <i class="fas fa-times"></i>
+        </button>
+        <button type="button" class="botao-recolher-busca" id="botao-recolher-busca" title="Fechar busca"
+          aria-label="Recolher busca">
+          <i class="fas fa-chevron-up"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- DROPDOWN COM RESULTADOS DA BUSCA -->
+    <div class="dropdown-resultados" id="dropdown-resultados" role="listbox">
+      <div class="cabecalho-resultados">
+        <span class="contador-resultados" id="contador-resultados"></span>
+      </div>
+      <div class="lista-resultados" id="lista-resultados">
+        <!-- Resultados aparecerão aqui dinamicamente -->
+      </div>
+      <div class="rodape-resultados">
+        <small class="dica-navegacao">
+          <i class="fas fa-keyboard"></i>
+          Use ↑↓ para navegar, Enter para selecionar, Esc para fechar
+        </small>
+      </div>
+    </div>
   </div>
 
   <!-- Ações do usuário (lado direito) -->
