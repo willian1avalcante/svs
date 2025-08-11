@@ -1,0 +1,65 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env
+.env
+.venv/
+venv/
+ENV/
+env/
+*.egg-info/
+*.egg
+
+# VSCode
+.vscode/
+.history/
+
+# Logs
+logs/
+*.log
+
+# Nginx
+nginx/logs/
+*.pid
+
+# Arquivos temporários
+*.tmp
+*.swp
+*.bak
+*.orig
+*.~*
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos de testes
+.coverage
+htmlcov/
+.tox/
+.pytest_cache/
+
+# Arquivos de build
+build/
+dist/
+*.spec
+
+# Arquivos de backup do editor
+*~
+
+# Arquivos do Linux/Mac
+*.swo
+*.swp
+
+# Arquivos do Windows
+ehthumbs.db
+Desktop.ini
+
+# Arquivos de instalação
+install_svs.sh
+start_svs.sh
+stop_svs.sh
+
+# Outros
