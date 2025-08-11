@@ -174,7 +174,7 @@ class SVSNavbar {
   expandirBusca() {
     if (this.buscaExpandidaAtiva) return;
 
-    console.log("📈 Expandindo busca");
+    console.log("📈 Expandindo busca para esquerda");
 
     // Fechar outros dropdowns
     this.fecharTodasCategorias();
@@ -185,14 +185,34 @@ class SVSNavbar {
     this.buscaExpandida.classList.add('ativa');
     this.buscaExpandidaAtiva = true;
 
+    // Verificar se há espaço suficiente à esquerda
+    this.verificarEspacoEsquerda();
+
     // Focar no input após a animação de expansão
     setTimeout(() => {
       this.inputBuscaGlobal.focus();
       this.buscaExpandida.classList.remove('animando');
-    }, 250); // Tempo ajustado para a nova animação
+    }, 250);
 
-    // Adicionar efeito de destaque (opcional)
+    // Adicionar efeito de destaque
     this.adicionarDestaqueLupa();
+  }
+
+  verificarEspacoEsquerda() {
+    if (window.innerWidth <= 768) return; // Skip no mobile
+
+    const busca = this.buscaExpandida;
+    const rect = busca.getBoundingClientRect();
+    const larguraExpandida = 400; // Largura quando expandida
+
+    // Se expandir à esquerda vai sair da tela
+    if (rect.right - larguraExpandida < 20) {
+      console.log("⚠️ Pouco espaço à esquerda, ajustando largura");
+      const larguraMaxima = Math.max(250, rect.right - 40);
+      busca.style.setProperty('--largura-maxima', `${larguraMaxima}px`);
+    } else {
+      busca.style.removeProperty('--largura-maxima');
+    }
   }
 
   recolherBusca() {

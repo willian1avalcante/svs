@@ -1,21 +1,21 @@
 /* =====================================================
-   VARIÁVEIS CSS PERSONALIZADAS PARA NAVBAR
+   VARIÁVEIS CSS PARA NAVBAR
    ===================================================== */
 :root {
-  /* Cores da navbar baseadas na paleta da empresa */
-  --navbar-bg-primary: linear-gradient(135deg, var(--base-primary) 0%, var(--svs-primaria-escura) 100%);
+  /* Cores da navbar */
+  --navbar-bg: linear-gradient(135deg, var(--base-primary) 0%, var(--svs-primaria-escura) 100%);
   --navbar-glass: rgba(255, 255, 255, 0.12);
   --navbar-glass-hover: rgba(255, 255, 255, 0.18);
   --navbar-glass-active: rgba(255, 255, 255, 0.25);
-
-  /* Sombras simples */
-  --navbar-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  
+  /* Bordas e sombras */
   --navbar-border: 1px solid rgba(255, 255, 255, 0.15);
-
-  /* Animações suaves */
+  --navbar-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  
+  /* Transições */
   --navbar-transition: all 0.25s ease;
   --navbar-transition-fast: all 0.15s ease;
-
+  
   /* Cores de texto */
   --navbar-text: rgba(255, 255, 255, 0.95);
   --navbar-text-secondary: rgba(255, 255, 255, 0.75);
@@ -23,7 +23,7 @@
 }
 
 /* =====================================================
-   NAVBAR PRINCIPAL - DESIGN CORPORATIVO LIMPO
+   NAVBAR PRINCIPAL
    ===================================================== */
 .navbar-svs {
   position: fixed;
@@ -31,41 +31,22 @@
   left: 0;
   right: 0;
   height: var(--svs-altura-navbar);
-
-  /* Background simples */
-  background: var(--navbar-bg-primary);
-
-  /* Sombra sutil */
+  
+  background: var(--navbar-bg);
   box-shadow: var(--navbar-shadow);
   border-bottom: var(--navbar-border);
-
-  /* Layout reorganizado */
-  z-index: var(--svs-z-navbar);
+  
   display: flex;
   align-items: center;
   gap: var(--svs-espaco-grande);
-  /* Gap entre elementos principais */
   padding: 0 var(--svs-espaco-grande);
   color: var(--navbar-text);
-}
-
-.busca-global,
-.container-busca,
-.botao-expandir-busca,
-.busca-expandida {
-  align-items: center;
-  /* Todos alinhados verticalmente */
-}
-
-/* Garantir que o dropdown não interfira no layout */
-.dropdown-resultados {
-  position: absolute;
-  z-index: 9999;
-  /* Z-index alto para ficar acima de tudo */
+  
+  z-index: var(--svs-z-navbar);
 }
 
 /* =====================================================
-   MARCA/LOGO - DESIGN SIMPLES
+   LOGO/MARCA
    ===================================================== */
 .marca-navbar {
   display: flex;
@@ -76,11 +57,9 @@
   color: var(--navbar-text);
   text-decoration: none;
   flex-shrink: 0;
-  /* Não encolher */
   transition: var(--navbar-transition);
   cursor: pointer;
   order: 1;
-  /* Primeiro elemento */
 }
 
 .marca-navbar:hover {
@@ -111,23 +90,179 @@
 }
 
 /* =====================================================
-   BUSCA GLOBAL EXPANSÍVEL - DESIGN CLEAN
+   MENU PRINCIPAL
+   ===================================================== */
+.menu-principal {
+  display: flex;
+  align-items: center;
+  gap: var(--svs-espaco-pequeno);
+  flex-shrink: 0;
+  order: 2;
+}
+
+.categoria-menu {
+  position: relative;
+}
+
+.botao-categoria {
+  display: flex;
+  align-items: center;
+  gap: var(--svs-espaco-pequeno);
+  
+  background: var(--navbar-glass);
+  border: var(--navbar-border);
+  border-radius: 12px;
+  padding: 10px 16px;
+  min-height: 40px;
+  
+  color: var(--navbar-text);
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  
+  transition: var(--navbar-transition);
+}
+
+.botao-categoria:hover {
+  background: var(--navbar-glass-hover);
+  transform: translateY(-1px);
+  color: white;
+}
+
+.botao-categoria.ativo {
+  background: var(--navbar-glass-active);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+}
+
+.seta-categoria {
+  font-size: 0.75rem;
+  color: var(--navbar-text-secondary);
+  transition: var(--navbar-transition);
+}
+
+.categoria-menu.aberta .seta-categoria {
+  transform: rotate(180deg);
+  color: var(--navbar-text);
+}
+
+/* =====================================================
+   DROPDOWN DAS CATEGORIAS
+   ===================================================== */
+.dropdown-categoria {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  min-width: 280px;
+  max-width: 320px;
+  overflow: hidden;
+  
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%) translateY(-10px);
+  
+  transition: var(--navbar-transition);
+  z-index: var(--svs-z-dropdown);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.categoria-menu.aberta .dropdown-categoria {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.cabecalho-categoria {
+  background: var(--svs-gradiente-principal);
+  color: white;
+  padding: var(--svs-espaco-medio) var(--svs-espaco-grande);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.conteudo-categoria {
+  background: white;
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.item-categoria {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.item-categoria:last-child {
+  border-bottom: none;
+}
+
+.botao-item-categoria {
+  width: 100%;
+  padding: var(--svs-espaco-medio) var(--svs-espaco-grande);
+  border: none;
+  background: transparent;
+  color: var(--svs-texto-principal);
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  
+  display: flex;
+  align-items: center;
+  gap: var(--svs-espaco-pequeno);
+  
+  transition: var(--navbar-transition-fast);
+}
+
+.botao-item-categoria:hover {
+  background: var(--svs-primaria-clara);
+  color: var(--svs-primaria-escura);
+  font-weight: 600;
+  border-left: 3px solid var(--svs-primaria);
+  padding-left: calc(var(--svs-espaco-grande) - 3px);
+}
+
+.botao-item-categoria.ativo {
+  background: var(--svs-gradiente-principal);
+  color: white;
+  font-weight: 700;
+}
+
+.botao-item-categoria i {
+  width: 18px;
+  text-align: center;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  transition: var(--navbar-transition-fast);
+}
+
+.botao-item-categoria:hover i {
+  color: var(--svs-primaria);
+}
+
+.botao-item-categoria.ativo i {
+  color: white;
+}
+
+/* =====================================================
+   BUSCA GLOBAL
    ===================================================== */
 .busca-global {
   display: flex;
   align-items: center;
-  gap: 6px;
   flex-shrink: 0;
-  /* Não encolher */
   position: relative;
-  z-index: 10;
   height: 44px;
   order: 3;
-  /* Terceiro elemento */
   margin-left: auto;
-  /* Empurrar para direita, deixando espaço */
   margin-right: var(--svs-espaco-grande);
-  /* Espaço antes das ações */
+  z-index: 10;
 }
 
 .container-busca {
@@ -135,65 +270,25 @@
   display: flex;
   align-items: center;
   height: 44px;
-  /* Altura fixa */
   transition: var(--navbar-transition);
 }
 
-/* =====================================================
-   ESTADOS DA BUSCA (CORRIGIDOS)
-   ===================================================== */
-.container-busca:not(.expandido) .botao-expandir-busca {
-  display: flex;
-  opacity: 1;
-  visibility: visible;
-}
-
-.container-busca:not(.expandido) .busca-expandida {
-  display: flex;
-  /* Sempre visível mas com width 0 */
-  opacity: 0;
-  visibility: hidden;
-  width: 44px;
-}
-
-.container-busca.expandido .botao-expandir-busca {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  /* Não interferir com cliques */
-}
-
-.container-busca.expandido .busca-expandida {
-  display: flex;
-  opacity: 1;
-  visibility: visible;
-}
-
-/* =====================================================
-   BOTÃO LUPA INICIAL - DESIGN SIMPLES
-   ===================================================== */
+/* Botão expandir busca */
 .botao-expandir-busca {
   display: flex;
   align-items: center;
   justify-content: center;
-
-  /* Estilo limpo */
+  
   background: var(--navbar-glass);
   border: var(--navbar-border);
-
-  /* Formato circular */
   border-radius: 50%;
   width: 44px;
   height: 44px;
-
-  /* Cores e texto */
+  
   color: var(--navbar-text);
   cursor: pointer;
-
-  /* Transições */
+  
   transition: var(--navbar-transition);
-
-  /* Posicionamento */
   position: relative;
   z-index: 2;
 }
@@ -204,64 +299,44 @@
   color: white;
 }
 
-.botao-expandir-busca:active {
-  transform: translateY(0);
-}
-
 .icone-busca-inicial {
   font-size: 1.1rem;
   transition: var(--navbar-transition);
 }
 
-/* =====================================================
-   BUSCA EXPANDIDA - INTERFACE CLEAN
-   ===================================================== */
+/* Busca expandida */
 .busca-expandida {
   display: flex;
   align-items: center;
-
-  /* Estilo limpo */
+  
   background: var(--navbar-glass);
   border: var(--navbar-border);
-
-  /* Formato */
   border-radius: 22px;
   padding: 8px 16px;
   height: 44px;
-  /* Altura fixa igual ao botão */
-
-  /* Posicionamento CORRIGIDO - fica na mesma linha */
+  
   position: absolute;
   top: 0;
-  /* Alinhado com o botão */
-  left: 0;
-  right: auto;
-  /* Permitir expansão para direita */
+  right: 0;
   z-index: 1;
-
-  /* Largura inicial igual ao botão */
+  
   width: 44px;
   min-width: 44px;
-
-  /* Estados inicial */
+  overflow: hidden;
+  
   opacity: 0;
   visibility: hidden;
-  overflow: hidden;
-
-  /* Transições */
+  
   transition: var(--navbar-transition);
 }
 
-/* Estado ativo - expansão horizontal */
 .busca-expandida.ativa {
   opacity: 1;
   visibility: visible;
   width: 400px;
-  /* Largura expandida */
   min-width: 400px;
 }
 
-/* Estado de foco */
 .busca-expandida:focus-within {
   background: var(--navbar-glass-active);
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25);
@@ -273,19 +348,16 @@
   margin-right: var(--svs-espaco-pequeno);
   font-size: 1rem;
   flex-shrink: 0;
-  transition: var(--navbar-transition-fast);
-
-  /* Inicialmente oculto */
+  
   opacity: 0;
   transform: scale(0.8);
+  transition: var(--navbar-transition-fast);
 }
 
-/* Mostrar ícone quando expandido */
 .busca-expandida.ativa .icone-busca {
   opacity: 1;
   transform: scale(1);
   transition-delay: 0.1s;
-  /* Delay para aparecer depois da expansão */
 }
 
 .busca-expandida:focus-within .icone-busca {
@@ -303,19 +375,16 @@
   font-weight: 500;
   padding: 6px 0;
   min-width: 0;
-
-  /* Inicialmente oculto */
+  
   opacity: 0;
   transform: translateX(-10px);
   transition: var(--navbar-transition-fast);
 }
 
-/* Mostrar input quando expandido */
 .busca-expandida.ativa .input-busca-global {
   opacity: 1;
   transform: translateX(0);
   transition-delay: 0.15s;
-  /* Delay maior para aparecer por último */
 }
 
 .input-busca-global::placeholder {
@@ -327,7 +396,7 @@
   color: var(--navbar-text-secondary);
 }
 
-/* Botões da busca expandida */
+/* Botões da busca */
 .botao-limpar-busca,
 .botao-recolher-busca {
   background: none;
@@ -336,28 +405,26 @@
   cursor: pointer;
   padding: 6px;
   border-radius: 50%;
-  transition: var(--navbar-transition-fast);
   font-size: 0.9rem;
   margin-left: 4px;
   flex-shrink: 0;
   width: 28px;
   height: 28px;
+  
   display: flex;
   align-items: center;
   justify-content: center;
-
-  /* Inicialmente ocultos */
+  
   opacity: 0;
   transform: scale(0.8);
+  transition: var(--navbar-transition-fast);
 }
 
-/* Mostrar botões quando expandido */
 .busca-expandida.ativa .botao-limpar-busca,
 .busca-expandida.ativa .botao-recolher-busca {
   opacity: 1;
   transform: scale(1);
   transition-delay: 0.2s;
-  /* Delay para aparecer depois de tudo */
 }
 
 .botao-limpar-busca.visivel {
@@ -366,7 +433,6 @@
   transform: scale(1);
 }
 
-/* Quando busca não está ativa, esconder botão limpar */
 .busca-expandida:not(.ativa) .botao-limpar-busca {
   opacity: 0 !important;
   visibility: hidden;
@@ -379,40 +445,56 @@
   background: var(--navbar-glass);
 }
 
+/* Estados da busca */
+.container-busca:not(.expandido) .botao-expandir-busca {
+  display: flex;
+  opacity: 1;
+  visibility: visible;
+}
+
+.container-busca:not(.expandido) .busca-expandida {
+  display: flex;
+  opacity: 0;
+  visibility: hidden;
+  width: 44px;
+}
+
+.container-busca.expandido .botao-expandir-busca {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.container-busca.expandido .busca-expandida {
+  display: flex;
+  opacity: 1;
+  visibility: visible;
+}
+
 /* =====================================================
-   DROPDOWN DE RESULTADOS - DESIGN CORPORATIVO
+   DROPDOWN DE RESULTADOS
    ===================================================== */
 .dropdown-resultados {
   position: absolute;
   top: calc(100% + 8px);
-  left: 0;
   right: 0;
-
-  /* Estilo limpo */
+  
   background: white;
-
-  /* Formato */
-  border-radius: 12px;
   border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
   overflow: hidden;
-
-  /* Sombra simples */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-
-  /* Tamanho - ajustado para seguir a largura da busca */
+  
   max-height: 480px;
   min-width: 400px;
   width: 400px;
-  /* Largura fixa igual à busca expandida */
-
-  /* Estados */
+  
   opacity: 0;
   visibility: hidden;
   transform: translateY(-10px);
-
-  /* Transições */
+  
   transition: var(--navbar-transition);
   z-index: calc(var(--svs-z-dropdown) + 5);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
 .dropdown-resultados.visivel {
@@ -421,7 +503,6 @@
   transform: translateY(0);
 }
 
-/* Cabeçalho dos resultados */
 .cabecalho-resultados {
   background: var(--svs-gradiente-principal);
   color: white;
@@ -439,13 +520,9 @@
   font-size: 0.85rem;
 }
 
-/* =====================================================
-   LISTA DE RESULTADOS - INTERFACE SIMPLES
-   ===================================================== */
 .lista-resultados {
   max-height: 320px;
   overflow-y: auto;
-  overflow-x: hidden;
   background: white;
 }
 
@@ -456,8 +533,8 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   cursor: pointer;
   transition: var(--navbar-transition-fast);
-  position: relative;
-  background: transparent;
+  
+  animation: fadeInUp 0.2s ease forwards;
 }
 
 .item-resultado:last-child {
@@ -471,7 +548,6 @@
   padding-left: calc(var(--svs-espaco-grande) - 3px);
 }
 
-/* Ícone do resultado */
 .icone-resultado {
   width: 28px;
   height: 28px;
@@ -493,7 +569,6 @@
   color: white;
 }
 
-/* Conteúdo do resultado */
 .conteudo-resultado {
   flex: 1;
   min-width: 0;
@@ -527,7 +602,6 @@
   color: var(--svs-primaria);
 }
 
-/* Destacar termo encontrado */
 .resultado-termo-encontrado {
   background: #fef08a;
   color: #000;
@@ -536,9 +610,6 @@
   font-weight: 700;
 }
 
-/* =====================================================
-   RODAPÉ DOS RESULTADOS
-   ===================================================== */
 .rodape-resultados {
   background: #f8fafc;
   padding: var(--svs-espaco-pequeno) var(--svs-espaco-grande);
@@ -588,7 +659,7 @@
   font-weight: 500;
 }
 
-/* Scrollbar simples */
+/* Scrollbar */
 .lista-resultados::-webkit-scrollbar {
   width: 6px;
   background: #f1f5f9;
@@ -604,226 +675,33 @@
 }
 
 /* =====================================================
-   MENU PRINCIPAL - DESIGN CLEAN
-   ===================================================== */
-.menu-principal {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  /* Alinhar à esquerda */
-  gap: var(--svs-espaco-pequeno);
-  flex-shrink: 0;
-  /* Não encolher */
-  order: 2;
-  /* Segundo elemento */
-}
-
-.categoria-menu {
-  position: relative;
-  display: inline-block;
-}
-
-.botao-categoria {
-  display: flex;
-  align-items: center;
-  gap: var(--svs-espaco-pequeno);
-
-  /* Estilo limpo */
-  background: var(--navbar-glass);
-  border: var(--navbar-border);
-
-  /* Formato */
-  border-radius: 12px;
-  padding: 10px 16px;
-  min-height: 40px;
-
-  /* Texto */
-  color: var(--navbar-text);
-  text-decoration: none;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 600;
-  white-space: nowrap;
-
-  /* Transições */
-  transition: var(--navbar-transition);
-}
-
-.botao-categoria:hover {
-  background: var(--navbar-glass-hover);
-  transform: translateY(-1px);
-  color: white;
-}
-
-.botao-categoria.ativo {
-  background: var(--navbar-glass-active);
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
-}
-
-.seta-categoria {
-  font-size: 0.75rem;
-  transition: var(--navbar-transition);
-  color: var(--navbar-text-secondary);
-}
-
-.categoria-menu.aberta .botao-categoria .seta-categoria {
-  transform: rotate(180deg);
-  color: var(--navbar-text);
-}
-
-/* =====================================================
-   DROPDOWN DAS CATEGORIAS - DESIGN CORPORATIVO
-   ===================================================== */
-.dropdown-categoria {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%);
-
-  /* Estilo limpo */
-  background: white;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-
-  /* Formato */
-  border-radius: 12px;
-  min-width: 280px;
-  max-width: 320px;
-  overflow: hidden;
-
-  /* Estados */
-  opacity: 0;
-  visibility: hidden;
-  transform: translateX(-50%) translateY(-10px);
-
-  /* Transições */
-  transition: var(--navbar-transition);
-  z-index: var(--svs-z-dropdown);
-
-  /* Sombra simples */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-}
-
-.categoria-menu.aberta .dropdown-categoria {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(-50%) translateY(0);
-}
-
-/* Cabeçalho da categoria */
-.cabecalho-categoria {
-  background: var(--svs-gradiente-principal);
-  color: white;
-  padding: var(--svs-espaco-medio) var(--svs-espaco-grande);
-  font-size: 0.9rem;
-  font-weight: 700;
-  text-align: center;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-/* Conteúdo da categoria */
-.conteudo-categoria {
-  background: white;
-  max-height: 360px;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-.item-categoria {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  margin: 0;
-  display: block;
-  transition: var(--navbar-transition-fast);
-  position: relative;
-}
-
-.item-categoria:last-child {
-  border-bottom: none;
-}
-
-.botao-item-categoria {
-  width: 100%;
-  padding: var(--svs-espaco-medio) var(--svs-espaco-grande);
-  border: none;
-  background: transparent;
-  color: var(--svs-texto-principal);
-  text-align: left;
-  cursor: pointer;
-  transition: var(--navbar-transition-fast);
-  font-size: 0.85rem;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: var(--svs-espaco-pequeno);
-  margin: 0;
-  position: relative;
-}
-
-.botao-item-categoria:hover {
-  background: var(--svs-primaria-clara);
-  color: var(--svs-primaria-escura);
-  font-weight: 600;
-  border-left: 3px solid var(--svs-primaria);
-  padding-left: calc(var(--svs-espaco-grande) - 3px);
-}
-
-.botao-item-categoria.ativo {
-  background: var(--svs-gradiente-principal);
-  color: white;
-  font-weight: 700;
-}
-
-.botao-item-categoria i {
-  width: 18px;
-  text-align: center;
-  font-size: 0.9rem;
-  flex-shrink: 0;
-  transition: var(--navbar-transition-fast);
-}
-
-.botao-item-categoria:hover i {
-  color: var(--svs-primaria);
-}
-
-.botao-item-categoria.ativo i {
-  color: white;
-}
-
-/* =====================================================
-   AÇÕES DA NAVBAR - DESIGN SIMPLES
+   AÇÕES DA NAVBAR
    ===================================================== */
 .acoes-navbar {
   display: flex;
   align-items: center;
   gap: var(--svs-espaco-medio);
   flex-shrink: 0;
-  /* Não encolher */
   order: 4;
-  /* Último elemento */
 }
 
 .botao-acao-navbar {
   display: flex;
   align-items: center;
   gap: var(--svs-espaco-pequeno);
-
-  /* Estilo limpo */
+  
   background: var(--navbar-glass);
   border: var(--navbar-border);
-
-  /* Formato */
   border-radius: 12px;
   padding: 10px 16px;
   min-height: 40px;
-
-  /* Texto */
+  
   color: var(--navbar-text);
   text-decoration: none;
   cursor: pointer;
   font-size: 0.9rem;
   font-weight: 600;
-
-  /* Transições */
+  
   transition: var(--navbar-transition);
 }
 
@@ -869,8 +747,8 @@
 
 .seta-usuario {
   font-size: 0.75rem;
-  transition: var(--navbar-transition);
   color: var(--navbar-text-secondary);
+  transition: var(--navbar-transition);
 }
 
 .botao-usuario.ativo .seta-usuario {
@@ -878,33 +756,25 @@
   color: var(--navbar-text);
 }
 
-/* Menu do usuário */
 .menu-usuario {
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
-
-  /* Estilo limpo */
+  
   background: white;
   border: 1px solid rgba(0, 0, 0, 0.1);
-
-  /* Formato */
   border-radius: 12px;
   min-width: 200px;
   overflow: hidden;
-
-  /* Estados */
+  
   opacity: 0;
   visibility: hidden;
   transform: translateY(-10px);
-
-  /* Transições */
+  
   transition: var(--navbar-transition);
   z-index: var(--svs-z-dropdown);
-
-  /* Sombra simples */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-
+  
   display: none;
 }
 
@@ -931,12 +801,14 @@
   color: var(--svs-texto-secundario);
   text-align: left;
   cursor: pointer;
-  transition: var(--navbar-transition-fast);
   font-size: 0.85rem;
   font-weight: 500;
+  
   display: flex;
   align-items: center;
   gap: var(--svs-espaco-pequeno);
+  
+  transition: var(--navbar-transition-fast);
 }
 
 .botao-menu-usuario:hover {
@@ -954,7 +826,7 @@
 }
 
 /* =====================================================
-   OVERLAY - SIMPLES
+   OVERLAY
    ===================================================== */
 .overlay-categorias {
   position: fixed;
@@ -964,6 +836,7 @@
   bottom: 0;
   background: rgba(0, 0, 0, 0.25);
   z-index: calc(var(--svs-z-navbar) - 1);
+  
   opacity: 0;
   visibility: hidden;
   transition: var(--navbar-transition);
@@ -977,76 +850,50 @@
 }
 
 /* =====================================================
-   ANIMAÇÕES SIMPLES
+   ANIMAÇÕES
    ===================================================== */
-
-/* Animação de entrada dos resultados */
-.item-resultado {
-  animation: fadeInUp 0.2s ease forwards;
-}
-
-.item-resultado:nth-child(1) {
-  animation-delay: 0ms;
-}
-
-.item-resultado:nth-child(2) {
-  animation-delay: 30ms;
-}
-
-.item-resultado:nth-child(3) {
-  animation-delay: 60ms;
-}
-
-.item-resultado:nth-child(4) {
-  animation-delay: 90ms;
-}
-
-.item-resultado:nth-child(5) {
-  animation-delay: 120ms;
-}
-
 @keyframes fadeInUp {
   from {
     opacity: 0;
     transform: translateY(10px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
+.item-resultado:nth-child(1) { animation-delay: 0ms; }
+.item-resultado:nth-child(2) { animation-delay: 30ms; }
+.item-resultado:nth-child(3) { animation-delay: 60ms; }
+.item-resultado:nth-child(4) { animation-delay: 90ms; }
+.item-resultado:nth-child(5) { animation-delay: 120ms; }
+
 /* =====================================================
    RESPONSIVIDADE
    ===================================================== */
 @media (max-width: 1200px) {
+  .navbar-svs {
+    gap: var(--svs-espaco-medio);
+  }
+  
+  .busca-global {
+    margin-right: var(--svs-espaco-medio);
+  }
+  
   .busca-expandida.ativa {
     width: 350px;
     min-width: 350px;
   }
-
+  
   .dropdown-resultados {
     min-width: 350px;
     width: 350px;
   }
-
-  .busca-expandida {
-    min-width: 350px;
-  }
-
+  
   .botao-categoria {
     padding: 8px 12px;
     font-size: 0.85rem;
-  }
-
-  .navbar-svs {
-    gap: var(--svs-espaco-medio);
-    /* Gap menor em telas menores */
-  }
-
-  .busca-global {
-    margin-right: var(--svs-espaco-medio);
   }
 }
 
@@ -1054,32 +901,31 @@
   .navbar-svs {
     gap: var(--svs-espaco-pequeno);
   }
-
+  
   .busca-global {
     margin-right: var(--svs-espaco-pequeno);
   }
-
+  
   .busca-expandida.ativa {
     width: 300px;
     min-width: 300px;
   }
-
+  
   .dropdown-resultados {
     min-width: 300px;
     width: 300px;
   }
-
-  .botao-expandir-busca {
+  
+  .botao-expandir-busca,
+  .busca-expandida {
     width: 40px;
     height: 40px;
   }
-
+  
   .busca-expandida {
-    height: 40px;
-    width: 40px;
     min-width: 40px;
   }
-
+  
   .container-busca:not(.expandido) .busca-expandida {
     width: 40px;
   }
@@ -1093,20 +939,17 @@
     padding: var(--svs-espaco-pequeno) var(--svs-espaco-medio);
     gap: var(--svs-espaco-pequeno);
   }
-
-  /* Logo fica na primeira linha */
+  
   .marca-navbar {
     order: 1;
     flex: 0 0 auto;
   }
-
-  /* Ações ficam ao lado do logo na primeira linha */
+  
   .acoes-navbar {
     order: 2;
     margin-left: auto;
   }
-
-  /* Menu fica na segunda linha */
+  
   .menu-principal {
     order: 3;
     width: 100%;
@@ -1115,37 +958,34 @@
     overflow-x: auto;
     padding-bottom: var(--svs-espaco-pequeno);
   }
-
-  /* Busca fica na terceira linha */
+  
   .busca-global {
     order: 4;
     width: 100%;
     margin: var(--svs-espaco-pequeno) 0 0 0;
     height: auto;
   }
-
+  
   .container-busca {
     width: 100%;
     height: 40px;
-    /* Altura reduzida no mobile */
   }
-
+  
   .busca-expandida {
     height: 40px;
     width: 40px;
     min-width: 40px;
   }
-
+  
   .busca-expandida.ativa {
     width: 100%;
-    /* Largura total no mobile */
     min-width: auto;
     position: relative;
-    /* Posição relativa no mobile */
     left: 0;
+    right: 0;
     transform: none;
   }
-
+  
   .dropdown-resultados {
     position: fixed;
     top: auto;
@@ -1157,82 +997,55 @@
     min-width: auto;
     width: auto;
   }
-
+  
   .botao-expandir-busca {
     width: 40px;
     height: 40px;
   }
-
+  
   .container-busca:not(.expandido) .busca-expandida {
     width: 40px;
   }
 }
 
 @media (max-width: 480px) {
-  .busca-expandida {
+  .marca-navbar {
+    flex: 1;
+  }
+  
+  .texto-marca {
+    display: none;
+  }
+  
+  .busca-expandida,
+  .botao-expandir-busca,
+  .container-busca {
     height: 36px;
+  }
+  
+  .busca-expandida {
     width: 36px;
     min-width: 36px;
     padding: 6px 12px;
   }
-
+  
   .busca-expandida.ativa {
     height: 36px;
   }
-
+  
   .botao-expandir-busca {
     width: 36px;
-    height: 36px;
   }
-
-  .container-busca {
-    height: 36px;
-  }
-
+  
   .container-busca:not(.expandido) .busca-expandida {
     width: 36px;
   }
-
-  .marca-navbar {
-    flex: 1;
-    /* Ocupar espaço disponível */
-  }
-
-  .texto-marca {
-    display: none;
-    /* Esconder texto em telas muito pequenas */
-  }
-}
-
-/* =====================================================
-   ANIMAÇÃO DE EXPANSÃO SUAVE
-   ===================================================== */
-@keyframes expandirBuscaHorizontal {
-  0% {
-    width: 44px;
-    opacity: 0;
-  }
-
-  50% {
-    opacity: 0.7;
-  }
-
-  100% {
-    width: 400px;
-    opacity: 1;
-  }
-}
-
-/* Aplicar animação apenas quando necessário */
-.busca-expandida.animando {
-  animation: expandirBuscaHorizontal 0.4s cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
 
 /* =====================================================
    IMPRESSÃO
    ===================================================== */
 @media print {
-
   .navbar-svs,
   .overlay-categorias,
   .dropdown-resultados,
@@ -1253,62 +1066,10 @@
   }
 }
 
-/* Alto contraste */
 @media (prefers-contrast: high) {
   .navbar-svs {
     --navbar-glass: rgba(255, 255, 255, 0.25);
     --navbar-border: 2px solid rgba(255, 255, 255, 0.4);
     --navbar-text: white;
   }
-}
-
-.busca-global .dropdown-resultados {
-  /* Posicionamento absoluto em relação à busca */
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  right: 0;
-  z-index: 9999;
-}
-
-/* Garantir espaçamento adequado entre elementos */
-.navbar-svs>* {
-  flex-shrink: 0;
-  /* Nenhum elemento deve encolher por padrão */
-}
-
-@media (max-width: 1024px) {
-
-  /* Em telas médias, reduzir texto dos botões */
-  .botao-categoria {
-    padding: 8px 12px;
-    font-size: 0.85rem;
-  }
-
-  .botao-categoria span {
-    display: none;
-    /* Esconder texto, mostrar só ícones */
-  }
-
-  .botao-categoria::after {
-    content: attr(data-short);
-    /* Mostrar versão curta */
-  }
-}
-
-/* Adicionar versões curtas aos botões (se necessário) */
-.categoria-menu[data-categoria="cadastro"] .botao-categoria::after {
-  content: "Cad";
-}
-
-.categoria-menu[data-categoria="consultas"] .botao-categoria::after {
-  content: "Cons";
-}
-
-.categoria-menu[data-categoria="precos"] .botao-categoria::after {
-  content: "Preços";
-}
-
-.categoria-menu[data-categoria="selecoes"] .botao-categoria::after {
-  content: "Sel";
 }
