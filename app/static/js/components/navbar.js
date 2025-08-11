@@ -1,6 +1,7 @@
+/* filepath: c:\Users\Dayane\Documents\svs\app\static\js\components\navbar.js */
 /**
- * SVS Navbar Component - Com Busca Global
- * Gerencia a navbar horizontal com busca global em todas as categorias
+ * SVS Navbar Component - Com Dropdown de Resultados
+ * Gerencia a navbar horizontal com dropdown de resultados da busca global
  */
 class SVSNavbar {
   constructor() {
@@ -12,15 +13,19 @@ class SVSNavbar {
     this.menuUsuarioAberto = false;
     this.overlay = null;
     this.moduloAtivo = null;
-
-    // Busca global
+    
+    // Busca global com dropdown de resultados
     this.inputBuscaGlobal = null;
     this.botaoLimparBusca = null;
+    this.dropdownResultados = null;
+    this.listaResultados = null;
     this.contadorResultados = null;
     this.termoBuscaAtual = '';
     this.resultadosBusca = [];
+    this.resultadoSelecionado = -1;
+    this.dropdownAberto = false;
 
-    console.log("🧭 SVS Navbar com Busca Global inicializando...");
+    console.log("🧭 SVS Navbar com Dropdown de Resultados inicializando...");
   }
 
   async init() {
@@ -32,7 +37,7 @@ class SVSNavbar {
       this.configurarBuscaGlobal();
       this.configurarNavegacaoTeclado();
 
-      console.log("✅ SVS Navbar com Busca Global inicializada");
+      console.log("✅ SVS Navbar com Dropdown de Resultados inicializada");
     } catch (erro) {
       console.error("❌ Erro ao inicializar navbar:", erro);
       throw erro;
@@ -42,17 +47,19 @@ class SVSNavbar {
   encontrarElementos() {
     // Encontrar todas as categorias de menu
     this.categoriasMenu = document.querySelectorAll('.categoria-menu');
-
+    
     // Elementos da busca global
     this.inputBuscaGlobal = document.getElementById('busca-global-input');
     this.botaoLimparBusca = document.getElementById('limpar-busca-global');
+    this.dropdownResultados = document.getElementById('dropdown-resultados');
+    this.listaResultados = document.getElementById('lista-resultados');
     this.contadorResultados = document.getElementById('contador-resultados');
-
+    
     // Elementos do usuário
     this.dropdownUsuario = document.querySelector('.dropdown-usuario');
     this.botaoUsuario = document.querySelector('.botao-usuario');
     this.menuUsuario = document.querySelector('.menu-usuario');
-
+    
     // Overlay
     this.overlay = document.querySelector('.overlay-categorias');
 
@@ -64,12 +71,16 @@ class SVSNavbar {
       throw new Error("Input de busca global não encontrado");
     }
 
+    if (!this.dropdownResultados) {
+      throw new Error("Dropdown de resultados não encontrado");
+    }
+
     console.log(`📋 Encontradas ${this.categoriasMenu.length} categorias de menu`);
-    console.log("🔍 Busca global encontrada");
+    console.log("🔍 Busca global e dropdown encontrados");
   }
 
   // =====================================================
-  // BUSCA GLOBAL - FUNCIONALIDADE PRINCIPAL
+  // BUSCA GLOBAL COM DROPDOWN DE RESULTADOS
   // =====================================================
   configurarBuscaGlobal() {
     // Event listener para input em tempo real
@@ -80,14 +91,13 @@ class SVSNavbar {
 
     // Event listener para teclas especiais
     this.inputBuscaGlobal.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        this.limparBuscaGlobal();
-      } else if (e.key === 'Enter') {
-        e.preventDefault();
-        this.executarPrimeiroResultado();
-      } else if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        this.focarPrimeiroResultado();
+      this.gerenciarTeclasBusca(e);
+    });
+
+    // Focus e blur para controlar dropdown
+    this.inputBuscaGlobal.addEventListener('focus', () => {
+      if (this.resultadosBusca.length > 0) {
+        this.mostrarDropdownResultados();
       }
     });
 
@@ -98,12 +108,45 @@ class SVSNavbar {
       });
     }
 
-    console.log("🔍 Busca global configurada");
+    console.log("🔍 Busca global com dropdown configurada");
+  }
+
+  gerenciarTeclasBusca(e) {
+    switch (e.key) {
+      case 'Escape':
+        this.limparBuscaGlobal();
+        break;
+        
+      case 'Enter':
+        e.preventDefault();
+        this.executarResultadoSelecionado();
+        break;
+        
+      case 'ArrowDown':
+        e.preventDefault();
+        this.navegarResultados(1);
+        break;
+        
+      case 'ArrowUp':
+        e.preventDefault();
+        this.navegarResultados(-1);
+        break;
+        
+      case 'Home':
+        e.preventDefault();
+        this.selecionarPrimeiroResultado();
+        break;
+        
+      case 'End':
+        e.preventDefault();
+        this.selecionarUltimoResultado();
+        break;
+    }
   }
 
   executarBuscaGlobal(termo) {
     this.termoBuscaAtual = termo.toLowerCase();
-
+    
     // Mostrar/esconder botão limpar
     if (this.botaoLimparBusca) {
       if (termo.length > 0) {
@@ -114,219 +157,279 @@ class SVSNavbar {
     }
 
     if (termo.length < 2) {
-      this.limparResultadosBusca();
+      this.esconderDropdownResultados();
+      this.resultadosBusca = [];
       return;
     }
 
     console.log(`🔍 Buscando globalmente: "${termo}"`);
-
-    let totalResultados = 0;
-    let categoriasComResultados = 0;
+    
     this.resultadosBusca = [];
-
-    // Primeiro, fechar todas as categorias
-    this.fecharTodasCategorias();
+    this.resultadoSelecionado = -1;
 
     // Buscar em todas as categorias
     this.categoriasMenu.forEach((categoria) => {
       const nomeCategoria = categoria.getAttribute('data-categoria');
+      const nomeCategoriaFormatado = this.formatarNomeCategoria(nomeCategoria);
       const itensCategoria = categoria.querySelectorAll('.item-categoria');
-      let resultadosCategoria = 0;
 
       itensCategoria.forEach((item) => {
         const botao = item.querySelector('.botao-item-categoria');
         if (!botao) return;
 
-        const textoItem = botao.textContent.trim().toLowerCase();
+        const textoItem = botao.textContent.trim();
+        const textoItemLower = textoItem.toLowerCase();
         const termosCustomizados = (item.getAttribute('data-busca') || '').toLowerCase();
-        const termosBusca = `${textoItem} ${termosCustomizados}`;
+        const termosBusca = `${textoItemLower} ${termosCustomizados}`;
 
-        const corresponde = termosBusca.includes(this.termoBuscaAtual);
+        if (termosBusca.includes(this.termoBuscaAtual)) {
+          // Obter ícone
+          const icone = botao.querySelector('i');
+          const classeIcone = icone ? icone.className : 'fas fa-cube';
+          
+          // Obter dados de navegação
+          const dataModule = botao.getAttribute('data-module');
+          const dataTarget = botao.getAttribute('data-target');
+          const dataAction = botao.getAttribute('data-action');
 
-        if (corresponde) {
-          // Mostrar e destacar
-          item.classList.remove('busca-oculto');
-          item.classList.add('busca-destaque');
-          this.destacarTermoEncontrado(botao, termo);
-
-          // Adicionar aos resultados
           this.resultadosBusca.push({
-            categoria: nomeCategoria,
-            item: item,
-            botao: botao,
-            texto: botao.textContent.trim()
+            nome: textoItem,
+            categoria: nomeCategoriaFormatado,
+            icone: classeIcone,
+            elemento: botao,
+            dataModule: dataModule,
+            dataTarget: dataTarget,
+            dataAction: dataAction
           });
-
-          resultadosCategoria++;
-          totalResultados++;
-        } else {
-          // Ocultar
-          item.classList.add('busca-oculto');
-          item.classList.remove('busca-destaque');
-          this.removerDestaqueTermo(botao);
         }
       });
-
-      // ✨ NOVA LÓGICA: Auto-expandir categorias com resultados
-      if (resultadosCategoria > 0) {
-        // Destacar categoria
-        categoria.classList.add('busca-destaque');
-        categoria.classList.remove('busca-oculta');
-
-        // 🔥 ABRIR AUTOMATICAMENTE a categoria
-        this.abrirCategoria(categoria);
-
-        categoriasComResultados++;
-
-        console.log(`📂 Auto-expandindo categoria "${nomeCategoria}" com ${resultadosCategoria} resultado(s)`);
-      } else {
-        // Categoria sem resultados fica opaca
-        categoria.classList.add('busca-oculta');
-        categoria.classList.remove('busca-destaque');
-      }
     });
 
-    this.atualizarContadorResultados(totalResultados, categoriasComResultados);
+    // Ordenar resultados por relevância (começa com o termo primeiro)
+    this.resultadosBusca.sort((a, b) => {
+      const aComeca = a.nome.toLowerCase().startsWith(this.termoBuscaAtual);
+      const bComeca = b.nome.toLowerCase().startsWith(this.termoBuscaAtual);
+      
+      if (aComeca && !bComeca) return -1;
+      if (!aComeca && bComeca) return 1;
+      
+      return a.nome.localeCompare(b.nome);
+    });
 
-    console.log(`✅ Busca concluída: ${totalResultados} resultados em ${categoriasComResultados} categorias`);
+    this.renderizarResultados();
+    this.mostrarDropdownResultados();
+    
+    console.log(`✅ Busca concluída: ${this.resultadosBusca.length} resultados`);
+  }
 
-    // 🎯 FOCAR NO PRIMEIRO RESULTADO automaticamente
-    if (this.resultadosBusca.length > 0) {
-      setTimeout(() => {
-        const primeiroResultado = this.resultadosBusca[0];
-        if (primeiroResultado.botao) {
-          primeiroResultado.botao.focus();
-          // Scroll suave para o primeiro resultado
-          primeiroResultado.botao.scrollIntoView({
-            behavior: 'smooth',
-            block: 'nearest'
-          });
-        }
-      }, 200); // Pequeno delay para animação de abertura
+  formatarNomeCategoria(categoria) {
+    const mapaCategorias = {
+      'cadastro': 'Cadastro',
+      'consultas': 'Consultas', 
+      'precos': 'Listas de Preços',
+      'selecoes': 'Seleções'
+    };
+    
+    return mapaCategorias[categoria] || categoria;
+  }
+
+  renderizarResultados() {
+    if (!this.listaResultados) return;
+
+    // Limpar lista
+    this.listaResultados.innerHTML = '';
+
+    if (this.resultadosBusca.length === 0) {
+      this.listaResultados.classList.add('vazia');
+      this.atualizarContadorResultados(0);
+      return;
     }
+
+    this.listaResultados.classList.remove('vazia');
+
+    // Renderizar cada resultado
+    this.resultadosBusca.forEach((resultado, index) => {
+      const itemElement = this.criarElementoResultado(resultado, index);
+      this.listaResultados.appendChild(itemElement);
+    });
+
+    this.atualizarContadorResultados(this.resultadosBusca.length);
+  }
+
+  criarElementoResultado(resultado, index) {
+    const item = document.createElement('div');
+    item.className = 'item-resultado';
+    item.setAttribute('role', 'option');
+    item.setAttribute('data-index', index);
+
+    // Destacar termo encontrado no nome
+    const nomeDestacado = this.destacarTermoNoTexto(resultado.nome, this.termoBuscaAtual);
+
+    item.innerHTML = `
+      <div class="icone-resultado">
+        <i class="${resultado.icone}"></i>
+      </div>
+      <div class="conteudo-resultado">
+        <div class="nome-resultado">${nomeDestacado}</div>
+        <div class="categoria-resultado">${resultado.categoria}</div>
+      </div>
+    `;
+
+    // Event listeners para o item
+    item.addEventListener('click', () => {
+      this.executarResultado(resultado);
+    });
+
+    item.addEventListener('mouseenter', () => {
+      this.selecionarResultado(index);
+    });
+
+    return item;
+  }
+
+  destacarTermoNoTexto(texto, termo) {
+    if (!termo) return texto;
+    
+    const regex = new RegExp(`(${termo})`, 'gi');
+    return texto.replace(regex, '<span class="resultado-termo-encontrado">$1</span>');
+  }
+
+  mostrarDropdownResultados() {
+    if (!this.dropdownResultados) return;
+    
+    this.dropdownResultados.classList.add('visivel');
+    this.inputBuscaGlobal.setAttribute('aria-expanded', 'true');
+    this.dropdownAberto = true;
+    
+    console.log("📋 Dropdown de resultados mostrado");
+  }
+
+  esconderDropdownResultados() {
+    if (!this.dropdownResultados) return;
+    
+    this.dropdownResultados.classList.remove('visivel');
+    this.inputBuscaGlobal.setAttribute('aria-expanded', 'false');
+    this.dropdownAberto = false;
+    this.resultadoSelecionado = -1;
+    
+    console.log("📋 Dropdown de resultados escondido");
+  }
+
+  atualizarContadorResultados(total) {
+    if (!this.contadorResultados) return;
+
+    if (total === 0 && this.termoBuscaAtual.length >= 2) {
+      this.contadorResultados.textContent = 'Nenhum resultado encontrado';
+    } else if (total > 0) {
+      const textoResultado = total === 1 ? 'resultado' : 'resultados';
+      this.contadorResultados.textContent = `${total} ${textoResultado} encontrado${total > 1 ? 's' : ''}`;
+    } else {
+      this.contadorResultados.textContent = '';
+    }
+  }
+
+  // =====================================================
+  // NAVEGAÇÃO NOS RESULTADOS
+  // =====================================================
+  navegarResultados(direcao) {
+    if (this.resultadosBusca.length === 0) return;
+
+    const novoIndice = this.resultadoSelecionado + direcao;
+    
+    if (novoIndice >= 0 && novoIndice < this.resultadosBusca.length) {
+      this.selecionarResultado(novoIndice);
+    } else if (direcao > 0 && this.resultadoSelecionado === this.resultadosBusca.length - 1) {
+      // Voltar para o primeiro
+      this.selecionarResultado(0);
+    } else if (direcao < 0 && this.resultadoSelecionado <= 0) {
+      // Ir para o último
+      this.selecionarResultado(this.resultadosBusca.length - 1);
+    }
+  }
+
+  selecionarResultado(index) {
+    // Remover seleção anterior
+    const itemAnterior = this.listaResultados.querySelector('.item-resultado.destacado');
+    if (itemAnterior) {
+      itemAnterior.classList.remove('destacado');
+    }
+
+    this.resultadoSelecionado = index;
+
+    // Adicionar nova seleção
+    const novoItem = this.listaResultados.querySelector(`[data-index="${index}"]`);
+    if (novoItem) {
+      novoItem.classList.add('destacado');
+      
+      // Scroll para o item visível
+      novoItem.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest'
+      });
+    }
+  }
+
+  selecionarPrimeiroResultado() {
+    if (this.resultadosBusca.length > 0) {
+      this.selecionarResultado(0);
+    }
+  }
+
+  selecionarUltimoResultado() {
+    if (this.resultadosBusca.length > 0) {
+      this.selecionarResultado(this.resultadosBusca.length - 1);
+    }
+  }
+
+  executarResultadoSelecionado() {
+    if (this.resultadoSelecionado >= 0 && this.resultadosBusca[this.resultadoSelecionado]) {
+      const resultado = this.resultadosBusca[this.resultadoSelecionado];
+      this.executarResultado(resultado);
+    }
+  }
+
+  executarResultado(resultado) {
+    console.log(`⚡ Executando resultado: ${resultado.nome} (${resultado.categoria})`);
+    
+    // Marcar como ativo
+    this.definirModuloAtivo(resultado.elemento);
+    
+    // Executar ação
+    if (resultado.dataModule) {
+      this.navegarParaModulo(resultado.dataModule);
+    } else if (resultado.dataAction === 'navigate' && resultado.dataTarget) {
+      this.navegarParaTarget(resultado.dataTarget);
+    }
+    
+    // Limpar busca e fechar dropdown
+    this.limparBuscaGlobal();
   }
 
   limparBuscaGlobal() {
     this.inputBuscaGlobal.value = '';
     this.termoBuscaAtual = '';
     this.resultadosBusca = [];
-
+    this.resultadoSelecionado = -1;
+    
     if (this.botaoLimparBusca) {
       this.botaoLimparBusca.classList.remove('visivel');
     }
 
-    this.limparResultadosBusca();
+    this.esconderDropdownResultados();
     this.inputBuscaGlobal.focus();
-
+    
     console.log("🧹 Busca global limpa");
   }
 
-  limparResultadosBusca() {
-    // Fechar todas as categorias primeiro
-    this.fecharTodasCategorias();
-
-    // Limpar todas as categorias
-    this.categoriasMenu.forEach((categoria) => {
-      categoria.classList.remove('busca-oculta', 'busca-destaque');
-
-      const itensCategoria = categoria.querySelectorAll('.item-categoria');
-      itensCategoria.forEach((item) => {
-        item.classList.remove('busca-oculto', 'busca-destaque');
-        const botao = item.querySelector('.botao-item-categoria');
-        if (botao) {
-          this.removerDestaqueTermo(botao);
-        }
-      });
-    });
-
-    this.atualizarContadorResultados(0, 0);
-
-    console.log("🧹 Busca limpa e categorias fechadas");
-  }
-
-  atualizarContadorResultados(total, categorias) {
-    if (!this.contadorResultados) return;
-
-    const textoContador = this.contadorResultados.querySelector('.texto-contador');
-    if (!textoContador) return;
-
-    if (total === 0 && this.termoBuscaAtual.length >= 2) {
-      textoContador.textContent = 'Nenhum resultado encontrado';
-      this.contadorResultados.classList.remove('com-resultados');
-      this.contadorResultados.classList.add('sem-resultados');
-    } else if (total > 0) {
-      const textoCategoria = categorias === 1 ? 'categoria' : 'categorias';
-      const textoResultado = total === 1 ? 'resultado' : 'resultados';
-      textoContador.textContent = `${total} ${textoResultado} em ${categorias} ${textoCategoria}`;
-      this.contadorResultados.classList.add('com-resultados');
-      this.contadorResultados.classList.remove('sem-resultados');
-    } else {
-      textoContador.textContent = '';
-      this.contadorResultados.classList.remove('com-resultados', 'sem-resultados');
-    }
-  }
-
-  executarPrimeiroResultado() {
-    if (this.resultadosBusca.length > 0) {
-      const primeiroResultado = this.resultadosBusca[0];
-      console.log(`⚡ Executando primeiro resultado: ${primeiroResultado.texto}`);
-      primeiroResultado.botao.click();
-    }
-  }
-
-  focarPrimeiroResultado() {
-    if (this.resultadosBusca.length > 0) {
-      const primeiroResultado = this.resultadosBusca[0];
-
-      // Abrir a categoria se não estiver aberta
-      const categoria = document.querySelector(`[data-categoria="${primeiroResultado.categoria}"]`);
-      if (categoria && !categoria.classList.contains('aberta')) {
-        this.abrirCategoria(categoria);
-      }
-
-      // Focar no botão
-      setTimeout(() => {
-        primeiroResultado.botao.focus();
-      }, 100);
-    }
-  }
-
-  destacarTermoEncontrado(botaoElemento, termo) {
-    if (!botaoElemento) return;
-
-    const span = botaoElemento.querySelector('span');
-    if (!span) return;
-
-    const textoOriginal = span.getAttribute('data-texto-original') || span.textContent;
-    span.setAttribute('data-texto-original', textoOriginal);
-
-    const regex = new RegExp(`(${termo})`, 'gi');
-    const textoDestacado = textoOriginal.replace(regex, '<mark class="termo-encontrado">$1</mark>');
-    span.innerHTML = textoDestacado;
-  }
-
-  removerDestaqueTermo(botaoElemento) {
-    if (!botaoElemento) return;
-
-    const span = botaoElemento.querySelector('span');
-    if (!span) return;
-
-    const textoOriginal = span.getAttribute('data-texto-original');
-    if (textoOriginal) {
-      span.textContent = textoOriginal;
-      span.removeAttribute('data-texto-original');
-    }
-  }
-
   // =====================================================
-  // CONFIGURAR DROPDOWNS DAS CATEGORIAS
+  // CONFIGURAR DROPDOWNS DAS CATEGORIAS (sem modificações)
   // =====================================================
   configurarDropdownsCategorias() {
     this.categoriasMenu.forEach((categoria, index) => {
       const botaoCategoria = categoria.querySelector('.botao-categoria');
       const dropdownCategoria = categoria.querySelector('.dropdown-categoria');
       const nomeCategoria = categoria.getAttribute('data-categoria');
-
+      
       if (!botaoCategoria || !dropdownCategoria) {
         console.warn(`⚠️ Categoria ${nomeCategoria} incompleta`);
         return;
@@ -358,31 +461,28 @@ class SVSNavbar {
 
   configurarItensCategoria(categoria) {
     const itensCategoria = categoria.querySelectorAll('.botao-item-categoria');
-
+    
     itensCategoria.forEach((item) => {
       item.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-
+        
         const dataModule = item.getAttribute('data-module');
         const dataAction = item.getAttribute('data-action');
         const dataTarget = item.getAttribute('data-target');
-
+        
         // Marcar como ativo
         this.definirModuloAtivo(item);
-
+        
         // Executar ação
         if (dataModule) {
           this.navegarParaModulo(dataModule);
         } else if (dataAction === 'navigate' && dataTarget) {
           this.navegarParaTarget(dataTarget);
         }
-
+        
         // Fechar dropdown após seleção
         this.fecharTodasCategorias();
-
-        // Limpar busca após seleção
-        this.limparBuscaGlobal();
       });
 
       // Navegação por teclado nos itens
@@ -393,24 +493,16 @@ class SVSNavbar {
   }
 
   // =====================================================
-  // CONTROLE DE ABERTURA/FECHAMENTO
+  // CONTROLE DE ABERTURA/FECHAMENTO (sem modificações)
   // =====================================================
   alternarCategoria(categoria) {
     const estaAberta = categoria.classList.contains('aberta');
-
-    // Se estamos em busca, não permitir fechamento manual
-    if (this.termoBuscaAtual.length >= 2 && estaAberta) {
-      console.log("⚠️ Não é possível fechar categoria durante busca");
-      return;
-    }
-
+    
     if (estaAberta) {
       this.fecharCategoria(categoria);
     } else {
-      // Se não estamos em busca, fechar outras categorias primeiro
-      if (this.termoBuscaAtual.length < 2) {
-        this.fecharTodasCategorias();
-      }
+      // Fechar outras categorias primeiro
+      this.fecharTodasCategorias();
       this.abrirCategoria(categoria);
     }
   }
@@ -418,48 +510,46 @@ class SVSNavbar {
   abrirCategoria(categoria) {
     const nomeCategoria = categoria.getAttribute('data-categoria');
     const botaoCategoria = categoria.querySelector('.botao-categoria');
-
+    
     console.log(`📂 Abrindo categoria: ${nomeCategoria}`);
-
+    
     // Marcar como aberta
     categoria.classList.add('aberta');
     botaoCategoria.setAttribute('aria-expanded', 'true');
-
-    // Mostrar overlay apenas se não estivermos em busca
-    if (this.overlay && this.termoBuscaAtual.length < 2) {
+    
+    // Mostrar overlay
+    if (this.overlay) {
       this.overlay.classList.add('mostrar');
     }
-
-    // Durante busca, não guardamos referência única pois múltiplas podem estar abertas
-    if (this.termoBuscaAtual.length < 2) {
-      this.categoriaAberta = categoria;
-    }
-
+    
+    // Guardar referência da categoria aberta
+    this.categoriaAberta = categoria;
+    
     console.log(`✅ Categoria ${nomeCategoria} aberta`);
   }
 
   fecharCategoria(categoria) {
     if (!categoria) return;
-
+    
     const nomeCategoria = categoria.getAttribute('data-categoria');
     const botaoCategoria = categoria.querySelector('.botao-categoria');
-
+    
     console.log(`📁 Fechando categoria: ${nomeCategoria}`);
-
+    
     // Marcar como fechada
     categoria.classList.remove('aberta');
     botaoCategoria.setAttribute('aria-expanded', 'false');
-
+    
     // Se for a categoria atualmente aberta, limpar referência
     if (this.categoriaAberta === categoria) {
       this.categoriaAberta = null;
-
+      
       // Esconder overlay se não há mais categorias abertas
       if (this.overlay) {
         this.overlay.classList.remove('mostrar');
       }
     }
-
+    
     console.log(`✅ Categoria ${nomeCategoria} fechada`);
   }
 
@@ -467,18 +557,18 @@ class SVSNavbar {
     this.categoriasMenu.forEach((categoria) => {
       this.fecharCategoria(categoria);
     });
-
+    
     // Garantir que overlay seja escondido
     if (this.overlay) {
       this.overlay.classList.remove('mostrar');
     }
-
+    
     this.categoriaAberta = null;
     console.log("📁 Todas as categorias fechadas");
   }
 
   // =====================================================
-  // DROPDOWN DO USUÁRIO
+  // DROPDOWN DO USUÁRIO (sem modificações)
   // =====================================================
   configurarDropdownUsuario() {
     if (!this.botaoUsuario) return;
@@ -502,14 +592,14 @@ class SVSNavbar {
       botao.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-
+        
         const action = botao.getAttribute('data-action');
         if (action === 'logout') {
           this.sairSistema();
         } else if (action === 'change-password') {
           this.alterarSenha();
         }
-
+        
         this.fecharMenuUsuario();
       });
     });
@@ -526,9 +616,10 @@ class SVSNavbar {
   }
 
   abrirMenuUsuario() {
-    // Fechar categorias abertas
+    // Fechar categorias abertas e dropdown de busca
     this.fecharTodasCategorias();
-
+    this.esconderDropdownResultados();
+    
     this.menuUsuarioAberto = true;
     this.botaoUsuario.classList.add('ativo');
     this.dropdownUsuario.classList.add('mostrar');
@@ -567,12 +658,13 @@ class SVSNavbar {
 
     // Clique fora fecha dropdowns
     document.addEventListener('click', (e) => {
-      // Se clicou fora das categorias e do usuário
-      if (!e.target.closest('.categoria-menu') &&
-        !e.target.closest('.dropdown-usuario') &&
-        !e.target.closest('.busca-global')) {
+      // Se clicou fora das categorias, usuário e busca
+      if (!e.target.closest('.categoria-menu') && 
+          !e.target.closest('.dropdown-usuario') &&
+          !e.target.closest('.busca-global')) {
         this.fecharTodasCategorias();
         this.fecharMenuUsuario();
+        this.esconderDropdownResultados();
       }
     });
 
@@ -581,6 +673,7 @@ class SVSNavbar {
       if (e.key === 'Escape') {
         this.fecharTodasCategorias();
         this.fecharMenuUsuario();
+        this.esconderDropdownResultados();
       }
     });
 
@@ -593,38 +686,38 @@ class SVSNavbar {
   }
 
   // =====================================================
-  // NAVEGAÇÃO POR TECLADO
+  // NAVEGAÇÃO POR TECLADO (sem modificações)
   // =====================================================
   configurarNavegacaoTeclado() {
     // Navegação entre categorias com setas
     this.categoriasMenu.forEach((categoria, index) => {
       const botaoCategoria = categoria.querySelector('.botao-categoria');
-
+      
       botaoCategoria.addEventListener('keydown', (e) => {
         let proximoIndex = -1;
-
+        
         switch (e.key) {
           case 'ArrowLeft':
             e.preventDefault();
             proximoIndex = index > 0 ? index - 1 : this.categoriasMenu.length - 1;
             break;
-
+            
           case 'ArrowRight':
             e.preventDefault();
             proximoIndex = index < this.categoriasMenu.length - 1 ? index + 1 : 0;
             break;
-
+            
           case 'Home':
             e.preventDefault();
             proximoIndex = 0;
             break;
-
+            
           case 'End':
             e.preventDefault();
             proximoIndex = this.categoriasMenu.length - 1;
             break;
         }
-
+        
         if (proximoIndex >= 0) {
           const proximoBotao = this.categoriasMenu[proximoIndex].querySelector('.botao-categoria');
           if (proximoBotao) {
@@ -641,42 +734,42 @@ class SVSNavbar {
     const itensVisiveis = categoria.querySelectorAll('.item-categoria:not(.busca-oculto) .botao-item-categoria');
     const itemAtual = e.target;
     const indiceAtual = Array.from(itensVisiveis).indexOf(itemAtual);
-
+    
     let proximoItem = null;
-
+    
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
         proximoItem = itensVisiveis[indiceAtual + 1] || itensVisiveis[0];
         break;
-
+        
       case 'ArrowUp':
         e.preventDefault();
         proximoItem = itensVisiveis[indiceAtual - 1] || itensVisiveis[itensVisiveis.length - 1];
         break;
-
+        
       case 'Home':
         e.preventDefault();
         proximoItem = itensVisiveis[0];
         break;
-
+        
       case 'End':
         e.preventDefault();
         proximoItem = itensVisiveis[itensVisiveis.length - 1];
         break;
     }
-
+    
     if (proximoItem) {
       proximoItem.focus();
     }
   }
 
   // =====================================================
-  // NAVEGAÇÃO E AÇÕES
+  // NAVEGAÇÃO E AÇÕES (sem modificações)
   // =====================================================
   navegarParaModulo(modulo) {
     console.log(`🚀 Navegando para módulo: ${modulo}`);
-
+    
     // Usar o sistema de rotas do SPA
     if (window.SVSRouter) {
       window.SVSRouter.navigateTo(`/${modulo}`);
@@ -688,7 +781,7 @@ class SVSNavbar {
 
   navegarParaTarget(target) {
     console.log(`🎯 Navegando para target: ${target}`);
-
+    
     // Submeter formulário legado
     this.submeterFormularioLegado(target);
   }
@@ -696,7 +789,7 @@ class SVSNavbar {
   submeterFormularioLegado(escolha) {
     const form = document.getElementById('legacy-form');
     const inputEscolha = document.getElementById('legacy-escolha');
-
+    
     if (form && inputEscolha) {
       inputEscolha.value = escolha;
       form.submit();
@@ -708,24 +801,24 @@ class SVSNavbar {
     document.querySelectorAll('.botao-item-categoria.ativo').forEach((btn) => {
       btn.classList.remove('ativo');
     });
-
+    
     // Adicionar ativo ao clicado
     botaoItem.classList.add('ativo');
-
-    const modulo = botaoItem.getAttribute('data-module') ||
-      botaoItem.getAttribute('data-target') ||
-      botaoItem.textContent.trim();
-
+    
+    const modulo = botaoItem.getAttribute('data-module') || 
+                   botaoItem.getAttribute('data-target') || 
+                   botaoItem.textContent.trim();
+    
     this.moduloAtivo = modulo;
     console.log(`✅ Módulo ativo: ${modulo}`);
   }
 
   sairSistema() {
     console.log("🚪 Saindo do sistema...");
-
+    
     const form = document.getElementById('legacy-form');
     const inputSair = document.getElementById('legacy-sair');
-
+    
     if (form && inputSair) {
       inputSair.value = 'true';
       form.submit();
@@ -734,10 +827,10 @@ class SVSNavbar {
 
   alterarSenha() {
     console.log("🔑 Alterando senha...");
-
+    
     const form = document.getElementById('legacy-form');
     const inputSenha = document.getElementById('legacy-senha');
-
+    
     if (form && inputSenha) {
       inputSenha.value = 'true';
       form.submit();
@@ -752,6 +845,7 @@ class SVSNavbar {
       // Em telas pequenas, fechar dropdowns abertos
       this.fecharTodasCategorias();
       this.fecharMenuUsuario();
+      this.esconderDropdownResultados();
     }
   }
 }
