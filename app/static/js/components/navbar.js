@@ -13,7 +13,14 @@ class SVSNavbar {
     this.menuUsuarioAberto = false;
     this.overlay = null;
     this.moduloAtivo = null;
-    
+
+    // Busca expansível
+    this.containerBusca = null;
+    this.botaoExpandirBusca = null;
+    this.buscaExpandida = null;
+    this.botaoRecolherBusca = null;
+    this.buscaExpandidaAtiva = false;
+
     // Busca global com dropdown de resultados
     this.inputBuscaGlobal = null;
     this.botaoLimparBusca = null;
@@ -47,19 +54,25 @@ class SVSNavbar {
   encontrarElementos() {
     // Encontrar todas as categorias de menu
     this.categoriasMenu = document.querySelectorAll('.categoria-menu');
-    
+
     // Elementos da busca global
     this.inputBuscaGlobal = document.getElementById('busca-global-input');
     this.botaoLimparBusca = document.getElementById('limpar-busca-global');
     this.dropdownResultados = document.getElementById('dropdown-resultados');
     this.listaResultados = document.getElementById('lista-resultados');
     this.contadorResultados = document.getElementById('contador-resultados');
-    
+
+    // Elementos da busca expansível
+    this.containerBusca = document.getElementById('container-busca');
+    this.botaoExpandirBusca = document.getElementById('botao-expandir-busca');
+    this.buscaExpandida = document.getElementById('busca-expandida');
+    this.botaoRecolherBusca = document.getElementById('botao-recolher-busca');
+
     // Elementos do usuário
     this.dropdownUsuario = document.querySelector('.dropdown-usuario');
     this.botaoUsuario = document.querySelector('.botao-usuario');
     this.menuUsuario = document.querySelector('.menu-usuario');
-    
+
     // Overlay
     this.overlay = document.querySelector('.overlay-categorias');
 
@@ -75,6 +88,11 @@ class SVSNavbar {
       throw new Error("Dropdown de resultados não encontrado");
     }
 
+    if (!this.containerBusca || !this.botaoExpandirBusca) {
+      throw new Error("Elementos de busca expansível não encontrados");
+    }
+
+    console.log("🔍 Busca expansível encontrada");
     console.log(`📋 Encontradas ${this.categoriasMenu.length} categorias de menu`);
     console.log("🔍 Busca global e dropdown encontrados");
   }
@@ -83,6 +101,9 @@ class SVSNavbar {
   // BUSCA GLOBAL COM DROPDOWN DE RESULTADOS
   // =====================================================
   configurarBuscaGlobal() {
+    // Configurar expansão da busca
+    this.configurarExpansaoBusca();
+
     // Event listener para input em tempo real
     this.inputBuscaGlobal.addEventListener('input', (e) => {
       const termo = e.target.value.trim();
@@ -108,35 +129,133 @@ class SVSNavbar {
       });
     }
 
-    console.log("🔍 Busca global com dropdown configurada");
+    console.log("🔍 Busca global com expansão configurada");
+  }
+
+  configurarExpansaoBusca() {
+    // Clique no botão expandir
+    this.botaoExpandirBusca.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      this.expandirBusca();
+    });
+
+    // Clique no botão recolher
+    if (this.botaoRecolherBusca) {
+      this.botaoRecolherBusca.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.recolherBusca();
+      });
+    }
+
+    // Teclas para recolher busca
+    this.inputBuscaGlobal.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.inputBuscaGlobal.value === '') {
+        this.recolherBusca();
+      }
+    });
+
+    // Blur - recolher se não houver conteúdo e não há dropdown aberto
+    this.inputBuscaGlobal.addEventListener('blur', (e) => {
+      // Delay para permitir cliques em botões
+      setTimeout(() => {
+        if (!this.inputBuscaGlobal.value &&
+          !this.dropdownAberto &&
+          !document.activeElement.closest('.busca-global')) {
+          this.recolherBusca();
+        }
+      }, 150);
+    });
+
+    console.log("🔧 Expansão da busca configurada");
+  }
+
+  expandirBusca() {
+    if (this.buscaExpandidaAtiva) return;
+
+    console.log("📈 Expandindo busca");
+
+    // Fechar outros dropdowns
+    this.fecharTodasCategorias();
+    this.fecharMenuUsuario();
+
+    // Marcar como expandida
+    this.containerBusca.classList.add('expandido');
+    this.buscaExpandida.classList.add('ativa', 'animando');
+    this.buscaExpandidaAtiva = true;
+
+    // Focar no input após animação
+    setTimeout(() => {
+      this.inputBuscaGlobal.focus();
+      this.buscaExpandida.classList.remove('animando');
+    }, 200);
+
+    // Adicionar efeito de destaque (opcional)
+    this.adicionarDestaqueLupa();
+  }
+
+  recolherBusca() {
+    if (!this.buscaExpandidaAtiva) return;
+
+    console.log("📉 Recolhendo busca");
+
+    // Limpar busca primeiro
+    this.limparBuscaGlobal();
+
+    // Animar recolhimento
+    this.buscaExpandida.classList.remove('ativa');
+
+    setTimeout(() => {
+      this.containerBusca.classList.remove('expandido');
+      this.buscaExpandidaAtiva = false;
+    }, 300);
+
+    // Remover destaque
+    this.removerDestaqueLupa();
+  }
+
+  adicionarDestaqueLupa() {
+    // Adicionar destaque sutil no botão quando há busca ativa
+    if (this.inputBuscaGlobal.value) {
+      this.botaoExpandirBusca.classList.add('destaque');
+    }
+  }
+
+  removerDestaqueLupa() {
+    this.botaoExpandirBusca.classList.remove('destaque');
   }
 
   gerenciarTeclasBusca(e) {
     switch (e.key) {
       case 'Escape':
-        this.limparBuscaGlobal();
+        if (this.inputBuscaGlobal.value === '') {
+          this.recolherBusca();
+        } else {
+          this.limparBuscaGlobal();
+        }
         break;
-        
+
       case 'Enter':
         e.preventDefault();
         this.executarResultadoSelecionado();
         break;
-        
+
       case 'ArrowDown':
         e.preventDefault();
         this.navegarResultados(1);
         break;
-        
+
       case 'ArrowUp':
         e.preventDefault();
         this.navegarResultados(-1);
         break;
-        
+
       case 'Home':
         e.preventDefault();
         this.selecionarPrimeiroResultado();
         break;
-        
+
       case 'End':
         e.preventDefault();
         this.selecionarUltimoResultado();
@@ -146,7 +265,7 @@ class SVSNavbar {
 
   executarBuscaGlobal(termo) {
     this.termoBuscaAtual = termo.toLowerCase();
-    
+
     // Mostrar/esconder botão limpar
     if (this.botaoLimparBusca) {
       if (termo.length > 0) {
@@ -163,7 +282,7 @@ class SVSNavbar {
     }
 
     console.log(`🔍 Buscando globalmente: "${termo}"`);
-    
+
     this.resultadosBusca = [];
     this.resultadoSelecionado = -1;
 
@@ -186,7 +305,7 @@ class SVSNavbar {
           // Obter ícone
           const icone = botao.querySelector('i');
           const classeIcone = icone ? icone.className : 'fas fa-cube';
-          
+
           // Obter dados de navegação
           const dataModule = botao.getAttribute('data-module');
           const dataTarget = botao.getAttribute('data-target');
@@ -209,27 +328,27 @@ class SVSNavbar {
     this.resultadosBusca.sort((a, b) => {
       const aComeca = a.nome.toLowerCase().startsWith(this.termoBuscaAtual);
       const bComeca = b.nome.toLowerCase().startsWith(this.termoBuscaAtual);
-      
+
       if (aComeca && !bComeca) return -1;
       if (!aComeca && bComeca) return 1;
-      
+
       return a.nome.localeCompare(b.nome);
     });
 
     this.renderizarResultados();
     this.mostrarDropdownResultados();
-    
+
     console.log(`✅ Busca concluída: ${this.resultadosBusca.length} resultados`);
   }
 
   formatarNomeCategoria(categoria) {
     const mapaCategorias = {
       'cadastro': 'Cadastro',
-      'consultas': 'Consultas', 
+      'consultas': 'Consultas',
       'precos': 'Listas de Preços',
       'selecoes': 'Seleções'
     };
-    
+
     return mapaCategorias[categoria] || categoria;
   }
 
@@ -289,29 +408,29 @@ class SVSNavbar {
 
   destacarTermoNoTexto(texto, termo) {
     if (!termo) return texto;
-    
+
     const regex = new RegExp(`(${termo})`, 'gi');
     return texto.replace(regex, '<span class="resultado-termo-encontrado">$1</span>');
   }
 
   mostrarDropdownResultados() {
     if (!this.dropdownResultados) return;
-    
+
     this.dropdownResultados.classList.add('visivel');
     this.inputBuscaGlobal.setAttribute('aria-expanded', 'true');
     this.dropdownAberto = true;
-    
+
     console.log("📋 Dropdown de resultados mostrado");
   }
 
   esconderDropdownResultados() {
     if (!this.dropdownResultados) return;
-    
+
     this.dropdownResultados.classList.remove('visivel');
     this.inputBuscaGlobal.setAttribute('aria-expanded', 'false');
     this.dropdownAberto = false;
     this.resultadoSelecionado = -1;
-    
+
     console.log("📋 Dropdown de resultados escondido");
   }
 
@@ -335,7 +454,7 @@ class SVSNavbar {
     if (this.resultadosBusca.length === 0) return;
 
     const novoIndice = this.resultadoSelecionado + direcao;
-    
+
     if (novoIndice >= 0 && novoIndice < this.resultadosBusca.length) {
       this.selecionarResultado(novoIndice);
     } else if (direcao > 0 && this.resultadoSelecionado === this.resultadosBusca.length - 1) {
@@ -360,7 +479,7 @@ class SVSNavbar {
     const novoItem = this.listaResultados.querySelector(`[data-index="${index}"]`);
     if (novoItem) {
       novoItem.classList.add('destacado');
-      
+
       // Scroll para o item visível
       novoItem.scrollIntoView({
         behavior: 'smooth',
@@ -390,19 +509,21 @@ class SVSNavbar {
 
   executarResultado(resultado) {
     console.log(`⚡ Executando resultado: ${resultado.nome} (${resultado.categoria})`);
-    
+
     // Marcar como ativo
     this.definirModuloAtivo(resultado.elemento);
-    
+
     // Executar ação
     if (resultado.dataModule) {
       this.navegarParaModulo(resultado.dataModule);
     } else if (resultado.dataAction === 'navigate' && resultado.dataTarget) {
       this.navegarParaTarget(resultado.dataTarget);
     }
-    
-    // Limpar busca e fechar dropdown
-    this.limparBuscaGlobal();
+
+    // Recolher busca após execução
+    setTimeout(() => {
+      this.recolherBusca();
+    }, 100);
   }
 
   limparBuscaGlobal() {
@@ -410,26 +531,26 @@ class SVSNavbar {
     this.termoBuscaAtual = '';
     this.resultadosBusca = [];
     this.resultadoSelecionado = -1;
-    
+
     if (this.botaoLimparBusca) {
       this.botaoLimparBusca.classList.remove('visivel');
     }
 
     this.esconderDropdownResultados();
     this.inputBuscaGlobal.focus();
-    
+
     console.log("🧹 Busca global limpa");
   }
 
   // =====================================================
-  // CONFIGURAR DROPDOWNS DAS CATEGORIAS (sem modificações)
+  // CONFIGURAR DROPDOWNS DAS CATEGORIAS
   // =====================================================
   configurarDropdownsCategorias() {
     this.categoriasMenu.forEach((categoria, index) => {
       const botaoCategoria = categoria.querySelector('.botao-categoria');
       const dropdownCategoria = categoria.querySelector('.dropdown-categoria');
       const nomeCategoria = categoria.getAttribute('data-categoria');
-      
+
       if (!botaoCategoria || !dropdownCategoria) {
         console.warn(`⚠️ Categoria ${nomeCategoria} incompleta`);
         return;
@@ -461,26 +582,26 @@ class SVSNavbar {
 
   configurarItensCategoria(categoria) {
     const itensCategoria = categoria.querySelectorAll('.botao-item-categoria');
-    
+
     itensCategoria.forEach((item) => {
       item.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        
+
         const dataModule = item.getAttribute('data-module');
         const dataAction = item.getAttribute('data-action');
         const dataTarget = item.getAttribute('data-target');
-        
+
         // Marcar como ativo
         this.definirModuloAtivo(item);
-        
+
         // Executar ação
         if (dataModule) {
           this.navegarParaModulo(dataModule);
         } else if (dataAction === 'navigate' && dataTarget) {
           this.navegarParaTarget(dataTarget);
         }
-        
+
         // Fechar dropdown após seleção
         this.fecharTodasCategorias();
       });
@@ -493,11 +614,11 @@ class SVSNavbar {
   }
 
   // =====================================================
-  // CONTROLE DE ABERTURA/FECHAMENTO (sem modificações)
+  // CONTROLE DE ABERTURA/FECHAMENTO
   // =====================================================
   alternarCategoria(categoria) {
     const estaAberta = categoria.classList.contains('aberta');
-    
+
     if (estaAberta) {
       this.fecharCategoria(categoria);
     } else {
@@ -510,46 +631,46 @@ class SVSNavbar {
   abrirCategoria(categoria) {
     const nomeCategoria = categoria.getAttribute('data-categoria');
     const botaoCategoria = categoria.querySelector('.botao-categoria');
-    
+
     console.log(`📂 Abrindo categoria: ${nomeCategoria}`);
-    
+
     // Marcar como aberta
     categoria.classList.add('aberta');
     botaoCategoria.setAttribute('aria-expanded', 'true');
-    
+
     // Mostrar overlay
     if (this.overlay) {
       this.overlay.classList.add('mostrar');
     }
-    
+
     // Guardar referência da categoria aberta
     this.categoriaAberta = categoria;
-    
+
     console.log(`✅ Categoria ${nomeCategoria} aberta`);
   }
 
   fecharCategoria(categoria) {
     if (!categoria) return;
-    
+
     const nomeCategoria = categoria.getAttribute('data-categoria');
     const botaoCategoria = categoria.querySelector('.botao-categoria');
-    
+
     console.log(`📁 Fechando categoria: ${nomeCategoria}`);
-    
+
     // Marcar como fechada
     categoria.classList.remove('aberta');
     botaoCategoria.setAttribute('aria-expanded', 'false');
-    
+
     // Se for a categoria atualmente aberta, limpar referência
     if (this.categoriaAberta === categoria) {
       this.categoriaAberta = null;
-      
+
       // Esconder overlay se não há mais categorias abertas
       if (this.overlay) {
         this.overlay.classList.remove('mostrar');
       }
     }
-    
+
     console.log(`✅ Categoria ${nomeCategoria} fechada`);
   }
 
@@ -557,18 +678,18 @@ class SVSNavbar {
     this.categoriasMenu.forEach((categoria) => {
       this.fecharCategoria(categoria);
     });
-    
+
     // Garantir que overlay seja escondido
     if (this.overlay) {
       this.overlay.classList.remove('mostrar');
     }
-    
+
     this.categoriaAberta = null;
     console.log("📁 Todas as categorias fechadas");
   }
 
   // =====================================================
-  // DROPDOWN DO USUÁRIO (sem modificações)
+  // DROPDOWN DO USUÁRIO
   // =====================================================
   configurarDropdownUsuario() {
     if (!this.botaoUsuario) return;
@@ -592,14 +713,14 @@ class SVSNavbar {
       botao.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        
+
         const action = botao.getAttribute('data-action');
         if (action === 'logout') {
           this.sairSistema();
         } else if (action === 'change-password') {
           this.alterarSenha();
         }
-        
+
         this.fecharMenuUsuario();
       });
     });
@@ -619,7 +740,7 @@ class SVSNavbar {
     // Fechar categorias abertas e dropdown de busca
     this.fecharTodasCategorias();
     this.esconderDropdownResultados();
-    
+
     this.menuUsuarioAberto = true;
     this.botaoUsuario.classList.add('ativo');
     this.dropdownUsuario.classList.add('mostrar');
@@ -658,13 +779,17 @@ class SVSNavbar {
 
     // Clique fora fecha dropdowns
     document.addEventListener('click', (e) => {
-      // Se clicou fora das categorias, usuário e busca
-      if (!e.target.closest('.categoria-menu') && 
-          !e.target.closest('.dropdown-usuario') &&
-          !e.target.closest('.busca-global')) {
+      if (!e.target.closest('.categoria-menu') &&
+        !e.target.closest('.dropdown-usuario') &&
+        !e.target.closest('.busca-global')) {
         this.fecharTodasCategorias();
         this.fecharMenuUsuario();
         this.esconderDropdownResultados();
+
+        // Recolher busca se não há conteúdo
+        if (this.buscaExpandidaAtiva && !this.inputBuscaGlobal.value) {
+          this.recolherBusca();
+        }
       }
     });
 
@@ -674,6 +799,11 @@ class SVSNavbar {
         this.fecharTodasCategorias();
         this.fecharMenuUsuario();
         this.esconderDropdownResultados();
+
+        // Se busca expandida mas vazia, recolher
+        if (this.buscaExpandidaAtiva && !this.inputBuscaGlobal.value) {
+          this.recolherBusca();
+        }
       }
     });
 
@@ -686,38 +816,38 @@ class SVSNavbar {
   }
 
   // =====================================================
-  // NAVEGAÇÃO POR TECLADO (sem modificações)
+  // NAVEGAÇÃO POR TECLADO
   // =====================================================
   configurarNavegacaoTeclado() {
     // Navegação entre categorias com setas
     this.categoriasMenu.forEach((categoria, index) => {
       const botaoCategoria = categoria.querySelector('.botao-categoria');
-      
+
       botaoCategoria.addEventListener('keydown', (e) => {
         let proximoIndex = -1;
-        
+
         switch (e.key) {
           case 'ArrowLeft':
             e.preventDefault();
             proximoIndex = index > 0 ? index - 1 : this.categoriasMenu.length - 1;
             break;
-            
+
           case 'ArrowRight':
             e.preventDefault();
             proximoIndex = index < this.categoriasMenu.length - 1 ? index + 1 : 0;
             break;
-            
+
           case 'Home':
             e.preventDefault();
             proximoIndex = 0;
             break;
-            
+
           case 'End':
             e.preventDefault();
             proximoIndex = this.categoriasMenu.length - 1;
             break;
         }
-        
+
         if (proximoIndex >= 0) {
           const proximoBotao = this.categoriasMenu[proximoIndex].querySelector('.botao-categoria');
           if (proximoBotao) {
@@ -734,42 +864,42 @@ class SVSNavbar {
     const itensVisiveis = categoria.querySelectorAll('.item-categoria:not(.busca-oculto) .botao-item-categoria');
     const itemAtual = e.target;
     const indiceAtual = Array.from(itensVisiveis).indexOf(itemAtual);
-    
+
     let proximoItem = null;
-    
+
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
         proximoItem = itensVisiveis[indiceAtual + 1] || itensVisiveis[0];
         break;
-        
+
       case 'ArrowUp':
         e.preventDefault();
         proximoItem = itensVisiveis[indiceAtual - 1] || itensVisiveis[itensVisiveis.length - 1];
         break;
-        
+
       case 'Home':
         e.preventDefault();
         proximoItem = itensVisiveis[0];
         break;
-        
+
       case 'End':
         e.preventDefault();
         proximoItem = itensVisiveis[itensVisiveis.length - 1];
         break;
     }
-    
+
     if (proximoItem) {
       proximoItem.focus();
     }
   }
 
   // =====================================================
-  // NAVEGAÇÃO E AÇÕES (sem modificações)
+  // NAVEGAÇÃO E AÇÕES
   // =====================================================
   navegarParaModulo(modulo) {
     console.log(`🚀 Navegando para módulo: ${modulo}`);
-    
+
     // Usar o sistema de rotas do SPA
     if (window.SVSRouter) {
       window.SVSRouter.navigateTo(`/${modulo}`);
@@ -781,7 +911,7 @@ class SVSNavbar {
 
   navegarParaTarget(target) {
     console.log(`🎯 Navegando para target: ${target}`);
-    
+
     // Submeter formulário legado
     this.submeterFormularioLegado(target);
   }
@@ -789,7 +919,7 @@ class SVSNavbar {
   submeterFormularioLegado(escolha) {
     const form = document.getElementById('legacy-form');
     const inputEscolha = document.getElementById('legacy-escolha');
-    
+
     if (form && inputEscolha) {
       inputEscolha.value = escolha;
       form.submit();
@@ -801,24 +931,24 @@ class SVSNavbar {
     document.querySelectorAll('.botao-item-categoria.ativo').forEach((btn) => {
       btn.classList.remove('ativo');
     });
-    
+
     // Adicionar ativo ao clicado
     botaoItem.classList.add('ativo');
-    
-    const modulo = botaoItem.getAttribute('data-module') || 
-                   botaoItem.getAttribute('data-target') || 
-                   botaoItem.textContent.trim();
-    
+
+    const modulo = botaoItem.getAttribute('data-module') ||
+      botaoItem.getAttribute('data-target') ||
+      botaoItem.textContent.trim();
+
     this.moduloAtivo = modulo;
     console.log(`✅ Módulo ativo: ${modulo}`);
   }
 
   sairSistema() {
     console.log("🚪 Saindo do sistema...");
-    
+
     const form = document.getElementById('legacy-form');
     const inputSair = document.getElementById('legacy-sair');
-    
+
     if (form && inputSair) {
       inputSair.value = 'true';
       form.submit();
@@ -827,10 +957,10 @@ class SVSNavbar {
 
   alterarSenha() {
     console.log("🔑 Alterando senha...");
-    
+
     const form = document.getElementById('legacy-form');
     const inputSenha = document.getElementById('legacy-senha');
-    
+
     if (form && inputSenha) {
       inputSenha.value = 'true';
       form.submit();
@@ -846,9 +976,18 @@ class SVSNavbar {
       this.fecharTodasCategorias();
       this.fecharMenuUsuario();
       this.esconderDropdownResultados();
+
+      // Não recolher busca no mobile se há conteúdo
+      if (this.buscaExpandidaAtiva && !this.inputBuscaGlobal.value) {
+        this.recolherBusca();
+      }
     }
   }
 }
+
+// =====================================================
+// EXPORTAÇÃO E INICIALIZAÇÃO
+// =====================================================
 
 // Export para window global
 window.SVSNavbar = SVSNavbar;

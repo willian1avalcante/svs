@@ -56,19 +56,14 @@
   gap: 4px;
   flex-shrink: 0;
   margin: 0 var(--svs-espaco-grande);
+  position: relative;
 }
 
 .container-busca {
   position: relative;
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: var(--svs-raio-grande);
-  padding: var(--svs-espaco-pequeno);
-  backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
-  min-width: 300px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .container-busca:focus-within {
@@ -838,7 +833,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
-  role: option;
+  bleed: option;
   background: white;
 }
 
@@ -1075,22 +1070,388 @@
 }
 
 /* =====================================================
-   ATUALIZAÇÃO DA BUSCA GLOBAL EXISTENTE
+   BUSCA GLOBAL EXPANSÍVEL
    ===================================================== */
 .busca-global {
-  position: relative; /* Importante para posicionamento do dropdown */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  margin: 0 var(--svs-espaco-grande);
+  position: relative;
 }
 
-.contador-resultados {
-  /* Remover estilos anteriores do contador */
-  display: inline;
-  font-weight: 600;
-  color: white;
+.container-busca {
+  position: relative;
+  display: flex;
+  align-items: center;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Remover CSS antigo do contador se existir */
-.contador-resultados.com-resultados,
-.contador-resultados.sem-resultados {
+/* =====================================================
+   BOTÃO LUPA INICIAL (ESTADO RECOLHIDO)
+   ===================================================== */
+.botao-expandir-busca {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.botao-expandir-busca::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.botao-expandir-busca:hover::before {
   opacity: 1;
 }
 
+.botao-expandir-busca:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.botao-expandir-busca:active {
+  transform: scale(0.95);
+}
+
+.icone-busca-inicial {
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.botao-expandir-busca:hover .icone-busca-inicial {
+  transform: scale(1.1);
+  color: white;
+}
+
+/* =====================================================
+   BUSCA EXPANDIDA (ESTADO EXPANDIDO)
+   ===================================================== */
+.busca-expandida {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--svs-raio-grande);
+  padding: var(--svs-espaco-pequeno);
+  backdrop-filter: blur(10px);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 350px;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.8) translateX(-20px);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.busca-expandida.ativa {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1) translateX(0);
+}
+
+.busca-expandida:focus-within {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+}
+
+/* Ícone da busca expandida */
+.icone-busca {
+  color: rgba(255, 255, 255, 0.7);
+  margin-right: var(--svs-espaco-pequeno);
+  font-size: 0.875rem;
+  flex-shrink: 0;
+  transition: color 0.3s ease;
+}
+
+.busca-expandida:focus-within .icone-busca {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Input da busca */
+.input-busca-global {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 4px 0;
+  min-width: 0;
+  transition: all 0.3s ease;
+}
+
+.input-busca-global::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+  font-style: italic;
+  transition: color 0.3s ease;
+}
+
+.input-busca-global:focus::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Botão limpar busca */
+.botao-limpar-busca {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: var(--svs-raio-pequeno);
+  transition: all 0.3s ease;
+  font-size: 0.75rem;
+  margin-left: var(--svs-espaco-pequeno);
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.8);
+  flex-shrink: 0;
+}
+
+.botao-limpar-busca.visivel {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+}
+
+.botao-limpar-busca:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+/* Botão recolher busca */
+.botao-recolher-busca {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: var(--svs-raio-pequeno);
+  transition: all 0.3s ease;
+  font-size: 0.75rem;
+  margin-left: var(--svs-espaco-pequeno);
+  flex-shrink: 0;
+}
+
+.botao-recolher-busca:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1) translateY(-1px);
+}
+
+/* =====================================================
+   ESTADOS DA BUSCA
+   ===================================================== */
+
+/* Estado inicial - apenas lupa visível */
+.container-busca:not(.expandido) .botao-expandir-busca {
+  display: flex;
+}
+
+.container-busca:not(.expandido) .busca-expandida {
+  display: none;
+}
+
+/* Estado expandido - busca completa visível */
+.container-busca.expandido .botao-expandir-busca {
+  display: none;
+}
+
+.container-busca.expandido .busca-expandida {
+  display: flex;
+}
+
+/* =====================================================
+   ANIMAÇÕES ESPECIAIS
+   ===================================================== */
+
+/* Animação de pulso para chamar atenção */
+@keyframes pulseLupa {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.1);
+  }
+}
+
+.botao-expandir-busca.destaque {
+  animation: pulseLupa 2s infinite;
+}
+
+/* Animação de entrada da busca expandida */
+@keyframes expandirBusca {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateX(-30px);
+    width: 40px;
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(0.95) translateX(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateX(0);
+    width: 350px;
+  }
+}
+
+.busca-expandida.animando {
+  animation: expandirBusca 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* =====================================================
+   CONTADOR DE RESULTADOS (ajustado)
+   ===================================================== */
+.contador-resultados {
+  display: inline;
+  font-weight: 600;
+  color: white;
+  font-size: 0.8rem;
+}
+
+/* =====================================================
+   RESPONSIVIDADE PARA BUSCA EXPANSÍVEL
+   ===================================================== */
+@media (max-width: 1200px) {
+  .busca-global {
+    margin: 0 var(--svs-espaco-medio);
+  }
+  
+  .busca-expandida {
+    min-width: 300px;
+  }
+}
+
+@media (max-width: 992px) {
+  .busca-global {
+    margin: 0 var(--svs-espaco-pequeno);
+  }
+  
+  .busca-expandida {
+    min-width: 250px;
+  }
+  
+  .botao-expandir-busca {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+@media (max-width: 768px) {
+  .busca-global {
+    order: 3;
+    width: 100%;
+    margin: var(--svs-espaco-pequeno) 0 0 0;
+    align-items: flex-start;
+  }
+  
+  .container-busca {
+    width: 100%;
+  }
+  
+  .busca-expandida {
+    min-width: auto;
+    width: 100%;
+    position: relative;
+    left: 0;
+    transform: none;
+  }
+  
+  .busca-expandida.ativa {
+    transform: none;
+  }
+  
+  /* No mobile, sempre mostrar expandida quando ativada */
+  .container-busca.expandido .busca-expandida {
+    position: relative;
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+@media (max-width: 480px) {
+  .botao-expandir-busca {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .icone-busca-inicial {
+    font-size: 0.875rem;
+  }
+  
+  .busca-expandida {
+    padding: 6px;
+  }
+  
+  .input-busca-global {
+    font-size: 0.8rem;
+  }
+}
+
+/* =====================================================
+   DROPDOWN DE RESULTADOS (manter como estava)
+   ===================================================== */
+.dropdown-resultados {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: var(--svs-fundo-principal);
+  border: 2px solid var(--svs-primaria);
+  border-radius: var(--svs-raio-grande);
+  box-shadow: var(--svs-sombra-grande), 0 0 20px rgba(30, 64, 175, 0.1);
+  max-height: 400px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  z-index: calc(var(--svs-z-dropdown) + 1);
+  overflow: hidden;
+  min-width: 400px;
+}
+
+.dropdown-resultados.visivel {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Ajustar posicionamento do dropdown quando busca está expandida */
+.container-busca.expandido .dropdown-resultados {
+  left: 0;
+  min-width: 350px;
+}
+
+@media (max-width: 768px) {
+  .container-busca.expandido .dropdown-resultados {
+    left: 0;
+    right: 0;
+    min-width: auto;
+  }
+}

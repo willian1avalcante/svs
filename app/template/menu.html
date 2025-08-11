@@ -7,26 +7,30 @@
     <span class="texto-marca">SVS</span>
   </div>
 
-  <!-- BUSCA GLOBAL COM DROPDOWN DE RESULTADOS -->
+  <!-- BUSCA GLOBAL EXPANSÍVEL -->
   <div class="busca-global">
-    <div class="container-busca">
-      <i class="fas fa-search icone-busca"></i>
-      <input type="text" 
-             class="input-busca-global" 
-             placeholder="Buscar módulos..."
-             id="busca-global-input"
-             autocomplete="off"
-             aria-expanded="false"
-             aria-haspopup="listbox"
-             role="combobox">
-      <button type="button" 
-              class="botao-limpar-busca" 
-              id="limpar-busca-global"
-              title="Limpar busca">
-        <i class="fas fa-times"></i>
+    <div class="container-busca" id="container-busca">
+      <!-- BOTÃO LUPA INICIAL -->
+      <button type="button" class="botao-expandir-busca" id="botao-expandir-busca" title="Buscar módulos"
+        aria-label="Expandir busca">
+        <i class="fas fa-search icone-busca-inicial"></i>
       </button>
+
+      <!-- BUSCA EXPANDIDA (inicialmente oculta) -->
+      <div class="busca-expandida" id="busca-expandida">
+        <i class="fas fa-search icone-busca"></i>
+        <input type="text" class="input-busca-global" placeholder="Buscar módulos..." id="busca-global-input"
+          autocomplete="off" aria-expanded="false" aria-haspopup="listbox" role="combobox">
+        <button type="button" class="botao-limpar-busca" id="limpar-busca-global" title="Limpar busca">
+          <i class="fas fa-times"></i>
+        </button>
+        <button type="button" class="botao-recolher-busca" id="botao-recolher-busca" title="Fechar busca"
+          aria-label="Recolher busca">
+          <i class="fas fa-chevron-up"></i>
+        </button>
+      </div>
     </div>
-    
+
     <!-- DROPDOWN COM RESULTADOS DA BUSCA -->
     <div class="dropdown-resultados" id="dropdown-resultados" role="listbox">
       <div class="cabecalho-resultados">
@@ -46,19 +50,19 @@
 
   <!-- Menu Principal Horizontal - SEM MODIFICAÇÕES -->
   <div class="menu-principal">
-    
+
     <!-- Categoria: Cadastro -->
     <div class="categoria-menu" data-categoria="cadastro">
       <button type="button" class="botao-categoria" aria-expanded="false">
         <span>Cadastro</span>
         <i class="fas fa-chevron-down seta-categoria"></i>
       </button>
-      
+
       <div class="dropdown-categoria">
         <div class="cabecalho-categoria">
           Cadastro
         </div>
-        
+
         <div class="conteudo-categoria">
           <div class="item-categoria" data-busca="ad anúncio anuncio">
             <button type="button" class="botao-item-categoria" data-module="ad">
@@ -100,12 +104,12 @@
         <span>Consultas</span>
         <i class="fas fa-chevron-down seta-categoria"></i>
       </button>
-      
+
       <div class="dropdown-categoria">
         <div class="cabecalho-categoria">
           Consultas
         </div>
-        
+
         <div class="conteudo-categoria">
           <div class="item-categoria" data-busca="cargas pendentes">
             <button type="button" class="botao-item-categoria" data-action="navigate" data-target="Cargas Pendentes">
@@ -138,7 +142,8 @@
             </button>
           </div>
           <div class="item-categoria" data-busca="estoques produtos">
-            <button type="button" class="botao-item-categoria" data-action="navigate" data-target="Estoques de Produtos">
+            <button type="button" class="botao-item-categoria" data-action="navigate"
+              data-target="Estoques de Produtos">
               <i class="fas fa-boxes"></i>
               <span>Estoques de Produtos</span>
             </button>
@@ -192,13 +197,15 @@
             </button>
           </div>
           <div class="item-categoria" data-busca="prazo entrega dia">
-            <button type="button" class="botao-item-categoria" data-action="navigate" data-target="Prazo de Entrega por Dia">
+            <button type="button" class="botao-item-categoria" data-action="navigate"
+              data-target="Prazo de Entrega por Dia">
               <i class="fas fa-calendar-check"></i>
               <span>Prazo de Entrega por Dia</span>
             </button>
           </div>
           <div class="item-categoria" data-busca="previsão data entrega">
-            <button type="button" class="botao-item-categoria" data-action="navigate" data-target="Previsão Data de Entrega">
+            <button type="button" class="botao-item-categoria" data-action="navigate"
+              data-target="Previsão Data de Entrega">
               <i class="fas fa-calendar-alt"></i>
               <span>Previsão Data de Entrega</span>
             </button>
@@ -243,12 +250,12 @@
         <span>Listas de Preços</span>
         <i class="fas fa-chevron-down seta-categoria"></i>
       </button>
-      
+
       <div class="dropdown-categoria">
         <div class="cabecalho-categoria">
           Listas de Preços
         </div>
-        
+
         <div class="conteudo-categoria">
           <div class="item-categoria" data-busca="consulta cr lista preços precos">
             <button type="button" class="botao-item-categoria" data-action="navigate" data-target="Consulta CR na LP">
@@ -278,12 +285,12 @@
         <span>Seleções</span>
         <i class="fas fa-chevron-down seta-categoria"></i>
       </button>
-      
+
       <div class="dropdown-categoria">
         <div class="cabecalho-categoria">
           Seleções
         </div>
-        
+
         <div class="conteudo-categoria">
           <div class="item-categoria" data-busca="seleciona cliente">
             <button type="button" class="botao-item-categoria" data-action="navigate" data-target="Seleciona Cliente">
@@ -301,11 +308,8 @@
   <div class="acoes-navbar">
 
     <!-- Link do calendário -->
-    <a href="http://www.skymsen.com.br/Intranet/cal_calendario.php" 
-       class="botao-acao-navbar botao-calendario" 
-       target="_blank" 
-       rel="noopener" 
-       title="Abrir calendário">
+    <a href="http://www.skymsen.com.br/Intranet/cal_calendario.php" class="botao-acao-navbar botao-calendario"
+      target="_blank" rel="noopener" title="Abrir calendário">
       <i class="fas fa-calendar-days"></i>
     </a>
 
@@ -316,7 +320,7 @@
         <span class="nome-usuario">willian.cavalcante</span>
         <i class="fas fa-chevron-down seta-usuario"></i>
       </button>
-      
+
       <div class="menu-usuario">
         <div class="item-menu-usuario">
           <button type="button" class="botao-menu-usuario" data-action="change-password">
