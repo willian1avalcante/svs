@@ -1,45 +1,35 @@
 /**
- * SVS Navbar Component
- * Gerencia a navbar e menu dropdown
+ * SVS Navbar Component - Horizontal Dropdowns
+ * Gerencia a navbar horizontal com dropdowns individuais por categoria
  */
 class SVSNavbar {
   constructor() {
-    this.botaoMenu = null;
-    this.dropdownMenu = null;
-    this.overlayMenu = null;
+    this.categoriasMenu = [];
+    this.categoriaAberta = null;
     this.dropdownUsuario = null;
     this.botaoUsuario = null;
     this.menuUsuario = null;
-    this.menuAberto = false;
     this.menuUsuarioAberto = false;
+    this.overlay = null;
     this.moduloAtivo = null;
     
-    // Cache do conteúdo original dos menus
-    this.conteudosOriginais = new Map();
+    // Busca por categoria
+    this.inputsBusca = new Map();
+    this.termoBuscaAtual = new Map();
 
-    // =====================================================
-    // BUSCA RÁPIDA - NOVA FUNCIONALIDADE
-    // =====================================================
-    this.inputBusca = null;
-    this.botaoLimparBusca = null;
-    this.contadorResultados = null;
-    this.termoBuscaAtual = '';
-    this.todosItensMenu = [];
-
-    console.log("🧭 SVS Navbar inicializando...");
+    console.log("🧭 SVS Navbar Horizontal inicializando...");
   }
 
   async init() {
     try {
       this.encontrarElementos();
-      this.armazenarConteudosOriginais();
       this.configurarEventListeners();
-      this.inicializarAcordeon();
+      this.configurarDropdownsCategorias();
+      this.configurarDropdownUsuario();
       this.configurarNavegacaoTeclado();
-      this.inicializarBuscaRapida();
-      this.expandirSecaoPadrao();
+      this.configurarBuscaPorCategoria();
 
-      console.log("✅ SVS Navbar inicializada");
+      console.log("✅ SVS Navbar Horizontal inicializada");
     } catch (erro) {
       console.error("❌ Erro ao inicializar navbar:", erro);
       throw erro;
@@ -47,388 +37,287 @@ class SVSNavbar {
   }
 
   encontrarElementos() {
-    this.botaoMenu = document.querySelector(".botao-menu");
-    this.dropdownMenu = document.querySelector(".dropdown-menu");
-    this.overlayMenu = document.querySelector(".overlay-menu");
-    this.dropdownUsuario = document.querySelector(".dropdown-usuario");
-    this.botaoUsuario = document.querySelector(".botao-usuario");
-    this.menuUsuario = document.querySelector(".menu-usuario");
-
-    // =====================================================
-    // ELEMENTOS DA BUSCA RÁPIDA
-    // =====================================================
-    this.inputBusca = document.querySelector("#busca-rapida-input");
-    this.botaoLimparBusca = document.querySelector("#limpar-busca");
-    this.contadorResultados = document.querySelector("#contador-resultados");
-
-    if (!this.botaoMenu || !this.dropdownMenu) {
-      throw new Error("Elementos essenciais da navbar não encontrados");
-    }
-  }
-
-  // =====================================================
-  // ARMAZENAR CONTEÚDO ORIGINAL - CACHE INTELIGENTE
-  // =====================================================
-  armazenarConteudosOriginais() {
-    const secoesMenu = document.querySelectorAll(".secao-menu");
+    // Encontrar todas as categorias de menu
+    this.categoriasMenu = document.querySelectorAll('.categoria-menu');
     
-    secoesMenu.forEach((secao) => {
-      const cabecalho = secao.querySelector(".cabecalho-secao-menu");
-      const conteudo = secao.querySelector(".conteudo-menu");
+    // Elementos do usuário
+    this.dropdownUsuario = document.querySelector('.dropdown-usuario');
+    this.botaoUsuario = document.querySelector('.botao-usuario');
+    this.menuUsuario = document.querySelector('.menu-usuario');
+    
+    // Overlay
+    this.overlay = document.querySelector('.overlay-categorias');
+
+    if (this.categoriasMenu.length === 0) {
+      throw new Error("Nenhuma categoria de menu encontrada");
+    }
+
+    console.log(`📋 Encontradas ${this.categoriasMenu.length} categorias de menu`);
+  }
+
+  // =====================================================
+  // CONFIGURAR DROPDOWNS DAS CATEGORIAS
+  // =====================================================
+  configurarDropdownsCategorias() {
+    this.categoriasMenu.forEach((categoria, index) => {
+      const botaoCategoria = categoria.querySelector('.botao-categoria');
+      const dropdownCategoria = categoria.querySelector('.dropdown-categoria');
+      const nomeCategoria = categoria.getAttribute('data-categoria');
       
-      if (cabecalho && conteudo) {
-        const nomeSecao = this.getNomeSecao(secao);
-        
-        // Armazena o HTML original do conteúdo
-        this.conteudosOriginais.set(nomeSecao, {
-          html: conteudo.outerHTML,
-          elemento: conteudo.cloneNode(true)
-        });
-        
-        console.log(`💾 Conteúdo da seção ${nomeSecao} armazenado no cache`);
-      }
-    });
-
-    // =====================================================
-    // INDEXAR TODOS OS ITENS PARA BUSCA - DO CACHE ORIGINAL
-    // =====================================================
-    this.indexarItensParaBuscaDoCache();
-  }
-
-  configurarEventListeners() {
-    this.botaoMenu.addEventListener("click", (e) => {
-      e.stopPropagation();
-      this.alternarMenu();
-    });
-
-    if (this.botaoUsuario) {
-      this.botaoUsuario.addEventListener("click", (e) => {
-        e.stopPropagation();
-        this.alternarMenuUsuario();
-      });
-    }
-
-    if (this.overlayMenu) {
-      this.overlayMenu.addEventListener("click", () => {
-        this.fecharMenu();
-      });
-    }
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        if (this.menuUsuarioAberto) {
-          this.fecharMenuUsuario();
-        } else if (this.menuAberto) {
-          this.fecharMenu();
-        }
-      }
-    });
-
-    document.addEventListener("click", (e) => {
-      if (
-        this.menuUsuarioAberto &&
-        this.dropdownUsuario &&
-        !this.dropdownUsuario.contains(e.target)
-      ) {
-        this.fecharMenuUsuario();
+      if (!botaoCategoria || !dropdownCategoria) {
+        console.warn(`⚠️ Categoria ${nomeCategoria} incompleta`);
+        return;
       }
 
-      if (
-        this.menuAberto &&
-        !this.dropdownMenu.contains(e.target) &&
-        !this.botaoMenu.contains(e.target)
-      ) {
-        this.fecharMenu();
-      }
-    });
-
-    window.addEventListener("resize", () => {
-      this.tratarRedimensionamento();
-    });
-  }
-
-  alternarMenu() {
-    if (this.menuAberto) {
-      this.fecharMenu();
-    } else {
-      this.abrirMenu();
-    }
-  }
-
-  abrirMenu() {
-    if (this.menuUsuarioAberto) {
-      this.fecharMenuUsuario();
-    }
-
-    this.menuAberto = true;
-    this.botaoMenu.classList.add('ativo');
-    this.dropdownMenu.classList.add('mostrar');
-
-    if (this.overlayMenu) {
-      this.overlayMenu.classList.add('mostrar');
-    }
-
-    this.botaoMenu.setAttribute('aria-expanded', 'true');
-
-    // Focar na busca quando abrir o menu
-    setTimeout(() => {
-      if (this.inputBusca) {
-        this.inputBusca.focus();
-      } else {
-        const primeiroBotao = this.dropdownMenu.querySelector('.botao-item-menu');
-        if (primeiroBotao) {
-          primeiroBotao.focus();
-        }
-      }
-    }, 100);
-
-    console.log('📖 Menu principal aberto');
-  }
-
-  fecharMenu() {
-    this.menuAberto = false;
-    this.botaoMenu.classList.remove("ativo");
-    this.dropdownMenu.classList.remove("mostrar");
-    if (this.overlayMenu) {
-      this.overlayMenu.classList.remove("mostrar");
-    }
-
-    this.botaoMenu.setAttribute("aria-expanded", "false");
-    this.botaoMenu.focus();
-
-    // Limpar busca quando fechar menu
-    this.limparBusca();
-
-    console.log("📕 Menu principal fechado");
-  }
-
-  alternarMenuUsuario() {
-    if (this.menuUsuarioAberto) {
-      this.fecharMenuUsuario();
-    } else {
-      this.abrirMenuUsuario();
-    }
-  }
-
-  abrirMenuUsuario() {
-    if (this.menuAberto) {
-      this.fecharMenu();
-    }
-
-    this.menuUsuarioAberto = true;
-    this.botaoUsuario.classList.add("ativo");
-    this.dropdownUsuario.classList.add("mostrar");
-
-    this.botaoUsuario.setAttribute("aria-expanded", "true");
-
-    setTimeout(() => {
-      const primeiroBotao = this.menuUsuario.querySelector(
-        ".botao-menu-usuario"
-      );
-      if (primeiroBotao) {
-        primeiroBotao.focus();
-      }
-    }, 100);
-
-    console.log("👤 Menu do usuário aberto");
-  }
-
-  fecharMenuUsuario() {
-    this.menuUsuarioAberto = false;
-    this.botaoUsuario.classList.remove("ativo");
-    this.dropdownUsuario.classList.remove("mostrar");
-
-    this.botaoUsuario.setAttribute("aria-expanded", "false");
-    this.botaoUsuario.focus();
-
-    console.log("👤 Menu do usuário fechado");
-  }
-
-  // =====================================================
-  // BUSCA RÁPIDA - FUNCIONALIDADE PRINCIPAL
-  // =====================================================
-  inicializarBuscaRapida() {
-    if (!this.inputBusca) {
-      console.log("⚠️ Input de busca não encontrado");
-      return;
-    }
-
-    // Event listener para input em tempo real
-    this.inputBusca.addEventListener('input', (e) => {
-      const termo = e.target.value.trim();
-      this.executarBusca(termo);
-    });
-
-    // Event listener para limpar busca
-    if (this.botaoLimparBusca) {
-      this.botaoLimparBusca.addEventListener('click', () => {
-        this.limparBusca();
-      });
-    }
-
-    // Keyboard shortcuts
-    this.inputBusca.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        this.limparBusca();
-      } else if (e.key === 'ArrowDown') {
+      // Event listener para o botão da categoria
+      botaoCategoria.addEventListener('click', (e) => {
         e.preventDefault();
-        const primeiroItemVisivel = document.querySelector('.item-menu:not(.busca-oculto) .botao-item-menu');
-        if (primeiroItemVisivel) {
-          primeiroItemVisivel.focus();
-        }
-      }
-    });
+        e.stopPropagation();
+        this.alternarCategoria(categoria);
+      });
 
-    console.log("🔍 Busca rápida inicializada");
+      // Event listener para teclas
+      botaoCategoria.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          this.alternarCategoria(categoria);
+        } else if (e.key === 'Escape') {
+          this.fecharTodasCategorias();
+        }
+      });
+
+      // Configurar cliques nos itens
+      this.configurarItensCategoria(categoria);
+
+      console.log(`🔧 Categoria ${nomeCategoria} configurada`);
+    });
   }
 
-  // =====================================================
-  // INDEXAÇÃO INTELIGENTE - DO CACHE ORIGINAL
-  // =====================================================
-  indexarItensParaBuscaDoCache() {
-    this.todosItensMenu = [];
+  configurarItensCategoria(categoria) {
+    const itensCategoria = categoria.querySelectorAll('.botao-item-categoria');
     
-    // ← MUDANÇA PRINCIPAL: Buscar nos elementos do CACHE, não do DOM
-    this.conteudosOriginais.forEach((dadosCache, nomeSecao) => {
-      const elementoCache = dadosCache.elemento;
-      const itensMenu = elementoCache.querySelectorAll('.item-menu');
-      
-      itensMenu.forEach((item) => {
-        const botao = item.querySelector('.botao-item-menu');
-        const textoItem = botao ? botao.textContent.trim() : '';
-        const termosCustomizados = item.getAttribute('data-busca') || '';
+    itensCategoria.forEach((item) => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         
-        // Criar índice de busca combinando todos os termos
-        const termosBusca = [
-          textoItem.toLowerCase(),
-          termosCustomizados.toLowerCase(),
-          nomeSecao.toLowerCase()
-        ].join(' ');
+        const dataModule = item.getAttribute('data-module');
+        const dataAction = item.getAttribute('data-action');
+        const dataTarget = item.getAttribute('data-target');
+        
+        // Marcar como ativo
+        this.definirModuloAtivo(item);
+        
+        // Executar ação
+        if (dataModule) {
+          this.navegarParaModulo(dataModule);
+        } else if (dataAction === 'navigate' && dataTarget) {
+          this.navegarParaTarget(dataTarget);
+        }
+        
+        // Fechar dropdown após seleção
+        this.fecharTodasCategorias();
+      });
 
-        this.todosItensMenu.push({
-          elementoCache: item.cloneNode(true), // ← Elemento do cache
-          texto: textoItem,
-          secao: nomeSecao,
-          termosBusca: termosBusca,
-          dataModule: botao ? botao.getAttribute('data-module') : null,
-          dataAction: botao ? botao.getAttribute('data-action') : null,
-          dataTarget: botao ? botao.getAttribute('data-target') : null,
-          dataBusca: termosCustomizados
-        });
+      // Navegação por teclado nos itens
+      item.addEventListener('keydown', (e) => {
+        this.gerenciarNavegacaoItens(e, categoria);
       });
     });
-
-    this.atualizarContadorResultados(this.todosItensMenu.length);
-    console.log(`📇 ${this.todosItensMenu.length} itens indexados do cache para busca`);
   }
 
-  executarBusca(termo) {
-    this.termoBuscaAtual = termo.toLowerCase();
+  // =====================================================
+  // CONTROLE DE ABERTURA/FECHAMENTO
+  // =====================================================
+  alternarCategoria(categoria) {
+    const estaAberta = categoria.classList.contains('aberta');
+    
+    if (estaAberta) {
+      this.fecharCategoria(categoria);
+    } else {
+      // Fechar outras categorias primeiro
+      this.fecharTodasCategorias();
+      this.abrirCategoria(categoria);
+    }
+  }
+
+  abrirCategoria(categoria) {
+    const nomeCategoria = categoria.getAttribute('data-categoria');
+    const botaoCategoria = categoria.querySelector('.botao-categoria');
+    const inputBusca = categoria.querySelector('.input-busca-categoria');
+    
+    console.log(`📂 Abrindo categoria: ${nomeCategoria}`);
+    
+    // Marcar como aberta
+    categoria.classList.add('aberta');
+    botaoCategoria.setAttribute('aria-expanded', 'true');
+    
+    // Mostrar overlay
+    if (this.overlay) {
+      this.overlay.classList.add('mostrar');
+    }
+    
+    // Guardar referência da categoria aberta
+    this.categoriaAberta = categoria;
+    
+    // Focar no input de busca se existir
+    setTimeout(() => {
+      if (inputBusca) {
+        inputBusca.focus();
+      }
+    }, 100);
+    
+    console.log(`✅ Categoria ${nomeCategoria} aberta`);
+  }
+
+  fecharCategoria(categoria) {
+    if (!categoria) return;
+    
+    const nomeCategoria = categoria.getAttribute('data-categoria');
+    const botaoCategoria = categoria.querySelector('.botao-categoria');
+    
+    console.log(`📁 Fechando categoria: ${nomeCategoria}`);
+    
+    // Marcar como fechada
+    categoria.classList.remove('aberta');
+    botaoCategoria.setAttribute('aria-expanded', 'false');
+    
+    // Limpar busca da categoria
+    this.limparBuscaCategoria(categoria);
+    
+    // Se for a categoria atualmente aberta, limpar referência
+    if (this.categoriaAberta === categoria) {
+      this.categoriaAberta = null;
+      
+      // Esconder overlay se não há mais categorias abertas
+      if (this.overlay) {
+        this.overlay.classList.remove('mostrar');
+      }
+    }
+    
+    console.log(`✅ Categoria ${nomeCategoria} fechada`);
+  }
+
+  fecharTodasCategorias() {
+    this.categoriasMenu.forEach((categoria) => {
+      this.fecharCategoria(categoria);
+    });
+    
+    // Garantir que overlay seja escondido
+    if (this.overlay) {
+      this.overlay.classList.remove('mostrar');
+    }
+    
+    this.categoriaAberta = null;
+    console.log("📁 Todas as categorias fechadas");
+  }
+
+  // =====================================================
+  // BUSCA POR CATEGORIA
+  // =====================================================
+  configurarBuscaPorCategoria() {
+    this.categoriasMenu.forEach((categoria) => {
+      const inputBusca = categoria.querySelector('.input-busca-categoria');
+      const nomeCategoria = categoria.getAttribute('data-categoria');
+      
+      if (!inputBusca) return;
+      
+      // Armazenar referência do input
+      this.inputsBusca.set(nomeCategoria, inputBusca);
+      
+      // Event listener para busca em tempo real
+      inputBusca.addEventListener('input', (e) => {
+        const termo = e.target.value.trim();
+        this.executarBuscaCategoria(categoria, termo);
+      });
+      
+      // Event listener para teclas especiais
+      inputBusca.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          this.limparBuscaCategoria(categoria);
+        } else if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          const primeiroItem = categoria.querySelector('.item-categoria:not(.busca-oculto) .botao-item-categoria');
+          if (primeiroItem) {
+            primeiroItem.focus();
+          }
+        }
+      });
+      
+      console.log(`🔍 Busca configurada para categoria: ${nomeCategoria}`);
+    });
+  }
+
+  executarBuscaCategoria(categoria, termo) {
+    const nomeCategoria = categoria.getAttribute('data-categoria');
+    const itensCategoria = categoria.querySelectorAll('.item-categoria');
+    
+    // Armazenar termo atual
+    this.termoBuscaAtual.set(nomeCategoria, termo.toLowerCase());
     
     if (termo.length < 2) {
-      this.mostrarTodosItens();
+      // Mostrar todos os itens
+      itensCategoria.forEach((item) => {
+        item.classList.remove('busca-oculto', 'busca-destaque');
+        const botao = item.querySelector('.botao-item-categoria');
+        if (botao) {
+          this.removerDestaqueTermo(botao);
+        }
+      });
       return;
     }
-
-    let itensEncontrados = [];
-    let secoesComResultados = new Set();
-
-    // ← MUDANÇA: Buscar nos dados do cache, não no DOM atual
-    this.todosItensMenu.forEach((itemCache) => {
-      const corresponde = itemCache.termosBusca.includes(this.termoBuscaAtual);
-      
-      if (corresponde) {
-        itensEncontrados.push(itemCache);
-        secoesComResultados.add(itemCache.secao);
-      }
-    });
-
-    // ← NOVA ESTRATÉGIA: Abrir seções e filtrar apenas os resultados
-    document.querySelectorAll('.secao-menu').forEach((secao) => {
-      const nomeSecao = this.getNomeSecao(secao);
-      
-      if (secoesComResultados.has(nomeSecao)) {
-        secao.classList.remove('busca-oculta');
-        
-        // Abrir seção se não estiver aberta
-        if (!secao.classList.contains('expandida')) {
-          this.abrirSecao(secao);
-        }
-        
-        // Após abrir, filtrar os itens dentro dela
-        setTimeout(() => {
-          this.filtrarItensNaSecao(secao, termo);
-        }, 100);
-        
-      } else {
-        secao.classList.add('busca-oculta');
-        this.fecharSecao(secao);
-      }
-    });
-
-    // Atualizar contador e botão limpar
-    this.atualizarContadorResultados(itensEncontrados.length);
-    this.atualizarBotaoLimpar(termo.length > 0);
-
-    console.log(`🔍 Busca por "${termo}": ${itensEncontrados.length} resultados em ${secoesComResultados.size} seções`);
-  }
-
-  // =====================================================
-  // NOVA FUNÇÃO: FILTRAR ITENS DENTRO DA SEÇÃO
-  // =====================================================
-  filtrarItensNaSecao(secao, termo) {
-    const nomeSecao = this.getNomeSecao(secao);
-    const itensDOM = secao.querySelectorAll('.item-menu');
     
-    itensDOM.forEach((itemDOM) => {
-      const botao = itemDOM.querySelector('.botao-item-menu');
+    let itensEncontrados = 0;
+    
+    itensCategoria.forEach((item) => {
+      const botao = item.querySelector('.botao-item-categoria');
       if (!botao) return;
       
-      const textoItem = botao.textContent.trim();
-      const termosCustomizados = itemDOM.getAttribute('data-busca') || '';
+      const textoItem = botao.textContent.trim().toLowerCase();
+      const termosCustomizados = (item.getAttribute('data-busca') || '').toLowerCase();
+      const termosBusca = `${textoItem} ${termosCustomizados}`;
       
-      const termosBusca = [
-        textoItem.toLowerCase(),
-        termosCustomizados.toLowerCase(),
-        nomeSecao.toLowerCase()
-      ].join(' ');
-      
-      const corresponde = termosBusca.includes(this.termoBuscaAtual);
+      const corresponde = termosBusca.includes(termo.toLowerCase());
       
       if (corresponde) {
-        // Mostrar item e destacar
-        itemDOM.classList.remove('busca-oculto');
-        itemDOM.classList.add('busca-destaque');
-        
-        // Destacar termo encontrado no texto
+        // Mostrar e destacar
+        item.classList.remove('busca-oculto');
+        item.classList.add('busca-destaque');
         this.destacarTermoEncontrado(botao, termo);
+        itensEncontrados++;
       } else {
-        // Ocultar item
-        itemDOM.classList.add('busca-oculto');
-        itemDOM.classList.remove('busca-destaque');
-        
-        // Remover destaque do termo
+        // Ocultar
+        item.classList.add('busca-oculto');
+        item.classList.remove('busca-destaque');
         this.removerDestaqueTermo(botao);
       }
     });
+    
+    console.log(`🔍 Busca em ${nomeCategoria}: "${termo}" - ${itensEncontrados} resultados`);
   }
 
-  mostrarTodosItens() {
-    // Remover todas as classes de busca
-    document.querySelectorAll('.item-menu').forEach((item) => {
+  limparBuscaCategoria(categoria) {
+    const nomeCategoria = categoria.getAttribute('data-categoria');
+    const inputBusca = this.inputsBusca.get(nomeCategoria);
+    
+    if (inputBusca) {
+      inputBusca.value = '';
+    }
+    
+    // Limpar termo armazenado
+    this.termoBuscaAtual.delete(nomeCategoria);
+    
+    // Mostrar todos os itens
+    const itensCategoria = categoria.querySelectorAll('.item-categoria');
+    itensCategoria.forEach((item) => {
       item.classList.remove('busca-oculto', 'busca-destaque');
-      const botao = item.querySelector('.botao-item-menu');
+      const botao = item.querySelector('.botao-item-categoria');
       if (botao) {
         this.removerDestaqueTermo(botao);
       }
     });
-
-    document.querySelectorAll('.secao-menu').forEach((secao) => {
-      secao.classList.remove('busca-oculta');
-    });
-
-    this.atualizarContadorResultados(this.todosItensMenu.length);
-    this.atualizarBotaoLimpar(false);
+    
+    console.log(`🧹 Busca limpa na categoria: ${nomeCategoria}`);
   }
 
   destacarTermoEncontrado(botaoElemento, termo) {
@@ -458,306 +347,298 @@ class SVSNavbar {
     }
   }
 
-  limparBusca() {
-    if (this.inputBusca) {
-      this.inputBusca.value = '';
-    }
-    this.termoBuscaAtual = '';
-    this.mostrarTodosItens();
-    console.log("🧹 Busca limpa");
-  }
-
-  atualizarContadorResultados(quantidade) {
-    if (this.contadorResultados) {
-      this.contadorResultados.textContent = `${quantidade} ${quantidade === 1 ? 'item' : 'itens'}`;
-      
-      if (quantidade > 0 && this.termoBuscaAtual.length >= 2) {
-        this.contadorResultados.classList.add('com-resultados');
-      } else {
-        this.contadorResultados.classList.remove('com-resultados');
-      }
-    }
-  }
-
-  atualizarBotaoLimpar(mostrar) {
-    if (this.botaoLimparBusca) {
-      if (mostrar) {
-        this.botaoLimparBusca.classList.add('visivel');
-      } else {
-        this.botaoLimparBusca.classList.remove('visivel');
-      }
-    }
-  }
-
   // =====================================================
-  // CONTROLE DE ACCORDION - SOLUÇÃO COMPORTAMENTAL
+  // DROPDOWN DO USUÁRIO
   // =====================================================
-  inicializarAcordeon() {
-    const secoesMenu = document.querySelectorAll(".secao-menu");
+  configurarDropdownUsuario() {
+    if (!this.botaoUsuario) return;
 
-    secoesMenu.forEach((secao, index) => {
-      const cabecalho = secao.querySelector(".cabecalho-secao-menu");
-      
-      if (cabecalho) {
-        console.log(`🔧 Inicializando seção ${index + 1}: ${this.getNomeSecao(secao)}`);
+    this.botaoUsuario.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      this.alternarMenuUsuario();
+    });
+
+    this.botaoUsuario.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        this.alternarMenuUsuario();
+      }
+    });
+
+    // Configurar itens do menu do usuário
+    const botoesMenuUsuario = document.querySelectorAll('.botao-menu-usuario');
+    botoesMenuUsuario.forEach((botao) => {
+      botao.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         
-        // REMOVER TODOS OS CONTEÚDOS INICIALMENTE
-        this.removerConteudoSecao(secao);
-
-        cabecalho.addEventListener("click", () => {
-          console.log(`👆 Clique na seção: ${this.getNomeSecao(secao)}`);
-          this.alternarSecao(secao);
-        });
-
-        cabecalho.addEventListener("keydown", (e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            this.alternarSecao(secao);
-          }
-        });
-      }
-    });
-  }
-
-  alternarSecao(secao) {
-    const expandida = secao.classList.contains("expandida");
-    console.log(`🔄 Alternando seção ${this.getNomeSecao(secao)} - Estado atual: ${expandida ? 'EXPANDIDA' : 'FECHADA'}`);
-
-    // Durante busca, não fechar outras seções
-    if (!this.termoBuscaAtual) {
-      // Fechar todas as outras seções APENAS se não estivermos buscando
-      document.querySelectorAll(".secao-menu").forEach((outraSecao) => {
-        if (outraSecao !== secao) {
-          this.fecharSecao(outraSecao);
+        const action = botao.getAttribute('data-action');
+        if (action === 'logout') {
+          this.sairSistema();
+        } else if (action === 'change-password') {
+          this.alterarSenha();
         }
+        
+        this.fecharMenuUsuario();
       });
-    }
+    });
 
-    // Então alternar a seção atual
-    if (expandida) {
-      this.fecharSecao(secao);
+    console.log("👤 Dropdown do usuário configurado");
+  }
+
+  alternarMenuUsuario() {
+    if (this.menuUsuarioAberto) {
+      this.fecharMenuUsuario();
     } else {
-      this.abrirSecao(secao);
+      this.abrirMenuUsuario();
     }
   }
 
-  abrirSecao(secao) {
-    const cabecalho = secao.querySelector(".cabecalho-secao-menu");
-    const nomeSecao = this.getNomeSecao(secao);
-
-    if (!cabecalho) return;
-
-    console.log(`📂 ABRINDO seção: ${nomeSecao}`);
-
-    // Marcar como expandida
-    secao.classList.add("expandida");
-    cabecalho.setAttribute("aria-expanded", "true");
+  abrirMenuUsuario() {
+    // Fechar categorias abertas
+    this.fecharTodasCategorias();
     
-    // CRIAR E INSERIR O CONTEÚDO DO CACHE
-    this.inserirConteudoSecao(secao);
+    this.menuUsuarioAberto = true;
+    this.botaoUsuario.classList.add('ativo');
+    this.dropdownUsuario.classList.add('mostrar');
+    this.botaoUsuario.setAttribute('aria-expanded', 'true');
 
-    console.log(`✅ Seção ${nomeSecao} ABERTA - elemento inserido no DOM`);
-  }
-
-  fecharSecao(secao) {
-    const cabecalho = secao.querySelector(".cabecalho-secao-menu");
-    const nomeSecao = this.getNomeSecao(secao);
-
-    if (!cabecalho) return;
-
-    console.log(`📁 FECHANDO seção: ${nomeSecao}`);
-
-    // Marcar como fechada
-    secao.classList.remove("expandida");
-    cabecalho.setAttribute("aria-expanded", "false");
-    
-    // REMOVER COMPLETAMENTE O CONTEÚDO DO DOM
-    this.removerConteudoSecao(secao);
-
-    console.log(`✅ Seção ${nomeSecao} FECHADA - elemento removido do DOM`);
-  }
-
-  // =====================================================
-  // MANIPULAÇÃO DIRETA DO DOM - CORE DA SOLUÇÃO
-  // =====================================================
-  inserirConteudoSecao(secao) {
-    const nomeSecao = this.getNomeSecao(secao);
-    const conteudoCache = this.conteudosOriginais.get(nomeSecao);
-    
-    if (!conteudoCache) {
-      console.error(`❌ Conteúdo da seção ${nomeSecao} não encontrado no cache`);
-      return;
-    }
-
-    // Verificar se já existe conteúdo (evitar duplicação)
-    const conteudoExistente = secao.querySelector(".conteudo-menu");
-    if (conteudoExistente) {
-      console.log(`⚠️ Seção ${nomeSecao} já possui conteúdo, removendo antes`);
-      conteudoExistente.remove();
-    }
-
-    // Criar novo elemento do cache
-    const novoConteudo = conteudoCache.elemento.cloneNode(true);
-    
-    // Inserir no DOM após o cabeçalho
-    const cabecalho = secao.querySelector(".cabecalho-secao-menu");
-    if (cabecalho) {
-      cabecalho.insertAdjacentElement('afterend', novoConteudo);
-      console.log(`➕ Conteúdo da seção ${nomeSecao} inserido no DOM`);
-      
-      // Se houver busca ativa, aplicar filtro imediatamente
-      if (this.termoBuscaAtual.length >= 2) {
-        setTimeout(() => {
-          this.filtrarItensNaSecao(secao, this.termoBuscaAtual);
-        }, 50);
-      }
-    }
-  }
-
-  removerConteudoSecao(secao) {
-    const nomeSecao = this.getNomeSecao(secao);
-    const conteudo = secao.querySelector(".conteudo-menu");
-    
-    if (conteudo) {
-      conteudo.remove();
-      console.log(`➖ Conteúdo da seção ${nomeSecao} removido do DOM`);
-    } else {
-      console.log(`✅ Seção ${nomeSecao} já estava sem conteúdo`);
-    }
-  }
-
-  getNomeSecao(secao) {
-    const cabecalho = secao.querySelector(".cabecalho-secao-menu span");
-    return cabecalho ? cabecalho.textContent.trim() : 'Desconhecida';
-  }
-
-  expandirSecaoPadrao() {
-    // Aguardar um pouco para garantir que tudo carregou
     setTimeout(() => {
-      const secoesMenu = document.querySelectorAll(".secao-menu");
-      let secaoPadrao = null;
-
-      // Procurar pela seção "Cadastro"
-      secoesMenu.forEach((secao) => {
-        const cabecalho = secao.querySelector(".cabecalho-secao-menu");
-        if (cabecalho && cabecalho.textContent.trim() === "Cadastro") {
-          secaoPadrao = secao;
-        }
-      });
-
-      // Se não encontrar "Cadastro", pegar a primeira seção
-      if (!secaoPadrao && secoesMenu.length > 0) {
-        secaoPadrao = secoesMenu[0];
+      const primeiroBotao = this.menuUsuario.querySelector('.botao-menu-usuario');
+      if (primeiroBotao) {
+        primeiroBotao.focus();
       }
+    }, 100);
 
-      // Expandir a seção padrão
-      if (secaoPadrao) {
-        console.log(`🎯 Expandindo seção padrão: ${this.getNomeSecao(secaoPadrao)}`);
-        this.abrirSecao(secaoPadrao);
-      }
-    }, 500);
+    console.log("👤 Menu do usuário aberto");
   }
 
-  configurarNavegacaoTeclado() {
-    // Delegar evento para botões que podem ser criados dinamicamente
-    document.addEventListener("keydown", (e) => {
-      const botaoAtivo = document.activeElement;
-      
-      if (botaoAtivo && botaoAtivo.classList.contains("botao-item-menu")) {
-        const botoesMenu = document.querySelectorAll(".botao-item-menu:not(.busca-oculto)");
-        const indiceAtual = Array.from(botoesMenu).indexOf(botaoAtivo);
-        let botaoDestino = null;
+  fecharMenuUsuario() {
+    this.menuUsuarioAberto = false;
+    this.botaoUsuario.classList.remove('ativo');
+    this.dropdownUsuario.classList.remove('mostrar');
+    this.botaoUsuario.setAttribute('aria-expanded', 'false');
 
-        switch (e.key) {
-          case "ArrowDown":
-            e.preventDefault();
-            botaoDestino = botoesMenu[indiceAtual + 1] || botoesMenu[0];
-            break;
-
-          case "ArrowUp":
-            e.preventDefault();
-            if (indiceAtual === 0 && this.inputBusca) {
-              // Voltar para o input de busca
-              this.inputBusca.focus();
-              return;
-            }
-            botaoDestino = botoesMenu[indiceAtual - 1] || botoesMenu[botoesMenu.length - 1];
-            break;
-
-          case "Home":
-            e.preventDefault();
-            if (this.inputBusca) {
-              this.inputBusca.focus();
-            } else {
-              botaoDestino = botoesMenu[0];
-            }
-            break;
-
-          case "End":
-            e.preventDefault();
-            botaoDestino = botoesMenu[botoesMenu.length - 1];
-            break;
-        }
-
-        if (botaoDestino) {
-          botaoDestino.focus();
-        }
-      }
-    });
-
-    const botoesMenuUsuario = document.querySelectorAll(".botao-menu-usuario");
-
-    botoesMenuUsuario.forEach((botao, indice) => {
-      botao.addEventListener("keydown", (e) => {
-        let botaoDestino = null;
-
-        switch (e.key) {
-          case "ArrowDown":
-            e.preventDefault();
-            botaoDestino =
-              botoesMenuUsuario[indice + 1] || botoesMenuUsuario[0];
-            break;
-
-          case "ArrowUp":
-            e.preventDefault();
-            botaoDestino =
-              botoesMenuUsuario[indice - 1] ||
-              botoesMenuUsuario[botoesMenuUsuario.length - 1];
-            break;
-        }
-
-        if (botaoDestino) {
-          botaoDestino.focus();
-        }
-      });
-    });
+    console.log("👤 Menu do usuário fechado");
   }
 
-  definirModuloAtivo(nomeModulo) {
-    document.querySelectorAll(".botao-item-menu.ativo").forEach((btn) => {
-      btn.classList.remove("ativo");
-    });
-
-    const botaoModulo = document.querySelector(`[data-module="${nomeModulo}"]`);
-    if (botaoModulo) {
-      botaoModulo.classList.add("ativo");
+  // =====================================================
+  // EVENT LISTENERS GLOBAIS
+  // =====================================================
+  configurarEventListeners() {
+    // Clique no overlay fecha tudo
+    if (this.overlay) {
+      this.overlay.addEventListener('click', () => {
+        this.fecharTodasCategorias();
+        this.fecharMenuUsuario();
+      });
     }
 
-    this.moduloAtivo = nomeModulo;
-    console.log(`✅ Módulo ativo: ${nomeModulo}`);
-  }
-
-  tratarRedimensionamento() {
-    if (window.innerWidth < 480) {
-      if (this.menuAberto) {
-        this.fecharMenu();
-      }
-      if (this.menuUsuarioAberto) {
+    // Clique fora fecha dropdowns
+    document.addEventListener('click', (e) => {
+      // Se clicou fora das categorias e do usuário
+      if (!e.target.closest('.categoria-menu') && !e.target.closest('.dropdown-usuario')) {
+        this.fecharTodasCategorias();
         this.fecharMenuUsuario();
       }
+    });
+
+    // Tecla ESC fecha tudo
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        this.fecharTodasCategorias();
+        this.fecharMenuUsuario();
+      }
+    });
+
+    // Responsividade
+    window.addEventListener('resize', () => {
+      this.tratarRedimensionamento();
+    });
+
+    console.log("🎧 Event listeners globais configurados");
+  }
+
+  // =====================================================
+  // NAVEGAÇÃO POR TECLADO
+  // =====================================================
+  configurarNavegacaoTeclado() {
+    // Navegação entre categorias com setas
+    this.categoriasMenu.forEach((categoria, index) => {
+      const botaoCategoria = categoria.querySelector('.botao-categoria');
+      
+      botaoCategoria.addEventListener('keydown', (e) => {
+        let proximoIndex = -1;
+        
+        switch (e.key) {
+          case 'ArrowLeft':
+            e.preventDefault();
+            proximoIndex = index > 0 ? index - 1 : this.categoriasMenu.length - 1;
+            break;
+            
+          case 'ArrowRight':
+            e.preventDefault();
+            proximoIndex = index < this.categoriasMenu.length - 1 ? index + 1 : 0;
+            break;
+            
+          case 'Home':
+            e.preventDefault();
+            proximoIndex = 0;
+            break;
+            
+          case 'End':
+            e.preventDefault();
+            proximoIndex = this.categoriasMenu.length - 1;
+            break;
+        }
+        
+        if (proximoIndex >= 0) {
+          const proximoBotao = this.categoriasMenu[proximoIndex].querySelector('.botao-categoria');
+          if (proximoBotao) {
+            proximoBotao.focus();
+          }
+        }
+      });
+    });
+
+    console.log("⌨️ Navegação por teclado configurada");
+  }
+
+  gerenciarNavegacaoItens(e, categoria) {
+    const itensVisiveis = categoria.querySelectorAll('.item-categoria:not(.busca-oculto) .botao-item-categoria');
+    const itemAtual = e.target;
+    const indiceAtual = Array.from(itensVisiveis).indexOf(itemAtual);
+    
+    let proximoItem = null;
+    
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        proximoItem = itensVisiveis[indiceAtual + 1] || itensVisiveis[0];
+        break;
+        
+      case 'ArrowUp':
+        e.preventDefault();
+        if (indiceAtual === 0) {
+          // Voltar para o input de busca
+          const inputBusca = categoria.querySelector('.input-busca-categoria');
+          if (inputBusca) {
+            inputBusca.focus();
+            return;
+          }
+        }
+        proximoItem = itensVisiveis[indiceAtual - 1] || itensVisiveis[itensVisiveis.length - 1];
+        break;
+        
+      case 'Home':
+        e.preventDefault();
+        proximoItem = itensVisiveis[0];
+        break;
+        
+      case 'End':
+        e.preventDefault();
+        proximoItem = itensVisiveis[itensVisiveis.length - 1];
+        break;
+    }
+    
+    if (proximoItem) {
+      proximoItem.focus();
+    }
+  }
+
+  // =====================================================
+  // NAVEGAÇÃO E AÇÕES
+  // =====================================================
+  navegarParaModulo(modulo) {
+    console.log(`🚀 Navegando para módulo: ${modulo}`);
+    
+    // Usar o sistema de rotas do SPA
+    if (window.SVSRouter) {
+      window.SVSRouter.navigateTo(`/${modulo}`);
+    } else {
+      // Fallback para sistema legado
+      this.submeterFormularioLegado(modulo);
+    }
+  }
+
+  navegarParaTarget(target) {
+    console.log(`🎯 Navegando para target: ${target}`);
+    
+    // Submeter formulário legado
+    this.submeterFormularioLegado(target);
+  }
+
+  submeterFormularioLegado(escolha) {
+    const form = document.getElementById('legacy-form');
+    const inputEscolha = document.getElementById('legacy-escolha');
+    
+    if (form && inputEscolha) {
+      inputEscolha.value = escolha;
+      form.submit();
+    }
+  }
+
+  definirModuloAtivo(botaoItem) {
+    // Remover ativo de todos
+    document.querySelectorAll('.botao-item-categoria.ativo').forEach((btn) => {
+      btn.classList.remove('ativo');
+    });
+    
+    // Adicionar ativo ao clicado
+    botaoItem.classList.add('ativo');
+    
+    const modulo = botaoItem.getAttribute('data-module') || 
+                   botaoItem.getAttribute('data-target') || 
+                   botaoItem.textContent.trim();
+    
+    this.moduloAtivo = modulo;
+    console.log(`✅ Módulo ativo: ${modulo}`);
+  }
+
+  sairSistema() {
+    console.log("🚪 Saindo do sistema...");
+    
+    const form = document.getElementById('legacy-form');
+    const inputSair = document.getElementById('legacy-sair');
+    
+    if (form && inputSair) {
+      inputSair.value = 'true';
+      form.submit();
+    }
+  }
+
+  alterarSenha() {
+    console.log("🔑 Alterando senha...");
+    
+    const form = document.getElementById('legacy-form');
+    const inputSenha = document.getElementById('legacy-senha');
+    
+    if (form && inputSenha) {
+      inputSenha.value = 'true';
+      form.submit();
+    }
+  }
+
+  // =====================================================
+  // RESPONSIVIDADE
+  // =====================================================
+  tratarRedimensionamento() {
+    if (window.innerWidth < 768) {
+      // Em telas pequenas, fechar dropdowns abertos
+      this.fecharTodasCategorias();
+      this.fecharMenuUsuario();
     }
   }
 }
 
 // Export para window global
 window.SVSNavbar = SVSNavbar;
+
+// Auto-inicialização quando DOM carrega
+document.addEventListener('DOMContentLoaded', () => {
+  if (!window.svsNavbar) {
+    window.svsNavbar = new SVSNavbar();
+    window.svsNavbar.init().catch(console.error);
+  }
+});
