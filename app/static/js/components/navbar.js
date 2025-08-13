@@ -37,6 +37,12 @@ class SVSNavbar {
     this.tentativasInicializacao = 0;
     this.maxTentativas = 10;
 
+    // Controle mobile
+    this.menuToggleMobile = null;
+    this.menuPrincipal = null;
+    this.menuMobileAberto = false;
+    this.isMobile = false;
+
     console.log("🧭 SVS Navbar inicializando...");
   }
 
@@ -44,7 +50,7 @@ class SVSNavbar {
     try {
       // Aguardar elementos estarem disponíveis
       await this.aguardarElementos();
-      
+
       this.encontrarElementos();
       this.configurarEventListeners();
       this.configurarDropdownsCategorias();
@@ -54,18 +60,18 @@ class SVSNavbar {
 
       this.inicializada = true;
       console.log("✅ SVS Navbar inicializada com sucesso");
-      
+
       // Emitir evento de navbar pronta
       this.emitirEvento('navbar:pronta');
-      
+
     } catch (erro) {
       console.error("❌ Erro ao inicializar navbar:", erro);
-      
+
       // Tentar novamente após um delay
       if (this.tentativasInicializacao < this.maxTentativas) {
         this.tentativasInicializacao++;
         console.log(`🔄 Tentativa ${this.tentativasInicializacao}/${this.maxTentativas} em 1s...`);
-        
+
         setTimeout(() => {
           this.init();
         }, 1000);
@@ -80,13 +86,13 @@ class SVSNavbar {
       const verificarElementos = () => {
         const navbar = document.querySelector('.navbar-svs');
         const categorias = document.querySelectorAll('.categoria-menu');
-        
+
         if (navbar && categorias.length > 0) {
           console.log("✅ Elementos da navbar encontrados");
           resolve();
         } else {
           this.tentativasInicializacao++;
-          
+
           if (this.tentativasInicializacao >= this.maxTentativas) {
             reject(new Error(`Elementos da navbar não encontrados após ${this.maxTentativas} tentativas`));
           } else {
@@ -95,7 +101,7 @@ class SVSNavbar {
           }
         }
       };
-      
+
       verificarElementos();
     });
   }
@@ -127,6 +133,12 @@ class SVSNavbar {
     this.dropdownUsuario = document.querySelector('.dropdown-usuario');
     this.botaoUsuario = document.querySelector('.botao-usuario');
     this.menuUsuario = document.querySelector('.menu-usuario');
+
+    // Elementos mobile
+    this.menuToggleMobile = document.getElementById('menu-toggle-mobile');
+    this.menuPrincipal = document.getElementById('menu-principal');
+
+    console.log("📱 Elementos mobile verificados");
 
     // Overlay
     this.overlay = document.querySelector('.overlay-categorias');
@@ -889,6 +901,15 @@ class SVSNavbar {
       });
     }
 
+    // Configurar menu mobile
+    this.configurarMenuMobile();
+
+    // Detectar mudanças de viewport
+    window.addEventListener('resize', () => {
+      this.tratarRedimensionamento();
+      this.detectarMobile();
+    });
+
     // Clique fora fecha dropdowns
     document.addEventListener('click', (e) => {
       if (!e.target.closest('.categoria-menu') &&
@@ -923,6 +944,9 @@ class SVSNavbar {
     window.addEventListener('resize', () => {
       this.tratarRedimensionamento();
     });
+
+    // Detectar mobile na inicialização
+    this.detectarMobile();
 
     console.log("🎧 Event listeners globais configurados");
   }
@@ -1077,6 +1101,131 @@ class SVSNavbar {
       inputSenha.value = 'true';
       form.submit();
     }
+  }
+
+  configurarMenuMobile() {
+    if (!this.menuToggleMobile || !this.menuPrincipal) {
+      console.warn("⚠️ Elementos do menu mobile não encontrados");
+      return;
+    }
+
+    this.menuToggleMobile.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      this.alternarMenuMobile();
+    });
+
+    console.log("📱 Menu mobile configurado");
+  }
+
+  detectarMobile() {
+    const wasMobile = this.isMobile;
+    this.isMobile = window.innerWidth <= 768;
+
+    if (wasMobile !== this.isMobile) {
+      if (this.isMobile) {
+        this.ativarModoMobile();
+      } else {
+        this.ativarModoDesktop();
+      }
+    }
+  }
+
+  ativarModoMobile() {
+    console.log("📱 Ativando modo mobile");
+
+    // Fechar tudo que estiver aberto
+    this.fecharTodasCategorias();
+    this.fecharMenuUsuario();
+    this.esconderDropdownResultados();
+
+    if (this.buscaExpandidaAtiva && !this.inputBuscaGlobal?.value) {
+      this.recolherBusca();
+    }
+  }
+
+  ativarModoDesktop() {
+    console.log("🖥️ Ativando modo desktop");
+
+    // Fechar menu mobile se estiver aberto
+    this.fecharMenuMobile();
+  }
+
+  alternarMenuMobile() {
+    if (this.menuMobileAberto) {
+      this.fecharMenuMobile();
+    } else {
+      this.abrirMenuMobile();
+    }
+  }
+
+  abrirMenuMobile() {
+    if (!this.isMobile) return;
+
+    console.log("📱 Abrindo menu mobile");
+
+    // Fechar outros elementos
+    this.fecharMenuUsuario();
+    this.esconderDropdownResultados();
+
+    this.menuMobileAberto = true;
+    this.menuToggleMobile.classList.add('ativo');
+    this.menuToggleMobile.setAttribute('aria-expanded', 'true');
+    this.menuToggleMobile.setAttribute('aria-label', 'Fechar menu');
+
+    this.menuPrincipal.classList.add('aberto');
+
+    // Mostrar overlay
+    if (this.overlay) {
+      this.overlay.classList.add('mostrar');
+    }
+
+    // Focar no primeiro item após animação
+    setTimeout(() => {
+      const primeiroItem = this.menuPrincipal.querySelector('.botao-categoria');
+      if (primeiroItem) {
+        primeiroItem.focus();
+      }
+    }, 300);
+  }
+
+  fecharMenuMobile() {
+    if (!this.menuMobileAberto) return;
+
+    console.log("📱 Fechando menu mobile");
+
+    this.menuMobileAberto = false;
+    this.menuToggleMobile.classList.remove('ativo');
+    this.menuToggleMobile.setAttribute('aria-expanded', 'false');
+    this.menuToggleMobile.setAttribute('aria-label', 'Abrir menu');
+
+    this.menuPrincipal.classList.remove('aberto');
+
+    // Fechar categorias abertas
+    this.fecharTodasCategorias();
+
+    // Esconder overlay
+    if (this.overlay) {
+      this.overlay.classList.remove('mostrar');
+    }
+  }
+
+  // ATUALIZAR MÉTODO EXISTENTE:
+  tratarRedimensionamento() {
+    this.detectarMobile();
+
+    if (this.isMobile) {
+      // Fechar dropdowns desktop no mobile
+      this.fecharTodasCategorias();
+      this.fecharMenuUsuario();
+      this.esconderDropdownResultados();
+    } else {
+      // Fechar menu mobile no desktop
+      this.fecharMenuMobile();
+    }
+
+    // Verificar espaço da busca
+    this.verificarEspacoEsquerda();
   }
 
   // =====================================================
