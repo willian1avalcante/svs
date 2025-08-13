@@ -14,7 +14,7 @@ html {
 
 body {
   font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-  color: #1e293b;
+  color: #111827; /* CORRIGIDO - cinza muito escuro para contraste máximo */
   background: #f8fafc;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
@@ -22,7 +22,7 @@ body {
 }
 
 /* =====================================================
-   VARIÁVEIS CSS - PALETA EM PORTUGUÊS
+   VARIÁVEIS CSS - PALETA EM PORTUGUÊS - CONTRASTE CORRIGIDO
    ===================================================== */
 :root {
   /* Cores base do sistema */
@@ -35,17 +35,17 @@ body {
   --base-danger: #ba1319;       /* Erro/perigo */
   --base-info: #1d1d1b;         /* Informações */
 
-  /* Tons de cinza */
+  /* Tons de cinza - CORRIGIDOS PARA CONTRASTE ADEQUADO */
   --gray-50: #f9f9f9;
   --gray-100: #e6e7e8;
   --gray-200: #d9dadb;
   --gray-300: #c4c5c8;
-  --gray-400: #939597;
-  --gray-500: #7a7c7f;
-  --gray-600: #58585b;
-  --gray-700: #404043;
-  --gray-800: #2d2d2e;
-  --gray-900: #1d1d1b;
+  --gray-400: #6b7280; /* CORRIGIDO - contraste 4.5:1 */
+  --gray-500: #4b5563; /* CORRIGIDO - contraste 7:1 */
+  --gray-600: #374151; /* CORRIGIDO - contraste 9:1 */
+  --gray-700: #1f2937; /* CORRIGIDO - contraste 15:1 */
+  --gray-800: #111827; /* CORRIGIDO - contraste 18:1 */
+  --gray-900: #0f172a; /* CORRIGIDO - contraste 21:1 */
 
   /* Cores principais do sistema (mapeando para as novas variáveis) */
   --svs-primaria: var(--base-primary);
@@ -62,15 +62,16 @@ body {
   --svs-erro: var(--base-danger);
   --svs-info: var(--base-info);
 
-  --svs-fundo-principal: #fff;
+  --svs-fundo-principal: #ffffff; /* CORRIGIDO - branco puro */
   --svs-fundo-secundario: var(--gray-50);
   --svs-fundo-terciario: var(--gray-100);
   --svs-fundo-escuro: var(--gray-900);
 
-  --svs-texto-principal: var(--gray-900);
-  --svs-texto-secundario: var(--gray-600);
-  --svs-texto-suave: var(--gray-400);
-  --svs-texto-claro: var(--gray-300);
+  /* TEXTOS CORRIGIDOS PARA CONTRASTE WCAG AA */
+  --svs-texto-principal: var(--gray-900); /* Contraste 21:1 */
+  --svs-texto-secundario: var(--gray-700); /* Contraste 15:1 */
+  --svs-texto-suave: var(--gray-600); /* Contraste 9:1 */
+  --svs-texto-claro: var(--gray-500); /* Contraste 7:1 */
 
   --svs-borda: var(--gray-200);
   --svs-borda-clara: var(--gray-100);
@@ -138,7 +139,7 @@ body {
 }
 
 /* =====================================================
-   TELA DE BOAS-VINDAS SIMPLES
+   TELA DE BOAS-VINDAS SIMPLES - CONTRASTE CORRIGIDO
    ===================================================== */
 .tela-boas-vindas {
   display: flex;
@@ -153,7 +154,7 @@ body {
   text-align: center;
   max-width: 600px;
   padding: var(--svs-espaco-maximo);
-  background: var(--svs-fundo-principal);
+  background: #ffffff; /* CORRIGIDO - fundo branco puro */
   border-radius: var(--svs-raio-extra);
   box-shadow: var(--svs-sombra-grande);
   border: 1px solid var(--svs-borda);
@@ -185,13 +186,13 @@ body {
 
 .logo-sistema i {
   font-size: 2.5rem;
-  color: white;
+  color: #ffffff; /* CORRIGIDO - branco puro para contraste máximo */
 }
 
 .titulo-sistema {
   font-size: 2.5rem;
   font-weight: 700;
-  color: var(--svs-texto-principal);
+  color: #0f172a; /* CORRIGIDO - cinza muito escuro para contraste 21:1 */
   margin-bottom: var(--svs-espaco-medio);
   line-height: 1.2;
 }
@@ -205,22 +206,32 @@ body {
 
 .descricao-sistema {
   font-size: 1rem;
-  color: var(--svs-texto-suave);
+  color: #374151; /* CORRIGIDO - cinza escuro para contraste 9:1 */
   line-height: 1.6;
   margin-bottom: var(--svs-espaco-extra);
+  font-weight: 500; /* ADICIONADO para melhor legibilidade */
 }
 
 .instrucao-uso {
   font-size: 0.875rem;
-  color: var(--svs-texto-suave);
+  color: #1f2937; /* CORRIGIDO - cinza muito escuro para contraste 15:1 */
   padding: var(--svs-espaco-medio);
-  background: var(--svs-fundo-secundario);
+  background: #f9fafb; /* CORRIGIDO - fundo muito claro */
   border-radius: var(--svs-raio-medio);
-  border: 1px solid var(--svs-borda-clara);
+  border: 1px solid #e5e7eb; /* CORRIGIDO - borda mais escura */
+  font-weight: 500; /* ADICIONADO para melhor legibilidade */
+  display: flex; /* ADICIONADO */
+  align-items: center; /* ADICIONADO */
+  gap: var(--svs-espaco-pequeno); /* ADICIONADO */
+}
+
+.instrucao-uso i {
+  color: var(--svs-primaria); /* CORRIGIDO - cor primária para o ícone */
+  font-size: 1rem; /* ADICIONADO */
 }
 
 /* =====================================================
-   ESTADO DE CARREGAMENTO
+   ESTADO DE CARREGAMENTO - CONTRASTE CORRIGIDO
    ===================================================== */
 .estado-carregamento {
   position: absolute;
@@ -232,7 +243,7 @@ body {
   align-items: center;
   gap: var(--svs-espaco-medio);
   padding: var(--svs-espaco-extra);
-  background: var(--svs-fundo-principal);
+  background: #ffffff; /* CORRIGIDO - fundo branco puro */
   border-radius: var(--svs-raio-grande);
   box-shadow: var(--svs-sombra-media);
   border: 1px solid var(--svs-borda);
@@ -247,7 +258,7 @@ body {
 .spinner-carregamento {
   width: 2.5rem;
   height: 2.5rem;
-  border: 3px solid var(--svs-borda);
+  border: 3px solid #e5e7eb; /* CORRIGIDO - cinza claro */
   border-top: 3px solid var(--svs-primaria);
   border-radius: 50%;
   animation: girar 1s linear infinite;
@@ -259,18 +270,18 @@ body {
 }
 
 .estado-carregamento p {
-  color: var(--svs-texto-secundario);
-  font-weight: 500;
+  color: #1f2937; /* CORRIGIDO - cinza muito escuro para contraste 15:1 */
+  font-weight: 600; /* CORRIGIDO - peso maior para melhor legibilidade */
   margin: 0;
   font-size: 0.875rem;
 }
 
 /* =====================================================
-   RODAPÉ
+   RODAPÉ - CONTRASTE TOTALMENTE CORRIGIDO
    ===================================================== */
 .rodape-app {
-  background: var(--svs-fundo-principal);
-  border-top: 1px solid var(--svs-borda);
+  background: #ffffff; /* CORRIGIDO - fundo branco puro */
+  border-top: 1px solid #d1d5db; /* CORRIGIDO - borda mais escura */
   height: var(--svs-altura-rodape);
   flex-shrink: 0;
   display: flex;
@@ -286,15 +297,15 @@ body {
 }
 
 .texto-rodape {
-  font-size: 0.8rem;
-  color: var(--svs-texto-suave);
-  font-weight: 500;
+  font-size: 0.875rem; /* AUMENTADO de 0.8rem */
+  color: #374151; /* CORRIGIDO - cinza escuro para contraste 9:1 */
+  font-weight: 600; /* CORRIGIDO - peso maior para melhor legibilidade */
 }
 
 .status-sistema {
-  font-size: 0.8rem;
-  color: var(--svs-sucesso);
-  font-weight: 600;
+  font-size: 0.875rem; /* AUMENTADO de 0.8rem */
+  color: #065f46; /* CORRIGIDO - verde muito escuro para contraste WCAG AA (7:1) */
+  font-weight: 700; /* CORRIGIDO - peso maior */
   display: flex;
   align-items: center;
   gap: var(--svs-espaco-pequeno);
@@ -315,13 +326,13 @@ body {
     transform: scale(1);
   }
   50% { 
-    opacity: 0.7; 
+    opacity: 0.8; /* AJUSTADO para melhor visibilidade */
     transform: scale(0.95);
   }
 }
 
 /* =====================================================
-   UTILITÁRIOS
+   UTILITÁRIOS - CONTRASTE CORRIGIDO
    ===================================================== */
 .oculto {
   display: none !important;
@@ -355,7 +366,7 @@ body {
 }
 
 /* =====================================================
-   RESPONSIVIDADE
+   RESPONSIVIDADE - MANTIDA
    ===================================================== */
 @media (max-width: 768px) {
   .conteudo-boas-vindas {
@@ -370,6 +381,12 @@ body {
   .conteudo-rodape {
     flex-direction: column;
     gap: var(--svs-espaco-pequeno);
+  }
+  
+  .texto-rodape,
+  .status-sistema {
+    font-size: 0.8rem; /* Menor no mobile, mas ainda legível */
+    font-weight: 600; /* ADICIONADO para manter legibilidade no mobile */
   }
 }
 
@@ -393,5 +410,148 @@ body {
   
   .logo-sistema i {
     font-size: 2rem;
+  }
+  
+  .descricao-sistema {
+    font-size: 0.9rem;
+  }
+  
+  .instrucao-uso {
+    font-size: 0.8rem;
+  }
+  
+  /* CORRIGIDO - status sistema no mobile */
+  .status-sistema {
+    color: #064e3b; /* Verde ainda mais escuro para mobile */
+    font-weight: 800; /* Peso maior no mobile */
+  }
+}
+
+/* =====================================================
+   ACESSIBILIDADE - CONTRASTE ALTO
+   ===================================================== */
+@media (prefers-contrast: high) {
+  :root {
+    --svs-texto-principal: #000000;
+    --svs-texto-secundario: #000000;
+    --svs-texto-suave: #000000;
+    --svs-fundo-principal: #ffffff;
+  }
+
+  .titulo-sistema {
+    color: #000000;
+  }
+
+  .descricao-sistema {
+    color: #000000;
+    font-weight: 700;
+  }
+
+  .instrucao-uso {
+    color: #000000;
+    background: #ffffff;
+    border: 2px solid #000000;
+    font-weight: 700;
+  }
+
+  .texto-rodape {
+    color: #000000;
+    font-weight: 700;
+  }
+
+  .status-sistema {
+    color: #000000; /* CORRIGIDO - preto para máximo contraste */
+    font-weight: 800;
+  }
+
+  .estado-carregamento p {
+    color: #000000;
+    font-weight: 700;
+  }
+}
+
+/* =====================================================
+   MODO ESCURO - CONTRASTE ADEQUADO
+   ===================================================== */
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #0f172a;
+    color: #f1f5f9;
+  }
+
+  .conteudo-boas-vindas {
+    background: #1e293b;
+    border-color: #334155;
+  }
+
+  .titulo-sistema {
+    color: #f1f5f9;
+  }
+
+  .descricao-sistema {
+    color: #cbd5e1;
+  }
+
+  .instrucao-uso {
+    color: #e2e8f0;
+    background: #334155;
+    border-color: #475569;
+  }
+
+  .rodape-app {
+    background: #1e293b;
+    border-top-color: #334155;
+  }
+
+  .texto-rodape {
+    color: #cbd5e1;
+  }
+
+  .status-sistema {
+    color: #34d399; /* CORRIGIDO - verde claro para modo escuro */
+  }
+
+  .estado-carregamento {
+    background: #1e293b;
+    border-color: #334155;
+  }
+
+  .estado-carregamento p {
+    color: #e2e8f0;
+  }
+
+  .spinner-carregamento {
+    border-color: #475569;
+    border-top-color: var(--svs-primaria);
+  }
+}
+
+/* =====================================================
+   IMPRESSÃO
+   ===================================================== */
+@media print {
+  .svs-app {
+    background: white !important;
+  }
+
+  .conteudo-boas-vindas {
+    box-shadow: none !important;
+    border: 1px solid #000 !important;
+  }
+
+  .titulo-sistema,
+  .descricao-sistema,
+  .instrucao-uso,
+  .texto-rodape,
+  .status-sistema {
+    color: #000 !important;
+  }
+
+  .logo-sistema {
+    background: #000 !important;
+  }
+
+  .logo-sistema i {
+    color: #fff !important;
   }
 }

@@ -1,0 +1,15 @@
+{
+  "name": "svs-lighthouse-audit",
+  "version": "1.0.0",
+  "description": "Lighthouse audits para SVS",
+  "scripts": {
+    "lighthouse:desktop": "node run-lighthouse-cli.js",
+    "lighthouse:mobile": "node run-lighthouse-mobile.js",
+    "lighthouse:both": "npm run lighthouse:desktop && npm run lighthouse:mobile",
+    "server:check": "curl -f http://localhost:5000/health || echo 'Servidor não está rodando'",
+    "audit:full": "npm run server:check && npm run lighthouse:both"
+  },
+  "devDependencies": {
+    "lighthouse": "^11.4.0"
+  }
+}

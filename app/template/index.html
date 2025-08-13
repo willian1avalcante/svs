@@ -6,19 +6,30 @@
   <meta name="description" content="SVS - Sistema de Vendas Skymsen" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>SVS - Sistema de Vendas Skymsen</title>
+
+  <!-- PRELOAD APENAS recursos críticos -->
+  <link rel="preload" href="/static/css/base.css" as="style">
+  <link rel="preload" href="/static/css/navbar.css" as="style">
+  <link rel="preload" href="/static/js/core/app.js" as="script">
+
+  <!-- FAVICONS OTIMIZADOS -->
+  <link rel="icon" type="image/x-icon" href="/static/images/favicon-16x16.ico" sizes="16x16">
+  <link rel="icon" type="image/png" sizes="32x32" href="/static/images/favicon-32x32.png">
   
-  <!-- CSS do Sistema -->
+  <!-- CSS CRÍTICO primeiro -->
   <link rel="stylesheet" href="/static/css/base.css" />
   <link rel="stylesheet" href="/static/css/navbar.css" />
-  <link rel="stylesheet" href="/static/css/modules.css" />
   
-  <!-- Bibliotecas Locais -->
-  <link rel="stylesheet" href="/static/vendor/bootstrap/css/bootstrap.min.css" />
-  <link rel="stylesheet" href="/static/vendor/fontawesome_700/css/all.min.css" />
+  <!-- CSS NÃO CRÍTICO - carregamento assíncrono -->
+  <link rel="preload" href="/static/css/modules.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="/static/vendor/bootstrap/css/bootstrap.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   
-  <!-- Fontes -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Fallback para CSS não crítico -->
+  <noscript>
+    <link rel="stylesheet" href="/static/css/modules.css" />
+    <link rel="stylesheet" href="/static/vendor/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/static/vendor/fontawesome_700/css/all.min.css" />
+  </noscript>
 
 </head>
 
@@ -84,16 +95,8 @@
     
   </div>
 
-  <!-- Scripts JavaScript -->
-  <script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="/static/js/core/app.js"></script>
-  <script src="/static/js/core/module-loader.js"></script>
-  <script src="/static/js/core/spa-router.js"></script>
-  <script src="/static/js/components/navbar.js"></script>
-  
-  <!-- Inicialização -->
+  <!-- CONFIGURAÇÃO GLOBAL inline para evitar round-trip -->
   <script>
-    // Configuração global
     window.SVS_CONFIG = {
       apiBase: '/api',
       staticBase: '/static',
@@ -104,13 +107,84 @@
         permissoes: ['leitura', 'escrita', 'admin']
       }
     };
+  </script>
 
-    // Inicialização
-    document.addEventListener('DOMContentLoaded', () => {
+  <!-- SCRIPT CRÍTICO - apenas app.js inicialmente -->
+  <script src="/static/js/core/app.js"></script>
+  
+  <!-- INICIALIZAÇÃO OTIMIZADA -->
+  <script>
+    // Função para carregar navbar de forma assíncrona
+    function loadNavbarScript() {
+      return new Promise((resolve, reject) => {
+        if (window.SVSNavbar) {
+          resolve();
+          return;
+        }
+        
+        const script = document.createElement('script');
+        script.src = '/static/js/components/navbar.js';
+        script.async = true;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
+    }
+    
+    // Função para carregar FontAwesome quando necessário
+    function loadFontAwesome() {
+      // Carregar FontAwesome mínimo quando há ícones na página
+      if (document.querySelector('.fas, .far, .fab')) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = '/static/css/fontawesome-minimal.css';
+        document.head.appendChild(link);
+        console.log('📦 FontAwesome mínimo carregado');
+      }
+    }
+    
+    // Inicialização com prioridades
+    document.addEventListener('DOMContentLoaded', async function() {
       console.log('🎯 Iniciando SVS...');
-      window.SVSApp.init();
+      
+      try {
+        // 1. Inicializar app primeiro (sem navbar)
+        await window.SVSApp.init();
+        
+        // 2. Carregar navbar de forma assíncrona (não bloqueia)
+        loadNavbarScript().then(() => {
+          console.log('📱 Navbar script carregado');
+        }).catch(err => {
+          console.warn('⚠️ Erro ao carregar navbar script:', err);
+        });
+        
+        // 3. Carregar outros scripts não críticos
+        setTimeout(() => {
+          const scripts = [
+            '/static/vendor/bootstrap/js/bootstrap.bundle.min.js',
+            '/static/js/core/module-loader.js', 
+            '/static/js/core/spa-router.js'
+          ];
+          
+          scripts.forEach((src, index) => {
+            setTimeout(() => {
+              const script = document.createElement('script');
+              script.src = src;
+              script.async = true;
+              document.head.appendChild(script);
+            }, index * 200);
+          });
+        }, 500);
+        
+        // 4. Carregar FontAwesome quando necessário
+        setTimeout(loadFontAwesome, 1000);
+        
+      } catch (error) {
+        console.error('❌ Erro na inicialização:', error);
+      }
     });
   </script>
+
 </body>
 
 </html>

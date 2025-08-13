@@ -1,63 +1,64 @@
+/* filepath: c:\Users\Dayane\Documents\svs\unlighthouse.config.ts */
 export default {
-  // URL base do seu site Flask
   site: 'http://localhost:5000/',
   
-  // Configurações do scanner
   scanner: {
-    // Incluir apenas as rotas que existem
-    include: [
-      // '/menu',
-      '/ad'
-    ],
-    
-    // Excluir rotas que podem dar problema
-    exclude: [
-      // '/static/**',     // Arquivos estáticos
-      '/favicon.ico',   // Favicon
-      '/**/.*',         // Arquivos ocultos
-    ],
-    
-    // Desabilitar crawler para focar apenas no menu
-    crawler: false,
-    
-    // Limitar a apenas uma rota
-    maxRoutes: 1,
+    include: ['/', '/menu', '/ad'],
+    exclude: ['/static/**', '/favicon.ico', '/**/.*', '/health'],
+    crawler: true,
+    maxRoutes: 5
   },
   
-  // Configurações do Lighthouse
   lighthouse: {
     settings: {
-      onlyCategories: [
-        'performance',
-        'accessibility', 
-        'best-practices',
-        'seo'
-      ],
-      
-      // CONFIGURAR IDIOMA PORTUGUÊS PARA OS RELATÓRIOS
+      // FORÇAR DESKTOP EXPLICITAMENTE
+      onlyCategories: ['performance', 'accessibility', 'best-practices', 'seo'],
       locale: 'pt-BR',
-      
-      // Configurações específicas para sistema interno
       formFactor: 'desktop',
       
-      // Simular conexão rápida para intranet
+      // CONFIGURAÇÕES EXPLÍCITAS DE DESKTOP
+      screenEmulation: {
+        mobile: false,
+        width: 1920,
+        height: 1080,
+        deviceScaleFactor: 1,
+        disabled: false
+      },
+      
+      // USER AGENT DESKTOP
+      emulatedUserAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      
+      // THROTTLING DESKTOP
       throttling: {
         rttMs: 40,
         throughputKbps: 10240,
         cpuSlowdownMultiplier: 1,
-      }
+        requestLatencyMs: 0,
+        downloadThroughputKbps: 10240,
+        uploadThroughputKbps: 10240
+      },
+      
+      // CONFIGURAÇÕES ADICIONAIS
+      waitUntil: 'networkidle0',
+      timeout: 30000,
+      
+      // DESABILITAR MOBILE EXPLICITAMENTE
+      disableDeviceEmulation: false,
+      blockedUrlPatterns: [],
+      skipAudits: []
     }
   },
   
-  // Configurações de output
-  outputPath: './unlighthouse-reports',
+  // CONFIGURAÇÃO DO UNLIGHTHOUSE
+  outputPath: './unlighthouse-reports-desktop',
+  cache: false,
   
-  // Cache para melhor performance
-  cache: true,
-  
-  // Configurações do servidor de relatórios
   server: {
     port: 5678,
-    host: 'localhost'
-  }
+    host: 'localhost',
+    showBanner: true
+  },
+  
+  debug: true, // ATIVAR para ver logs
+  verbose: true
 }

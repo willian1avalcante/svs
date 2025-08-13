@@ -1,5 +1,6 @@
+/* filepath: c:\Users\Dayane\Documents\svs\app\static\js\core\app.js */
 /**
- * SVS App - Controlador Principal da Aplicação
+ * SVS App - Controlador Principal da Aplicação - Versão Otimizada
  */
 class SVSApp {
     constructor() {
@@ -8,6 +9,7 @@ class SVSApp {
         this.carregadorModulos = null;
         this.roteador = null;
         this.inicializado = false;
+        this.navbarCarregada = false;
         this.config = window.SVS_CONFIG || {};
 
         console.log('🚀 SVS App inicializando...');
@@ -17,15 +19,28 @@ class SVSApp {
         try {
             this.esconderCarregamento();
 
-            await this.carregarNavbar();
+            // Aguardar DOM estar pronto
+            if (document.readyState !== 'complete') {
+                await new Promise(resolve => {
+                    if (document.readyState === 'loading') {
+                        document.addEventListener('DOMContentLoaded', resolve);
+                    } else {
+                        resolve();
+                    }
+                });
+            }
+
+            // REMOVER dependência da navbar - inicializar sem ela
             await this.inicializarRoteador();
             await this.inicializarCarregadorModulos();
-
             this.configurarEventosGlobais();
             this.tratarRotaInicial();
 
             this.inicializado = true;
-            console.log('✅ SVS App inicializado com sucesso');
+            console.log('✅ SVS App inicializado com sucesso (sem navbar)');
+
+            // Tentar carregar navbar de forma assíncrona
+            this.carregarNavbarAsync();
 
             this.emitirEvento('app:pronto');
 
@@ -36,35 +51,96 @@ class SVSApp {
         }
     }
 
-    async carregarNavbar() {
+    async carregarNavbarAsync() {
         try {
-            const resposta = await fetch('/menu');
+            console.log('📡 Carregando navbar assincronamente...');
+
+            // Aguardar um pouco para não bloquear o carregamento inicial
+            await new Promise(resolve => setTimeout(resolve, 100));
+
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 3000);
+
+            const resposta = await fetch('/menu', {
+                signal: controller.signal,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'text/html',
+                    'Cache-Control': 'max-age=300'
+                }
+            });
+
+            clearTimeout(timeout);
+
             if (!resposta.ok) {
-                throw new Error(`Erro ao carregar navbar: ${resposta.status}`);
+                throw new Error(`HTTP ${resposta.status}`);
             }
 
             const htmlNavbar = await resposta.text();
-
             const containerNavbar = document.getElementById('navbar-container');
+
             if (!containerNavbar) {
                 throw new Error('Container da navbar não encontrado');
             }
 
+            // Inserir HTML
             containerNavbar.innerHTML = htmlNavbar;
 
-            await new Promise(resolve => setTimeout(resolve, 100));
-
+            // Aguardar script da navbar estar disponível
             if (window.SVSNavbar) {
                 this.navbar = new window.SVSNavbar();
                 await this.navbar.init();
+                this.navbarCarregada = true;
             } else {
-                throw new Error('Classe SVSNavbar não encontrada');
+                // Aguardar script ser carregado
+                this.aguardarScriptNavbar();
             }
 
-            console.log('✅ Navbar carregada');
+            console.log('✅ Navbar carregada assincronamente');
+
         } catch (erro) {
             console.error('❌ Erro ao carregar navbar:', erro);
-            throw erro;
+            this.carregarNavbarFallback();
+        }
+    }
+
+    aguardarScriptNavbar() {
+        const maxTentativas = 20;
+        let tentativas = 0;
+
+        const verificar = () => {
+            tentativas++;
+            
+            if (window.SVSNavbar) {
+                this.navbar = new window.SVSNavbar();
+                this.navbar.init().then(() => {
+                    this.navbarCarregada = true;
+                    console.log('✅ Navbar inicializada após script carregar');
+                });
+            } else if (tentativas < maxTentativas) {
+                setTimeout(verificar, 250);
+            } else {
+                console.warn('⚠️ Timeout aguardando script da navbar');
+                this.carregarNavbarFallback();
+            }
+        };
+
+        verificar();
+    }
+
+    carregarNavbarFallback() {
+        const containerNavbar = document.getElementById('navbar-container');
+        if (containerNavbar && !containerNavbar.innerHTML.trim()) {
+            containerNavbar.innerHTML = `
+                <nav class="navbar-svs">
+                    <div class="marca-navbar">
+                        <span class="texto-marca">SVS</span>
+                    </div>
+                    <div class="acoes-navbar">
+                        <span style="color: white; font-size: 0.875rem;">Carregando menu...</span>
+                    </div>
+                </nav>
+            `;
         }
     }
 
@@ -74,7 +150,7 @@ class SVSApp {
                 this.roteador = window.svsApp;
                 console.log('✅ Roteador inicializado');
             } else {
-                console.log('⚠️ Roteador não encontrado');
+                console.log('⚠️ Roteador não encontrado - continuando sem SPA routing');
             }
         } catch (erro) {
             console.error('❌ Erro ao inicializar roteador:', erro);
@@ -87,11 +163,10 @@ class SVSApp {
                 this.carregadorModulos = new window.ModuleLoader();
                 console.log('✅ Carregador de módulos inicializado');
             } else {
-                throw new Error('Classe ModuleLoader não encontrada');
+                console.warn('⚠️ Classe ModuleLoader não encontrada');
             }
         } catch (erro) {
             console.error('❌ Erro ao inicializar carregador de módulos:', erro);
-            throw erro;
         }
     }
 
@@ -121,21 +196,23 @@ class SVSApp {
 
     async carregarModulo(nomeModulo) {
         if (!this.carregadorModulos) {
-            console.error('❌ Carregador de módulos não inicializado');
+            console.warn('⚠️ Carregador de módulos não disponível');
             return;
         }
 
         try {
             this.mostrarCarregamento(`Carregando ${nomeModulo}...`);
 
-            if (this.navbar && this.navbar.menuAberto) {
+            // Só tentar fechar menu se navbar estiver carregada
+            if (this.navbarCarregada && this.navbar && typeof this.navbar.fecharMenu === 'function') {
                 this.navbar.fecharMenu();
             }
 
             const modulo = await this.carregadorModulos.load(nomeModulo);
             this.moduloAtual = modulo;
 
-            if (this.navbar) {
+            // Só definir módulo ativo se navbar estiver carregada
+            if (this.navbarCarregada && this.navbar && typeof this.navbar.definirModuloAtivo === 'function') {
                 this.navbar.definirModuloAtivo(nomeModulo);
             }
 
@@ -182,7 +259,7 @@ class SVSApp {
 
     mostrarCarregamento(mensagem = 'Carregando...') {
         const estadoCarregamento = document.getElementById('loading-state');
-        const textoCarregamento = estadoCarregamento ? estadoCarregamento.querySelector('p') : null;
+        const textoCarregamento = estadoCarregamento?.querySelector('p');
 
         if (textoCarregamento) {
             textoCarregamento.textContent = mensagem;
@@ -204,6 +281,7 @@ class SVSApp {
         console.error('❌', mensagem);
 
         if (this.config.debug) {
+            // Em modo debug, mostrar alert
             alert(mensagem);
         }
     }
@@ -211,6 +289,27 @@ class SVSApp {
     emitirEvento(nomeEvento, dados = null) {
         const evento = new CustomEvent(nomeEvento, { detail: dados });
         window.dispatchEvent(evento);
+    }
+
+    // Método público para verificar se navbar está pronta
+    isNavbarReady() {
+        return this.navbarCarregada;
+    }
+
+    // Método para executar ação quando navbar estiver pronta
+    whenNavbarReady(callback) {
+        if (this.navbarCarregada) {
+            callback();
+        } else {
+            const checkNavbar = () => {
+                if (this.navbarCarregada) {
+                    callback();
+                } else {
+                    setTimeout(checkNavbar, 100);
+                }
+            };
+            checkNavbar();
+        }
     }
 }
 

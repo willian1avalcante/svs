@@ -32,11 +32,19 @@ class SVSNavbar {
     this.resultadoSelecionado = -1;
     this.dropdownAberto = false;
 
-    console.log("🧭 SVS Navbar com Dropdown de Resultados inicializando...");
+    // Estado de inicialização
+    this.inicializada = false;
+    this.tentativasInicializacao = 0;
+    this.maxTentativas = 10;
+
+    console.log("🧭 SVS Navbar inicializando...");
   }
 
   async init() {
     try {
+      // Aguardar elementos estarem disponíveis
+      await this.aguardarElementos();
+      
       this.encontrarElementos();
       this.configurarEventListeners();
       this.configurarDropdownsCategorias();
@@ -44,14 +52,61 @@ class SVSNavbar {
       this.configurarBuscaGlobal();
       this.configurarNavegacaoTeclado();
 
-      console.log("✅ SVS Navbar com Dropdown de Resultados inicializada");
+      this.inicializada = true;
+      console.log("✅ SVS Navbar inicializada com sucesso");
+      
+      // Emitir evento de navbar pronta
+      this.emitirEvento('navbar:pronta');
+      
     } catch (erro) {
       console.error("❌ Erro ao inicializar navbar:", erro);
-      throw erro;
+      
+      // Tentar novamente após um delay
+      if (this.tentativasInicializacao < this.maxTentativas) {
+        this.tentativasInicializacao++;
+        console.log(`🔄 Tentativa ${this.tentativasInicializacao}/${this.maxTentativas} em 1s...`);
+        
+        setTimeout(() => {
+          this.init();
+        }, 1000);
+      } else {
+        console.error("❌ Falha ao inicializar navbar após múltiplas tentativas");
+      }
     }
   }
 
+  async aguardarElementos() {
+    return new Promise((resolve, reject) => {
+      const verificarElementos = () => {
+        const navbar = document.querySelector('.navbar-svs');
+        const categorias = document.querySelectorAll('.categoria-menu');
+        
+        if (navbar && categorias.length > 0) {
+          console.log("✅ Elementos da navbar encontrados");
+          resolve();
+        } else {
+          this.tentativasInicializacao++;
+          
+          if (this.tentativasInicializacao >= this.maxTentativas) {
+            reject(new Error(`Elementos da navbar não encontrados após ${this.maxTentativas} tentativas`));
+          } else {
+            console.log(`⏳ Aguardando elementos... tentativa ${this.tentativasInicializacao}`);
+            setTimeout(verificarElementos, 200);
+          }
+        }
+      };
+      
+      verificarElementos();
+    });
+  }
+
   encontrarElementos() {
+    // Verificar se navbar existe
+    const navbar = document.querySelector('.navbar-svs');
+    if (!navbar) {
+      throw new Error("Elemento .navbar-svs não encontrado");
+    }
+
     // Encontrar todas as categorias de menu
     this.categoriasMenu = document.querySelectorAll('.categoria-menu');
 
@@ -76,31 +131,37 @@ class SVSNavbar {
     // Overlay
     this.overlay = document.querySelector('.overlay-categorias');
 
+    // Validações críticas
     if (this.categoriasMenu.length === 0) {
       throw new Error("Nenhuma categoria de menu encontrada");
     }
 
     if (!this.inputBuscaGlobal) {
-      throw new Error("Input de busca global não encontrado");
+      console.warn("⚠️ Input de busca global não encontrado");
     }
 
     if (!this.dropdownResultados) {
-      throw new Error("Dropdown de resultados não encontrado");
+      console.warn("⚠️ Dropdown de resultados não encontrado");
     }
 
     if (!this.containerBusca || !this.botaoExpandirBusca) {
-      throw new Error("Elementos de busca expansível não encontrados");
+      console.warn("⚠️ Elementos de busca expansível não encontrados");
     }
 
-    console.log("🔍 Busca expansível encontrada");
     console.log(`📋 Encontradas ${this.categoriasMenu.length} categorias de menu`);
-    console.log("🔍 Busca global e dropdown encontrados");
+    console.log("🔍 Elementos de busca verificados");
   }
 
   // =====================================================
   // BUSCA GLOBAL COM DROPDOWN DE RESULTADOS
   // =====================================================
   configurarBuscaGlobal() {
+    // Verificar se elementos de busca existem
+    if (!this.inputBuscaGlobal || !this.containerBusca) {
+      console.warn("⚠️ Elementos de busca não encontrados, pulando configuração");
+      return;
+    }
+
     // Configurar expansão da busca
     this.configurarExpansaoBusca();
 
@@ -129,10 +190,15 @@ class SVSNavbar {
       });
     }
 
-    console.log("🔍 Busca global com expansão configurada");
+    console.log("🔍 Busca global configurada");
   }
 
   configurarExpansaoBusca() {
+    if (!this.botaoExpandirBusca || !this.buscaExpandida) {
+      console.warn("⚠️ Elementos de expansão da busca não encontrados");
+      return;
+    }
+
     // Clique no botão expandir
     this.botaoExpandirBusca.addEventListener('click', (e) => {
       e.preventDefault();
@@ -158,11 +224,10 @@ class SVSNavbar {
 
     // Blur - recolher se não houver conteúdo e não há dropdown aberto
     this.inputBuscaGlobal.addEventListener('blur', (e) => {
-      // Delay para permitir cliques em botões
       setTimeout(() => {
         if (!this.inputBuscaGlobal.value &&
           !this.dropdownAberto &&
-          !document.activeElement.closest('.busca-global')) {
+          !document.activeElement?.closest('.busca-global')) {
           this.recolherBusca();
         }
       }, 150);
@@ -171,43 +236,42 @@ class SVSNavbar {
     console.log("🔧 Expansão da busca configurada");
   }
 
+  emitirEvento(nomeEvento, dados = null) {
+    const evento = new CustomEvent(nomeEvento, { detail: dados });
+    window.dispatchEvent(evento);
+  }
+
   expandirBusca() {
-    if (this.buscaExpandidaAtiva) return;
+    if (this.buscaExpandidaAtiva || !this.buscaExpandida) return;
 
-    console.log("📈 Expandindo busca para esquerda");
+    console.log("📈 Expandindo busca");
 
-    // Fechar outros dropdowns
     this.fecharTodasCategorias();
     this.fecharMenuUsuario();
 
-    // Marcar como expandida
     this.containerBusca.classList.add('expandido');
     this.buscaExpandida.classList.add('ativa');
     this.buscaExpandidaAtiva = true;
 
-    // Verificar se há espaço suficiente à esquerda
     this.verificarEspacoEsquerda();
 
-    // Focar no input após a animação de expansão
     setTimeout(() => {
-      this.inputBuscaGlobal.focus();
-      this.buscaExpandida.classList.remove('animando');
+      if (this.inputBuscaGlobal) {
+        this.inputBuscaGlobal.focus();
+      }
     }, 250);
 
-    // Adicionar efeito de destaque
     this.adicionarDestaqueLupa();
   }
 
   verificarEspacoEsquerda() {
-    if (window.innerWidth <= 768) return; // Skip no mobile
+    if (window.innerWidth <= 768 || !this.buscaExpandida) return;
 
     const busca = this.buscaExpandida;
     const rect = busca.getBoundingClientRect();
-    const larguraExpandida = 400; // Largura quando expandida
+    const larguraExpandida = 400;
 
-    // Se expandir à esquerda vai sair da tela
     if (rect.right - larguraExpandida < 20) {
-      console.log("⚠️ Pouco espaço à esquerda, ajustando largura");
       const larguraMaxima = Math.max(250, rect.right - 40);
       busca.style.setProperty('--largura-maxima', `${larguraMaxima}px`);
     } else {
@@ -216,34 +280,33 @@ class SVSNavbar {
   }
 
   recolherBusca() {
-    if (!this.buscaExpandidaAtiva) return;
+    if (!this.buscaExpandidaAtiva || !this.buscaExpandida) return;
 
     console.log("📉 Recolhendo busca");
 
-    // Limpar busca primeiro
     this.limparBuscaGlobal();
-
-    // Animar recolhimento
     this.buscaExpandida.classList.remove('ativa');
 
     setTimeout(() => {
-      this.containerBusca.classList.remove('expandido');
+      if (this.containerBusca) {
+        this.containerBusca.classList.remove('expandido');
+      }
       this.buscaExpandidaAtiva = false;
-    }, 250); // Tempo ajustado
+    }, 250);
 
-    // Remover destaque
     this.removerDestaqueLupa();
   }
 
   adicionarDestaqueLupa() {
-    // Adicionar destaque sutil no botão quando há busca ativa
-    if (this.inputBuscaGlobal.value) {
+    if (this.botaoExpandirBusca && this.inputBuscaGlobal?.value) {
       this.botaoExpandirBusca.classList.add('destaque');
     }
   }
 
   removerDestaqueLupa() {
-    this.botaoExpandirBusca.classList.remove('destaque');
+    if (this.botaoExpandirBusca) {
+      this.botaoExpandirBusca.classList.remove('destaque');
+    }
   }
 
   gerenciarTeclasBusca(e) {
